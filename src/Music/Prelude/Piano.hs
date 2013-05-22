@@ -6,6 +6,8 @@ module Music.Prelude.Piano (
         module Data.Semigroup,
         module Data.VectorSpace,
         module Data.AffineSpace,
+        NotePart,
+        Note,
         putXml,
         showXml,
         asScore
