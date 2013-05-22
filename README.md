@@ -1,7 +1,9 @@
 
 # music-preludes
 
-Some useful preludes for the Music Suite.
+Some useful preludes for the Haskell Music Suite.
+
+This library is part of the Haskell Music Suite, see <http://musicsuite.github.com>.
 
 ## Requirements
 
