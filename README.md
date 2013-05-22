@@ -1,7 +1,7 @@
 
-# foobar
+# music-preludes
 
-Description.
+Some useful preludes for the Music Suite.
 
 ## Requirements
 
