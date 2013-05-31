@@ -23,6 +23,7 @@ library
         musicxml2,
         process,
         semigroups,
+        reverse-apply,
         music-score,
         music-pitch,
         music-pitch-literal,
@@ -40,3 +41,7 @@ executable "spanien"
 executable "triplets"
     hs-source-dirs: src examples
     main-is: triplets.hs
+
+executable "duo"
+    hs-source-dirs: src examples
+    main-is: duo.hs
