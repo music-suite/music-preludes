@@ -19,10 +19,11 @@ description:
 library                    
     build-depends: 
         base >= 4 && < 5,
-        music-score,
-        musicxml2,
         vector-space,
+        musicxml2,
+        process,
         semigroups,
+        music-score,
         music-pitch,
         music-pitch-literal,
         music-dynamics,
@@ -31,4 +32,11 @@ library
     hs-source-dirs: src
     exposed-modules:
         Music.Prelude.Piano
-        
+
+executable "spanien"
+    hs-source-dirs: src examples
+    main-is: spanien.hs
+
+executable "triplets"
+    hs-source-dirs: src examples
+    main-is: triplets.hs

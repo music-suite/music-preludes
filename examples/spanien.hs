@@ -47,7 +47,7 @@ instance Show NotePart where
     show Vla  = "Viola"
     show Vc   = "Cello"
 
-type Note = (VoiceT NotePart (TieT
+type Note = (PartT NotePart (TieT
     (TremoloT (HarmonicT (SlideT
         (DynamicT (ArticulationT (TextT Integer))))))))
                                                               

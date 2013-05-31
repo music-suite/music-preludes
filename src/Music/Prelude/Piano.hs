@@ -20,8 +20,8 @@ import Music.Dynamics.Literal
 import Data.Semigroup
 import Data.VectorSpace hiding (Sum, getSum)
 import Data.AffineSpace
-import qualified Music.MusicXml as Xml
 
+import qualified Music.MusicXml as Xml
 
 putXml  = putStrLn . Xml.showXml . toXml . asScore
 showXml = Xml.showXml . toXml . asScore
@@ -36,6 +36,6 @@ data NotePart
 instance Show NotePart where
     show Pno  = "Piano"
 
-type Note = (VoiceT NotePart (TieT
+type Note = (PartT NotePart (TieT
     (TremoloT (HarmonicT (SlideT
         (DynamicT (ArticulationT (TextT Integer))))))))
