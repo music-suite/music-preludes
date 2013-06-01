@@ -1,6 +1,7 @@
 
 {-# LANGUAGE TypeFamilies #-}
 
+import Control.Monad
 import Control.Applicative
 import Control.Apply.Reverse
 import Data.Semigroup
@@ -13,7 +14,7 @@ import qualified Data.List as List
 import Music.Pitch.Literal
 import Music.Dynamics.Literal
 import Music.Score
-import Music.Score.Combinators (sampleSingle)
+import Music.Score.Zip
 import System.Process
 
 main = do
@@ -94,23 +95,6 @@ simple = id
 
 
 
-
-
-
-
-
-
--- TODO move stuff
-
-resetDynamics :: HasDynamic c => c -> c
-resetDynamics = setBeginCresc False . setEndCresc False . setBeginDim False . setEndDim False
--- FIXME setLevel
-
-resetArticulation :: HasArticulation c => c -> c
-resetArticulation = setBeginSlur False . setContSlur False . setEndSlur False . setAccLevel 0 . setStaccLevel 0
-
-
-
 --------------------------------------------------------------------------------
 -- Pitch
 --------------------------------------------------------------------------------
@@ -128,29 +112,4 @@ fifth      = 7
 fourth     = 5
 minorThird = 3
 majorThird = 4
-
---------------------------------------------------------------------------------
--- Structure
---------------------------------------------------------------------------------
-
-infixl 6 ||>
-a ||> b = padToBar a |> b
-bar = rest^*4
-
-padToBar a = a |> (rest ^* (d' * 4))
-    where
-        d  = snd $ properFraction $ duration a / 4
-        d' = if (d == 0) then 0 else (1-d)
-
-
-rotl []     = []
-rotl (x:xs) = xs ++ [x]
-
-rotr [] = []
-rotr xs = (last xs:init xs)
-
-rotated n as | n >= 0 = iterate rotr as !! n
-             | n <  0 = iterate rotl as !! (abs n)    
-             
-             
 
