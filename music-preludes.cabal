@@ -23,6 +23,7 @@ library
         musicxml2,
         process,
         semigroups,
+        monadplus,
         reverse-apply,
         music-score,
         music-pitch,
@@ -33,6 +34,7 @@ library
     hs-source-dirs: src
     exposed-modules:
         Music.Prelude.Piano
+        Music.Prelude.StringQuartet
 
 executable "spanien"
     hs-source-dirs: src examples

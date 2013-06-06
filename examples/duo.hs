@@ -1,7 +1,10 @@
 
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE NoMonomorphismRestriction #-}
 
 import Control.Monad
+import Control.Monad.Plus
 import Control.Applicative
 import Control.Apply.Reverse
 import Data.Semigroup
@@ -14,13 +17,17 @@ import qualified Data.List as List
 import Music.Pitch.Literal
 import Music.Dynamics.Literal
 import Music.Score
+import Music.Score.Combinators
 import Music.Score.Zip
 import System.Process
 
 main = do
-    writeMidi "spanien.mid" score
-    writeXml "spanien.xml" $ score^/4
-    runCommand "open -a /Applications/Sibelius\\ 6.app spanien.xml"
+    writeMidi "test.mid" score
+    writeXml "test.xml" $ score^/4
+    -- writeLy "test.ly" $ score^/4
+    -- writeAbc "test.abc" $ score^/4
+    -- writeGuido "test.gmn" $ score^/4
+    runCommand "open -a /Applications/Sibelius\\ 6.app test.xml"
 score = piece
 
 subj1 = ((_p `cresc` mf |> mf `dim` _p)^*(duration subj1' - 2)) `dynamics` subj1'
@@ -33,10 +40,10 @@ subj1' = (^/2) $
         |> legato (e |> d |> b_ |> c) |> b_^*2 
         |> d |> e |> b_ |> c^*2 |> b_
 
-piece = part1 ||> toLydian part2  
+piece = part1 !!> toLydian part2  
     where
-        part1 = pres1 ||> pres2 ||> pres3 ||> pres4 ||> pres5 ||> pres6
-        part2 = pres1 ||> pres2 ||> pres3 ||> pres4 ||> pres5 ||> pres6
+        part1 = pres1 !!> pres2 !!> pres3 !!> pres4 !!> pres5 !!> pres6
+        part2 = pres1 !!> pres2 !!> pres3 !!> pres4 !!> pres5 !!> pres6
       
 pres1 = delay 0 (subj1^*(2/2))
 pres2 = delay 0 (subj1^*(2/2)) </> delay 2 (subj1^*(3/2))
@@ -48,6 +55,8 @@ pres6 = delay 0 (subj1^*(2/3)) </> delay 4 (subj1^*(2/2))
 
 toLydian = modifyPitches (\p -> if p == c then cs else p)
 
+(!!>) :: Score a -> Score a -> Score a
+a !!> b = mcatMaybes $ fmap Just a ||> fmap Just b
 
 
 
@@ -104,6 +113,11 @@ simple = id
 up x = fmap (modifyPitch (+ x))
 down x = fmap (modifyPitch (subtract x))
 
+up :: (Functor f, Num (Pitch b), HasPitch b) => Pitch b -> f b -> f b
+
+upOctave :: (Functor f, HasPitch b, Num (Pitch b)) => f b -> f b
+upOctave = up octave
+  
 -- TODO move to Music.Pitch.Interval.Literal
 unison     = 0
 octave     = 12

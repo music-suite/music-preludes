@@ -3,9 +3,9 @@ import Music.Prelude.Piano hiding (Note, NotePart)
 import System.Process
 
 main = do
-    writeMidi "spanien.mid" score
-    writeXml "spanien.xml" $ score^/4
-    runCommand "open -a /Applications/Sibelius\\ 6.app spanien.xml"
+    writeMidi "test.mid" score
+    writeXml "test.xml" $ score^/4
+    runCommand "open -a /Applications/Sibelius\\ 6.app test.xml"
 
 score = makeLongNotes 10 |> makeLongNotes 10 |> makeLongNotes 10
 
