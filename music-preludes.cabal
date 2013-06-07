@@ -33,6 +33,7 @@ library
         
     hs-source-dirs: src
     exposed-modules:
+        Music.Prelude.Basic
         Music.Prelude.Piano
         Music.Prelude.StringQuartet
 

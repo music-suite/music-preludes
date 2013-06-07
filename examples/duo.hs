@@ -3,23 +3,8 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
-import Control.Monad
-import Control.Monad.Plus
-import Control.Applicative
-import Control.Apply.Reverse
-import Data.Semigroup
-import Data.VectorSpace
-import Data.AffineSpace
-import Data.Foldable (Foldable(..), toList)
-import Data.Ord (comparing)
-import qualified Data.List as List
-
-import Music.Pitch.Literal
-import Music.Dynamics.Literal
-import Music.Score
-import Music.Score.Combinators
-import Music.Score.Zip
-import System.Process
+import System.Process (runCommand)
+import Music.Prelude.Basic
 
 main = do
     writeMidi "test.mid" score

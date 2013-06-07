@@ -1,7 +1,8 @@
 {-# LANGUAGE
+    GeneralizedNewtypeDeriving,
     DeriveDataTypeable #-} 
 
-module Music.Prelude.StringQuartet (
+module Music.Prelude.Basic (
         module Music.Score,
         module Music.Score.Combinators,
         module Music.Pitch.Literal,
@@ -32,18 +33,11 @@ showXml = Xml.showXml . toXml . asScore
 asScore :: Score Note -> Score Note
 asScore = id
 
-data NotePart
-    = Vl1
-    | Vl2
-    | Vla
-    | Vc
+newtype NotePart = NotePart { getNotePart :: Integer }
     deriving (Eq, Ord, Enum, Typeable)
 
 instance Show NotePart where
-    show Vl1  = "Violin I"
-    show Vl2  = "Violin II"
-    show Vla  = "Viola"
-    show Vc   = "Cello"
+    show _  = ""
 
 type Note = (PartT NotePart (TieT
     (TremoloT (HarmonicT (SlideT
