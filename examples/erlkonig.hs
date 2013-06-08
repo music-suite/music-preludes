@@ -11,7 +11,7 @@ main = do
     -- playMidiIO "Graphic MIDI" $ score^/10
 
 score :: Score Note
-score = let 
+score = let
         up x = fmap (modifyPitch (+ x))
         down x = fmap (modifyPitch (subtract x))
         octave = 12
@@ -27,7 +27,7 @@ score = let 
         bar    = rest^*4
 
         song    = mempty
-        left    = repTimes 2 (repTimes 4 $ removeRests ({-resetDynamics $ -}triplet g))
-        right   = repTimes 2 (delay 4 motive |> mempty)
+        left    = repTimes 2 (repTimes 4 $ removeRests $ triplet g)
+        right   = removeRests $ repTimes 2 (delay 4 motive |> rest^*3)
 
     in  stretch (1.2) $ stretch (1/4) $ song </> left </> down octave right
