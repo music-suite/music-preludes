@@ -1,5 +1,5 @@
 
-import System.Process
+import System.Process (runCommand)
 import Music.Prelude.StringQuartet
 
 main = do

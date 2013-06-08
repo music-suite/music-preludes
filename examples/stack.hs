@@ -47,25 +47,6 @@ type Note = PartT Int (PartT () Integer)
 asScore :: Score Note -> Score Note
 asScore = id
 
-open :: Score Note -> IO ()
-open = openXml . (^/4)
-
-play :: Score Note -> IO ()
-play = playMidiIO "Graphic MIDI"
-
-simple :: Score (PartT Integer Integer) -> Score (PartT Integer Integer)
-simple = id
-                                                                 
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -27,7 +27,7 @@ score = let 
         bar    = rest^*4
 
         song    = mempty
-        left    = repTimes 2 (repTimes 4 $ removeRests (resetDynamics $ triplet g))
+        left    = repTimes 2 (repTimes 4 $ removeRests ({-resetDynamics $ -}triplet g))
         right   = repTimes 2 (delay 4 motive |> mempty)
 
     in  stretch (1.2) $ stretch (1/4) $ song </> left </> down octave right

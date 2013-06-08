@@ -1,10 +1,6 @@
 
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE NoMonomorphismRestriction #-}
-
 import System.Process (runCommand)
-import Music.Prelude.Basic
+import Music.Prelude.StringQuartet
 
 main = do
     writeMidi "test.mid" score
@@ -43,72 +39,4 @@ toLydian = modifyPitches (\p -> if p == c then cs else p)
 (!!>) :: Score a -> Score a -> Score a
 a !!> b = mcatMaybes $ fmap Just a ||> fmap Just b
 
-
-
-
-
-
-
-
-
-
-data NotePart
-    = Vl1
-    | Vl2
-    deriving (Eq, Ord, Enum)
-
-instance Show NotePart where
-    show Vl1  = "Violin 1"
-    show Vl2  = "Violin 2"
-
-vl1, vl2 :: NotePart
-vl1  = Vl1
-vl2  = Vl2
-
-type Note = (PartT NotePart (TieT
-    (TremoloT (HarmonicT (SlideT
-        (DynamicT (ArticulationT (TextT Integer))))))))
-
-asScore :: Score Note -> Score Note
-asScore = id
-
-open :: Score Note -> IO ()
-open = openXml . (^/4)
-
-play :: Score Note -> IO ()
-play = playMidiIO "Graphic MIDI"
-
-simple :: Score (PartT Integer Integer) -> Score (PartT Integer Integer)
-simple = id
-                                                                 
-
-
-
-
-
-
-
-
---------------------------------------------------------------------------------
--- Pitch
---------------------------------------------------------------------------------
-
--- TODO better transposition etc
--- TODO interval literals (Music.Pitch.Interval.Literal)
-up x = fmap (modifyPitch (+ x))
-down x = fmap (modifyPitch (subtract x))
-
-up :: (Functor f, Num (Pitch b), HasPitch b) => Pitch b -> f b -> f b
-
-upOctave :: (Functor f, HasPitch b, Num (Pitch b)) => f b -> f b
-upOctave = up octave
-  
--- TODO move to Music.Pitch.Interval.Literal
-unison     = 0
-octave     = 12
-tritone    = 6
-fifth      = 7
-fourth     = 5
-minorThird = 3
-majorThird = 4
 

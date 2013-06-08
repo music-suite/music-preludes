@@ -37,14 +37,20 @@ library
         Music.Prelude.Piano
         Music.Prelude.StringQuartet
 
-executable "spanien"
+executable "complex"
     hs-source-dirs: src examples
-    main-is: spanien.hs
+    main-is: duo.hs
+
+executable "duo"
+    hs-source-dirs: src examples
+    main-is: duo.hs
+
+executable "erlkonig"
+    hs-source-dirs: src examples
+    main-is: erlkonig.hs
 
 executable "triplets"
     hs-source-dirs: src examples
     main-is: triplets.hs
 
-executable "duo"
-    hs-source-dirs: src examples
-    main-is: duo.hs
+
