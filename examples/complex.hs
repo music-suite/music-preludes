@@ -3,11 +3,12 @@ import System.Process (runCommand)
 import Music.Prelude.StringQuartet
 
 main = do
-    writeMidi "test.mid" score
-    writeXml "test.xml" $ score^/4
-    writeLy "test.ly" $ score^/4
-    runCommand "lilypond -f png test.ly"
-    -- runCommand "open -a /Applications/Sibelius\\ 6.app test.xml"
+    -- writeMidi "test.mid" score
+    -- writeXml "test.xml" $ score^/4
+    -- openXml $ score
+    writeLy "test.ly" $ score
+    runCommand "lilypond test.ly"
+    -- playMidiIO "Graphic MIDI" $ score^/10
 
 
 -- infixr 7 //

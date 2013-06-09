@@ -5,8 +5,8 @@ import Music.Prelude.Basic
 main = do
     -- writeMidi "test.mid" score
     -- writeXml "test.xml" $ score^/4
-    -- writeLy "test.ly" $ score
     -- openXml $ score
+    writeLy "test.ly" $ score
     runCommand "lilypond test.ly"
     -- playMidiIO "Graphic MIDI" $ score^/10
 
@@ -23,7 +23,7 @@ score = let
         bar    = rest^*4
 
         song    = mempty
-        left    = times 2 (times 4 $ removeRests $ triplet g)
+        left    = times 4 (times 4 $ removeRests $ triplet g)
         right   = removeRests $ times 2 (delay 4 motive |> rest^*3)
 
-    in  stretch (1.2) $ stretch (1/4) $ song </> left </> down octave right
+    in  stretch (1/4) $ song </> left </> down octave right

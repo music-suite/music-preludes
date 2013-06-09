@@ -3,12 +3,13 @@ import System.Process (runCommand)
 import Music.Prelude.StringQuartet
 
 main = do
-    writeMidi "test.mid" score
-    writeXml "test.xml" $ score^/4
-    -- writeLy "test.ly" $ score^/4
-    -- writeAbc "test.abc" $ score^/4
-    -- writeGuido "test.gmn" $ score^/4
-    runCommand "open -a /Applications/Sibelius\\ 6.app test.xml"
+    -- writeMidi "test.mid" score
+    -- writeXml "test.xml" $ score^/4
+    -- openXml $ score
+    writeLy "test.ly" $ score
+    runCommand "lilypond test.ly"
+    -- playMidiIO "Graphic MIDI" $ score^/10
+
 score = piece
 
 subj1 = ((_p `cresc` mf |> mf `dim` _p)^*(duration subj1' - 2)) `dynamics` subj1'

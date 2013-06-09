@@ -22,7 +22,7 @@ score = let
 
         left = (dynamics pp . legato) 
                (melody [a,g,f,e] |> d^*2)
-            |> (dynamics ((mp |> mp `cresc` mf |> mf `dim` mp |> mp)^*12) . legato) 
+            |> (dynamics ((mp |> mp `cresc` mf |> mf)^*8) . legato) 
                (melody [g,f,e,d] |> c |> (d |> e)^/2 |> f |> e |> d^*8)
         right = up fourth . delay 2 $ 
                (dynamics pp . legato) 

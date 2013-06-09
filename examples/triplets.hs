@@ -5,9 +5,9 @@ import Music.Prelude.StringQuartet
 main = do
     -- writeMidi "test.mid" score
     -- writeXml "test.xml" $ score^/4
-    -- writeLy "test.ly" $ score
-    openXml $ score
-    -- runCommand "lilypond test.ly"
+    -- openXml $ score
+    writeLy "test.ly" $ score
+    runCommand "lilypond test.ly"
     -- playMidiIO "Graphic MIDI" $ score^/10
 
 subject = legato $ accent $ scat [c',cs'^*2]
