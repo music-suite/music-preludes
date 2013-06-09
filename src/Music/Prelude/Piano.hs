@@ -5,34 +5,24 @@
 
 module Music.Prelude.Piano (
         module Music.Score,
-        module Music.Pitch.Literal,
-        module Music.Dynamics.Literal,
-        module Data.Semigroup,
-        module Data.VectorSpace,
-        module Data.AffineSpace,
-        NotePart,
+        PianoPart,
         Note,
         asScore
   ) where
 
 import Music.Score
-import Music.Pitch.Literal
-import Music.Dynamics.Literal
-import Data.Semigroup
 import Data.Typeable
-import Data.VectorSpace hiding (Sum, getSum)
-import Data.AffineSpace
 
 asScore :: Score Note -> Score Note
 asScore = id
 
-data NotePart
+data PianoPart
     = Pno
     deriving (Eq, Ord, Enum)
 
-instance Show NotePart where
+instance Show PianoPart where
     show Pno  = "Piano"
 
-type Note = (PartT NotePart (TieT
+type Note = (PartT PianoPart (TieT
     (TremoloT (HarmonicT (SlideT
         (DynamicT (ArticulationT (TextT Integer))))))))
