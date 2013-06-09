@@ -20,7 +20,7 @@ score = let
         octave = 12
         fourth = 5
 
-        left = (dynamics pp . legato) (melody [a,g,f,e] |> d^*2)
+        left = (dynamics (cresc _p _f |> _p) . legato) (melody [a,g,f,e] |> d^*2)
             |> (dynamics mp . legato) (melody [g,f,e,d] |> c |> (d |> e)^/2 |> f |> e |> d^*8)
         right = up fourth . delay 2 $ 
                (dynamics pp . legato) (melody [a,g,f,e] |> d^*2)
