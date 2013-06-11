@@ -22,10 +22,10 @@ subj1' = (^/2) $
         |> legato (e |> d |> b_ |> c) |> b_^*2 
         |> d |> e |> b_ |> c^*2 |> b_
 
-piece = part1 !!> toLydian part2  
+piece = part1 |> toLydian part2  
     where
-        part1 = pres1 !!> pres2 !!> pres3 !!> pres4 !!> pres5 !!> pres6
-        part2 = pres1 !!> pres2 !!> pres3 !!> pres4 !!> pres5 !!> pres6
+        part1 = pres1 |> pres2 |> pres3 |> pres4 |> pres5 |> pres6
+        part2 = pres1 |> pres2 |> pres3 |> pres4 |> pres5 |> pres6
       
 pres1 = delay 0 (subj1^*(2/2))
 pres2 = delay 0 (subj1^*(2/2)) </> delay 2 (subj1^*(3/2))
@@ -37,7 +37,7 @@ pres6 = delay 0 (subj1^*(2/3)) </> delay 4 (subj1^*(2/2))
 
 toLydian = modifyPitches (\p -> if p == c then cs else p)
 
-(!!>) :: Score a -> Score a -> Score a
-a !!> b = mcatMaybes $ fmap Just a ||> fmap Just b
+-- (|>) :: Score a -> Score a -> Score a
+-- a |> b = mcatMaybes $ fmap Just a ||> fmap Just b
 
 
