@@ -16,6 +16,12 @@ import Data.Typeable
 asScore :: Score Note -> Score Note
 asScore = id
 
+asVoice :: Voice Note -> Voice Note
+asVoice = id
+
+asTrack :: Track Note -> Track Note
+asTrack = id
+
 newtype BasicPart = BasicPart { getBasicPart :: Integer }
     deriving (Eq, Ord, Enum, Typeable)
 

@@ -1,3 +1,4 @@
 dist
 *.xml
 *.mid
+.DS_Store

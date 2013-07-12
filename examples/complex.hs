@@ -5,15 +5,15 @@ import Music.Prelude.StringQuartet
 main = do
     -- writeMidi "test.mid" score
     -- writeXml "test.xml" $ score^/4
-    -- openXml $ score
-    writeLy "test.ly" $ score
-    runCommand "lilypond test.ly"
+    -- openXml score
+    openLy score
     -- playMidiIO "Graphic MIDI" $ score^/10
 
 
 -- infixr 7 //
 -- (//) = flip times
 
+score :: Score Note
 score = test 1 </> test 2
 
 test 1  = group 5 c |> c^*3                  
