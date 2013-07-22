@@ -12,7 +12,7 @@ main = do
 subject = legato $ accent $ scat [c',cs'^*2]
 
 score :: Score Note
-score =  
+score =
     (times 5 $ subject ^*(2/3 * 1/4)) 
         </>
     (times 5 $ subject ^*(1/4)) 

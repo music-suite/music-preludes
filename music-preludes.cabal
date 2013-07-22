@@ -53,6 +53,16 @@ executable "triplets"
     hs-source-dirs: src examples
     main-is: triplets.hs
 
+executable "music2ly"
+    hs-source-dirs: src examples
+    main-is: music2ly.hs
+executable "music2midi"
+    hs-source-dirs: src examples
+    main-is: music2midi.hs
+executable "music2musicxml"
+    hs-source-dirs: src examples
+    main-is: music2musicxml.hs
+
 test-suite properties
     type: exitcode-stdio-1.0
     main-is: properties.hs
