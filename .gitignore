@@ -2,3 +2,6 @@ dist
 *.xml
 *.mid
 .DS_Store
+*.ly
+*.png
+tests
