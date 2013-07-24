@@ -10,7 +10,8 @@ module Music.Prelude.Basic (
         asScore
   ) where
 
-import Music.Score
+import Music.Score hiding (Pitch)
+import Music.Pitch
 import Data.Typeable
 
 asScore :: Score Note -> Score Note
@@ -30,4 +31,4 @@ instance Show BasicPart where
 
 type Note = (PartT BasicPart (TieT
     (TremoloT (HarmonicT (SlideT
-        (DynamicT (ArticulationT (TextT Integer))))))))
+        (DynamicT (ArticulationT (TextT {-Integer-}Pitch))))))))

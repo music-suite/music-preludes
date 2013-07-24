@@ -1,4 +1,7 @@
 
+module Main where
+
+import Prelude
 import System.Process (runCommand)
 import Music.Prelude.StringQuartet
 
