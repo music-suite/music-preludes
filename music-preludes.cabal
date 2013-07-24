@@ -1,7 +1,7 @@
 
 name:               music-preludes
-version:            1.3
-cabal-version:      >= 1.2
+version:            1.3.1
+cabal-version:      >= 1.10
 author:             Hans Hoglund
 maintainer:         Hans Hoglund
 license:            BSD3
@@ -16,6 +16,10 @@ description:
 
     This library is part of the Music Suite, see <http://musicsuite.github.com>.
 
+source-repository head
+  type:             git
+  location:         git://github.com/hanshoglund/music-preludes.git
+  
 library                    
     build-depends: 
         base >= 4 && < 5,
@@ -32,45 +36,89 @@ library
         music-dynamics-literal
         
     hs-source-dirs: src
+    default-language: Haskell2010
     exposed-modules:
         Music.Prelude.Basic
         Music.Prelude.Piano
         Music.Prelude.StringQuartet
 
 executable "complex"
+    build-depends: 
+        base >= 4 && < 5,
+        process,
+        lilypond,
+        musicxml2,
+        music-pitch,
+        music-score,
+        music-preludes
     hs-source-dirs: src examples
-    main-is: duo.hs
+    default-language: Haskell2010
+    main-is: complex.hs
 
 executable "duo"
+    build-depends: 
+        base >= 4 && < 5,
+        process,
+        lilypond,
+        musicxml2,
+        music-pitch,
+        music-score,
+        music-preludes
     hs-source-dirs: src examples
+    default-language: Haskell2010
     main-is: duo.hs
 
-executable "erlkonig"
-    hs-source-dirs: src examples
-    main-is: erlkonig.hs
+-- executable "erlkonig"
+--     build-depends: 
+--         base >= 4 && < 5,
+--         process,
+--         lilypond,
+--         musicxml2,
+--         music-pitch,
+--         music-score,
+--         music-preludes
+--     hs-source-dirs: src examples
+--     default-language: Haskell2010
+--     main-is: erlkonig.hs
 
 executable "triplets"
+    build-depends: 
+        base >= 4 && < 5,
+        process,
+        lilypond,
+        musicxml2,
+        music-pitch,
+        music-score,
+        music-preludes
     hs-source-dirs: src examples
-    main-is: triplets.hs
+    default-language: Haskell2010
+    main-is: triplets.hs    
 
-executable "music2ly"
-    hs-source-dirs: src examples
-    main-is: music2ly.hs
-executable "music2midi"
-    hs-source-dirs: src examples
-    main-is: music2midi.hs
-executable "music2musicxml"
-    hs-source-dirs: src examples
-    main-is: music2musicxml.hs
 
-test-suite properties
-    type: exitcode-stdio-1.0
-    main-is: properties.hs
-    hs-source-dirs: tests
-    ghc-options: -w -threaded -rtsopts -with-rtsopts=-N
-    build-depends:
-        HUnit                       >= 1.2,
-        QuickCheck                  >= 1.2 && < 1.3,
-        test-framework              >= 0.6,
-        test-framework-th           >= 0.2,
-        test-framework-quickcheck   >= 0.3
+-- executable "music2ly"
+--     hs-source-dirs: src examples
+--     default-language: Haskell2010
+--     main-is: music2ly.hs
+--
+-- executable "music2midi"
+--     hs-source-dirs: src examples
+--     default-language: Haskell2010
+--     main-is: music2midi.hs
+--
+-- executable "music2musicxml"
+--     hs-source-dirs: src examples
+--     default-language: Haskell2010
+--     main-is: music2musicxml.hs
+-- 
+-- test-suite properties
+--     type: exitcode-stdio-1.0
+--     main-is: properties.hs
+--     hs-source-dirs: tests
+--     default-language: Haskell2010
+--     ghc-options: -w -threaded -rtsopts -with-rtsopts=-N
+--     build-depends:
+--         HUnit                       >= 1.2,
+--         QuickCheck                  >= 1.2 && < 1.3,
+--         test-framework              >= 0.6,
+--         test-framework-th           >= 0.2,
+--         test-framework-quickcheck   >= 0.3
