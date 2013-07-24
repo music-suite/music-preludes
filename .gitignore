@@ -5,3 +5,4 @@ dist
 *.ly
 *.png
 tests
+*.pdf
