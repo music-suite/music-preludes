@@ -3,6 +3,19 @@
     GeneralizedNewtypeDeriving,
     DeriveDataTypeable #-} 
 
+------------------------------------------------------------------------------------
+-- |
+-- Copyright   : (c) Hans Hoglund 2012
+--
+-- License     : BSD-style
+--
+-- Maintainer  : hans@hanshoglund.se
+-- Stability   : experimental
+-- Portability : non-portable (TF,GNTD)
+--
+-- A basic music representation for string quartet.
+--
+-------------------------------------------------------------------------------------
 module Music.Prelude.StringQuartet (
         module Music.Score,
         StringQuartetPart,
