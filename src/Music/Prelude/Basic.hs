@@ -50,10 +50,19 @@ type Note = (PartT BasicPart (TieT
     (TremoloT (HarmonicT (SlideT
         (DynamicT (ArticulationT (TextT {-Integer-}P.Pitch))))))))
 
+
+instance Enum a => Enum (Score a) where
+    toEnum = return . toEnum
+    fromEnum = fromEnum . head . events
+
+instance Enum P.Pitch where
+    toEnum = (c .+^) . perfect . fromIntegral
+    fromEnum = fromIntegral . number . (.-. c)
+
 instance HasPitch P.Pitch where { type Pitch P.Pitch = P.Pitch ; getPitch = id; modifyPitch = id }
 instance Tiable P.Pitch where { beginTie = id ; endTie = id }
 instance HasLilypond P.Pitch where
-    getLilypond d p = L.note (L.NotePitch (L.Pitch (pc,acc,oct+5)) Nothing) ^*(fromDurationT $ d*4)
+    getLilypond d p = L.note (L.NotePitch (L.Pitch (pc,acc,oct+5)) Nothing) ^*((fromRational . toRational) d*4)
         where
             pc  = toEnum $ fromEnum $ name p
             acc = fromIntegral $ accidental p
