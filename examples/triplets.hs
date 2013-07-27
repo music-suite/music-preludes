@@ -28,14 +28,4 @@ score =
 
 
 -- TODO
-
-instance HasPitch Pitch where { type Pitch Pitch = Pitch ; getPitch = id; modifyPitch = id }
-
-instance Tiable Pitch where { beginTie = id ; endTie = id }
-instance HasLilypond Pitch where
-    getLilypond d p = Lilypond.note (Lilypond.NotePitch (Lilypond.Pitch (pc,acc,oct+5)) Nothing) ^*(fromDurationT $ d*4)
-        where
-            pc  = toEnum $ fromEnum $ name p
-            acc = fromIntegral $ accidental p
-            oct = fromIntegral $ octaves (p .-. c)
             

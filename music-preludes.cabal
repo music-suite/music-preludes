@@ -24,6 +24,7 @@ library
     build-depends: 
         base >= 4 && < 5,
         vector-space,
+        lilypond,
         musicxml2,
         process,
         semigroups,

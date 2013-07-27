@@ -1,7 +1,8 @@
 
 {-# LANGUAGE
     GeneralizedNewtypeDeriving,
-    DeriveDataTypeable #-} 
+    DeriveDataTypeable,
+    TypeFamilies #-} 
 
 ------------------------------------------------------------------------------------
 -- |
@@ -18,14 +19,17 @@
 -------------------------------------------------------------------------------------
 module Music.Prelude.Basic (
         module Music.Score,
+        module Music.Pitch,
         BasicPart,
         Note,
         asScore
   ) where
 
-import Music.Score hiding (Pitch)
-import Music.Pitch
+import Music.Score
+import Music.Pitch hiding (Pitch)
 import Data.Typeable
+import qualified Music.Pitch as P
+import qualified Music.Lilypond as L
 
 asScore :: Score Note -> Score Note
 asScore = id
@@ -44,4 +48,14 @@ instance Show BasicPart where
 
 type Note = (PartT BasicPart (TieT
     (TremoloT (HarmonicT (SlideT
-        (DynamicT (ArticulationT (TextT {-Integer-}Pitch))))))))
+        (DynamicT (ArticulationT (TextT {-Integer-}P.Pitch))))))))
+
+instance HasPitch P.Pitch where { type Pitch P.Pitch = P.Pitch ; getPitch = id; modifyPitch = id }
+instance Tiable P.Pitch where { beginTie = id ; endTie = id }
+instance HasLilypond P.Pitch where
+    getLilypond d p = L.note (L.NotePitch (L.Pitch (pc,acc,oct+5)) Nothing) ^*(fromDurationT $ d*4)
+        where
+            pc  = toEnum $ fromEnum $ name p
+            acc = fromIntegral $ accidental p
+            oct = fromIntegral $ octaves (p .-. c)
+
