@@ -99,17 +99,17 @@ executable "triplets"
 
 
 -- executable "music2ly"
---     hs-source-dirs: src examples
+--     hs-source-dirs: src examples tools
 --     default-language: Haskell2010
 --     main-is: music2ly.hs
 --
 -- executable "music2midi"
---     hs-source-dirs: src examples
+--     hs-source-dirs: src examples tools
 --     default-language: Haskell2010
 --     main-is: music2midi.hs
 --
 -- executable "music2musicxml"
---     hs-source-dirs: src examples
+--     hs-source-dirs: src examples tools
 --     default-language: Haskell2010
 --     main-is: music2musicxml.hs
 -- 
