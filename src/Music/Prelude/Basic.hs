@@ -26,9 +26,10 @@ module Music.Prelude.Basic (
   ) where
 
 import Music.Score
-import Music.Pitch hiding (Pitch)
+import Music.Pitch
 import Data.Typeable
-import qualified Music.Pitch as P
+import Data.AffineSpace.Point
+import Data.Foldable (toList)
 import qualified Music.Lilypond as L
 
 asScore :: Score Note -> Score Note
@@ -48,20 +49,23 @@ instance Show BasicPart where
 
 type Note = (PartT BasicPart (TieT
     (TremoloT (HarmonicT (SlideT
-        (DynamicT (ArticulationT (TextT {-Integer-}P.Pitch))))))))
+        (DynamicT (ArticulationT (TextT {-Integer-}Pitch))))))))
 
+open = openLy . asScore
 
 instance Enum a => Enum (Score a) where
     toEnum = return . toEnum
-    fromEnum = fromEnum . head . events
+    fromEnum = fromEnum . head . toList
 
-instance Enum P.Pitch where
+instance Enum Pitch where
     toEnum = (c .+^) . perfect . fromIntegral
     fromEnum = fromIntegral . number . (.-. c)
 
-instance HasPitch P.Pitch where { type Pitch P.Pitch = P.Pitch ; getPitch = id; modifyPitch = id }
-instance Tiable P.Pitch where { beginTie = id ; endTie = id }
-instance HasLilypond P.Pitch where
+instance HasPitch Pitch where { type PitchOf Pitch = Pitch ; getPitch = id; modifyPitch = id }
+instance Tiable Pitch where { beginTie = id ; endTie = id }
+-- TODO HasMidi
+-- TODO HasMusicXml
+instance HasLilypond Pitch where
     getLilypond d p = L.note (L.NotePitch (L.Pitch (pc,acc,oct+5)) Nothing) ^*((fromRational . toRational) d*4)
         where
             pc  = toEnum $ fromEnum $ name p
