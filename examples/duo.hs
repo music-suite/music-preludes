@@ -2,7 +2,7 @@
 module Main where
 
 import System.Process (runCommand)
-import Music.Prelude.StringQuartet
+import Music.Prelude.Basic
 
 main = do
     -- writeMidi "test.mid" score

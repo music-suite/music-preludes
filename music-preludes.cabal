@@ -47,12 +47,19 @@ library
 executable "complex"
     build-depends: 
         base >= 4 && < 5,
-        process,
+        vector-space,
+        vector-space-points,
         lilypond,
         musicxml2,
-        music-pitch,
+        process,
+        semigroups,
+        monadplus,
+        reverse-apply,
         music-score,
-        music-preludes
+        music-pitch,
+        music-pitch-literal,
+        music-dynamics,
+        music-dynamics-literal
     hs-source-dirs: src examples
     default-language: Haskell2010
     main-is: complex.hs
@@ -60,39 +67,39 @@ executable "complex"
 executable "duo"
     build-depends: 
         base >= 4 && < 5,
-        process,
+        vector-space,
+        vector-space-points,
         lilypond,
         musicxml2,
-        music-pitch,
+        process,
+        semigroups,
+        monadplus,
+        reverse-apply,
         music-score,
-        music-preludes
+        music-pitch,
+        music-pitch-literal,
+        music-dynamics,
+        music-dynamics-literal
     hs-source-dirs: src examples
     default-language: Haskell2010
     main-is: duo.hs
 
--- executable "erlkonig"
---     build-depends: 
---         base >= 4 && < 5,
---         process,
---         lilypond,
---         musicxml2,
---         music-pitch,
---         music-score,
---         music-preludes
---     hs-source-dirs: src examples
---     default-language: Haskell2010
---     main-is: erlkonig.hs
-
 executable "triplets"
     build-depends: 
         base >= 4 && < 5,
-        process,
+        vector-space,
         vector-space-points,
         lilypond,
         musicxml2,
-        music-pitch,
+        process,
+        semigroups,
+        monadplus,
+        reverse-apply,
         music-score,
-        music-preludes
+        music-pitch,
+        music-pitch-literal,
+        music-dynamics,
+        music-dynamics-literal
     hs-source-dirs: src examples
     default-language: Haskell2010
     main-is: triplets.hs    

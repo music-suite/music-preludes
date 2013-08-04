@@ -20,6 +20,7 @@
 module Music.Prelude.Basic (
         module Music.Score,
         module Music.Pitch,
+        module Music.Dynamics.Literal,
         BasicPart,
         Note,
         asScore
@@ -27,6 +28,7 @@ module Music.Prelude.Basic (
 
 import Music.Score
 import Music.Pitch
+import Music.Dynamics.Literal --TODO
 import Data.Typeable
 import Data.AffineSpace.Point
 import Data.Foldable (toList)
