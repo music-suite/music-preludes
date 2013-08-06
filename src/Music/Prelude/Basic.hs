@@ -76,7 +76,7 @@ instance HasLilypond a => HasLilypond (ChordT a) where
 
 
 
--- TODO These instances should be moves, see music-score #67
+-- TODO These instances should be moved, see music-score #67
 
 instance HasPitch Pitch where { type PitchOf Pitch = Pitch ; getPitch = id; modifyPitch = id }
 
