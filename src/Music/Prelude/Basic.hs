@@ -63,7 +63,6 @@ instance HasPitch Pitch where { type PitchOf Pitch = Pitch ; getPitch = id; modi
 
 instance Tiable Pitch where { beginTie = id ; endTie = id }
 
--- TODO HasMidi
 instance HasMidi Semitones where
     getMidi a = getMidi $ (60 + fromIntegral a :: Integer)
 
