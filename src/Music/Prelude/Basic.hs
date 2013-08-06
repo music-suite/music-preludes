@@ -32,6 +32,7 @@ import Music.Dynamics.Literal --TODO
 import Data.Typeable
 import Data.AffineSpace.Point
 import qualified Music.Lilypond as L
+import qualified Music.MusicXml.Simple as Xml
 
 asScore :: Score Note -> Score Note
 asScore = id
@@ -54,18 +55,35 @@ type Note = (PartT BasicPart (TieT
 
 open = openLy . asScore
 
+
+
 -- TODO These instances should be moves, see music-score #67
 
 instance HasPitch Pitch where { type PitchOf Pitch = Pitch ; getPitch = id; modifyPitch = id }
 
 instance Tiable Pitch where { beginTie = id ; endTie = id }
+
 -- TODO HasMidi
--- TODO HasMusicXml
+instance HasMidi Semitones where
+    getMidi a = getMidi $ (60 + fromIntegral a :: Integer)
+
+instance HasMidi Pitch where
+    getMidi p = getMidi $ semitones (p .-. c)
+
+instance HasMusicXml Pitch where
+    getMusicXml d p = Xml.note (pc, Just acc, oct) (frac d)
+        where
+            pc   = toEnum $ fromEnum $ name p
+            acc  = fromIntegral $ accidental p
+            oct  = fromIntegral $ octaves (p .-. c)
+            frac = fromRational . toRational
 
 instance HasLilypond Pitch where
-    getLilypond d p = L.note (L.NotePitch (L.Pitch (pc,acc,oct+5)) Nothing) ^*((fromRational . toRational) d*4)
+    getLilypond d p = L.note (L.NotePitch (L.Pitch (pc,acc,oct+5)) Nothing) ^*(frac d*4)
         where
-            pc  = toEnum $ fromEnum $ name p
-            acc = fromIntegral $ accidental p
-            oct = fromIntegral $ octaves (p .-. c)
+            pc   = toEnum $ fromEnum $ name p
+            acc  = fromIntegral $ accidental p
+            oct  = fromIntegral $ octaves (p .-. c)
+            frac = fromRational . toRational
+
 
