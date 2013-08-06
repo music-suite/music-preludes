@@ -31,7 +31,6 @@ import Music.Pitch
 import Music.Dynamics.Literal --TODO
 import Data.Typeable
 import Data.AffineSpace.Point
-import Data.Foldable (toList)
 import qualified Music.Lilypond as L
 
 asScore :: Score Note -> Score Note
@@ -55,18 +54,14 @@ type Note = (PartT BasicPart (TieT
 
 open = openLy . asScore
 
-instance Enum a => Enum (Score a) where
-    toEnum = return . toEnum
-    fromEnum = fromEnum . head . toList
-
-instance Enum Pitch where
-    toEnum = (c .+^) . perfect . fromIntegral
-    fromEnum = fromIntegral . number . (.-. c)
+-- TODO These instances should be moves, see music-score #67
 
 instance HasPitch Pitch where { type PitchOf Pitch = Pitch ; getPitch = id; modifyPitch = id }
+
 instance Tiable Pitch where { beginTie = id ; endTie = id }
 -- TODO HasMidi
 -- TODO HasMusicXml
+
 instance HasLilypond Pitch where
     getLilypond d p = L.note (L.NotePitch (L.Pitch (pc,acc,oct+5)) Nothing) ^*((fromRational . toRational) d*4)
         where
