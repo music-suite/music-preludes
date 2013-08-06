@@ -50,10 +50,29 @@ instance Show BasicPart where
     show _  = ""
 
 type Note = (PartT BasicPart (TieT
-    (TremoloT (HarmonicT (SlideT
-        (DynamicT (ArticulationT (TextT {-Integer-}Pitch))))))))
+    (TremoloT
+      (ChordT 
+        (HarmonicT (SlideT
+            (DynamicT (ArticulationT (TextT Pitch)))))))))
 
 open = openLy . asScore
+
+
+
+-- TODO move
+-- TODO rename
+pcatLy :: [Lilypond] -> Lilypond
+pcatLy = foldr L.pcat (L.Simultaneous False [])
+
+scatLy :: [Lilypond] -> Lilypond
+scatLy = foldr L.scat (L.Sequential [])
+
+instance IsPitch a => IsPitch (ChordT a) where
+    fromPitch = ChordT . return . fromPitch
+
+instance HasLilypond a => HasLilypond (ChordT a) where
+    getLilypond d = pcatLy . fmap (getLilypond d) . getChordT
+
 
 
 
