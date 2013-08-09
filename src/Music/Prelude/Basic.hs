@@ -49,10 +49,11 @@ newtype BasicPart = BasicPart { getBasicPart :: Integer }
 instance Show BasicPart where
     show _  = ""
 
-type Note = (PartT BasicPart (TieT
+type Note = (PartT BasicPart
     (TremoloT
-      (ChordT 
-        (HarmonicT (SlideT
+      (ChordT      
+        (TieT
+          (HarmonicT (SlideT
             (DynamicT (ArticulationT (TextT Pitch)))))))))
 
 open = openLy . asScore
@@ -72,6 +73,45 @@ instance IsPitch a => IsPitch (ChordT a) where
 
 instance HasLilypond a => HasLilypond (ChordT a) where
     getLilypond d = pcatLy . fmap (getLilypond d) . getChordT
+
+
+-----------------------------
+-- A propos #40:
+
+-- We want certain transformers to be outside the ChordT transformer (PartT n, TremoloT)
+-- This makes sense as chords *must* share these attributes
+--
+-- Problem with the simultanous function
+--
+--
+-- This can be implemented: it merges simultaneous events
+simult :: Score a -> Score (ChordT a)
+simult = undefined
+
+-- Also we can do monadic join on chords
+joinChord :: Score (ChordT (ChordT a)) -> Score (ChordT a)
+joinChord = undefined
+
+-- Hence we also have
+bindSimult :: Score (ChordT a) -> Score (ChordT a)
+bindSimult = joinChord . simult
+
+-- That is: given a score of chords of notes (with harmonics, dynamics, pitch etc), we
+-- can merge all simultaneous chords together so that each chord has a unique era.
+
+-- On the other hand: given a score of chords of notes where the chords have separate properties
+-- (part and tremolo), how can we join simultaneous events? This works if the outer properties
+-- form a semigroup, i.e. tremolo can use Max.
+
+-- For some attributes (notably parts) there is no way to do this. I.e. given a score of chords
+-- in various parts, we can only merge chords that are in the same part.
+
+
+
+-- How to lift this to outermost level?
+-- (Score a -> Score b) -> Score (PartT n a) -> Score (PartT n b)
+-- (Score a -> Score b) -> Score (TieT a) -> Score (TieT b)
+-- (Score a -> Score b) -> Score (TremoloT a) -> Score (TremoloT b)
 
 
 
