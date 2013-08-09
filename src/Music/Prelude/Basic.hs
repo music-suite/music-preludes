@@ -1,6 +1,7 @@
 
 {-# LANGUAGE
     GeneralizedNewtypeDeriving,
+    MultiParamTypeClasses,
     DeriveDataTypeable,
     TypeFamilies #-} 
 
@@ -71,6 +72,8 @@ scatLy = foldr L.scat (L.Sequential [])
 instance IsPitch a => IsPitch (ChordT a) where
     fromPitch = ChordT . return . fromPitch
 
+instance HasMidi a => HasMidi (ChordT a) where
+    getMidi = pcat . fmap getMidi . getChordT
 instance HasLilypond a => HasLilypond (ChordT a) where
     getLilypond d = pcatLy . fmap (getLilypond d) . getChordT
 
@@ -96,15 +99,125 @@ joinChord = undefined
 bindSimult :: Score (ChordT a) -> Score (ChordT a)
 bindSimult = joinChord . simult
 
--- That is: given a score of chords of notes (with harmonics, dynamics, pitch etc), we
--- can merge all simultaneous chords together so that each chord has a unique era.
+fixSimult :: Score Note -> Score Note
+fixSimult = undefined
 
--- On the other hand: given a score of chords of notes where the chords have separate properties
--- (part and tremolo), how can we join simultaneous events? This works if the outer properties
--- form a semigroup, i.e. tremolo can use Max.
+mapPartWithout :: (Score a -> Score a) -> Score (PartT n a) -> Score (PartT n a)
+mapPartWithout = undefined
 
--- For some attributes (notably parts) there is no way to do this. I.e. given a score of chords
--- in various parts, we can only merge chords that are in the same part.
+
+data P = PW
+data A = AW
+x :: Score (PartT P A)
+x = undefined
+
+-- fmap split x :: Score (P, A)
+
+
+{-
+That is: given a score of chords of notes (with harmonics, dynamics, pitch etc), we
+can merge all simultaneous chords together so that each chord has a unique era.
+
+On the other hand: given a score of chords of notes where the chords have separate properties
+(part and tremolo), how can we join simultaneous events? This works if the outer properties
+form a semigroup, i.e. tremolo can use Max.
+
+For some attributes (notably parts) there is no way to do this. I.e. given a score of chords
+in various parts, we can only merge chords that are in the same part.
+
+What we *really* need is a *partial* semigroup, i.e. a function (<?> :: a -> a -> Maybe a)
+Or should we just use mapParts?
+
+====
+
+How can we move around the contenst of a note transformer? I.e. is there a generic way
+to go from, say (TremoloT (ArticulationT a)) to (ArticulationT (TremoloT a)). We can
+do this if we have a way to decompose and recompose the tyransformers, i.e. functions
+like:
+    
+    split       :: TremoloT a -> (Tremolo, a)
+    fuse        :: Tremolo -> a -> TremoloT a
+    split       :: ArticulationT a -> (Articulation, a)
+    fuse        :: Articulation -> a -> ArticulationT a
+
+so generalize:
+-}
+
+class Splittable t where
+    type Head t
+    split :: t a -> (Head t, a)
+    fuse  :: Head t -> a -> t a
+    split = undefined
+    fuse = undefined
+
+    -- juggle :: (Splittable t ?, Splittable u ?) => t (u a) -> u (t a)
+
+
+data Articulation = A_
+
+instance Splittable ((,) a) where
+    type Head ((,) a) = a
+    split = id
+    fuse = (,)  
+    
+instance Splittable ((,,) a b) where
+    type Head ((,,) a b) = (a, b)
+    split (a,b,c) = ((a,b), c)
+    fuse (a,b) c = (a,b,c)
+instance Splittable ArticulationT where
+    type Head ArticulationT = Articulation
+instance Splittable TremoloT where
+    type Head TremoloT = Int
+instance Splittable (PartT n) where
+    type Head (PartT n) = n
+instance Splittable ChordT where
+    type Head ChordT = ()
+
+type Note2 = 
+  (ChordT      
+    (PartT BasicPart
+      (TremoloT
+        (TieT
+          (HarmonicT (SlideT
+            (DynamicT (ArticulationT (TextT Pitch)))))))))
+
+j :: Note -> Note2
+j = juggle . fmap juggle
+
+
+juggle :: (Splittable t, Splittable u) => t (u a) -> u (t a)
+juggle = (uncurry fuse) . second' (uncurry fuse) . juggle' . second' split . split
+
+
+juggle' (a, (b, c)) = (b, (a, c))
+second' f (a,b) = (a,f b)
+
+-- juggle :: (Splittable t n, Splittable u n) => n -> u a -> t a
+-- juggle _ = uncurry (\x y -> fuse x y) . split 
+
+{-
+    instance Splittable t x
+    instance Splittable u y
+
+    juggle x =
+        uncurry (\x ua -> (x, fuse x ua)) . split x
+
+    t (u a) -> u (t a)
+    t (u a)
+    (x, u a)
+    (x, u (t a))
+    u (t a)
+
+
+
+
+    f x (g y a) -> g y (f x a)
+    f x (g y a)
+    (x, g y a)
+    (x, g y (f x a))
+    g y (f x a)
+
+-}
 
 
 
