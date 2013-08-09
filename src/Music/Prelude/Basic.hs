@@ -52,30 +52,20 @@ instance Show BasicPart where
 
 type Note = (PartT BasicPart
     (TremoloT
-      (ChordT      
+      -- (ChordT      
         (TieT
           (HarmonicT (SlideT
-            (DynamicT (ArticulationT (TextT Pitch)))))))))
+            (DynamicT (ArticulationT (TextT Pitch))))))))
+            -- )
 
 open = openLy . asScore
 
-
-
--- TODO move
--- TODO rename
-pcatLy :: [Lilypond] -> Lilypond
-pcatLy = foldr L.pcat (L.Simultaneous False [])
-
-scatLy :: [Lilypond] -> Lilypond
-scatLy = foldr L.scat (L.Sequential [])
 
 instance IsPitch a => IsPitch (ChordT a) where
     fromPitch = ChordT . return . fromPitch
 
 instance HasMidi a => HasMidi (ChordT a) where
     getMidi = pcat . fmap getMidi . getChordT
-instance HasLilypond a => HasLilypond (ChordT a) where
-    getLilypond d = pcatLy . fmap (getLilypond d) . getChordT
 
 
 -----------------------------
@@ -181,8 +171,8 @@ type Note2 =
           (HarmonicT (SlideT
             (DynamicT (ArticulationT (TextT Pitch)))))))))
 
-j :: Note -> Note2
-j = juggle . fmap juggle
+-- j :: Note -> Note2
+-- j = juggle . fmap juggle
 
 
 juggle :: (Splittable t, Splittable u) => t (u a) -> u (t a)
@@ -242,7 +232,7 @@ instance HasMidi Pitch where
     getMidi p = getMidi $ semitones (p .-. c)
 
 instance HasMusicXml Pitch where
-    getMusicXml d p = Xml.note (pc, Just acc, oct) (frac d)
+    getMusicXml d p = Xml.note (pc, Just acc, oct+4) (frac d)
         where
             pc   = toEnum $ fromEnum $ name p
             acc  = fromIntegral $ accidental p
