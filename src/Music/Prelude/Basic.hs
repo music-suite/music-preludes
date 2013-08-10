@@ -1,6 +1,7 @@
 
 {-# LANGUAGE
     GeneralizedNewtypeDeriving,
+    StandaloneDeriving,
     MultiParamTypeClasses,
     DeriveDataTypeable,
     TypeFamilies #-} 
@@ -61,6 +62,9 @@ type Note = (PartT BasicPart
                   (ChordT      
                     Pitch)))))))))
 
+type Note3 =
+                  (ChordT      
+                    Pitch)
 open = openLy . asScore
 
 
@@ -73,32 +77,22 @@ open = openLy . asScore
 -- Problem with the simultanous function
 --
 --
--- This can be implemented: it merges simultaneous events
-simult :: Score a -> Score (ChordT a)
-simult = undefined
+-- This is implemented: it merges simultaneous events
+-- simultaneous :: Score a -> Score (ChordT a)
 
 -- Also we can do monadic join on chords
-joinChord :: Score (ChordT (ChordT a)) -> Score (ChordT a)
-joinChord = undefined
-
--- Hence we also have
-bindSimult :: Score (ChordT a) -> Score (ChordT a)
-bindSimult = joinChord . simult
-
-fixSimult :: Score Note -> Score Note
-fixSimult = undefined
-
-mapPartWithout :: (Score a -> Score a) -> Score (PartT n a) -> Score (PartT n a)
-mapPartWithout = undefined
-
-
-data P = PW
-data A = AW
-x :: Score (PartT P A)
-x = undefined
-
--- fmap split x :: Score (P, A)
-
+-- joinChord :: Score (ChordT (ChordT a)) -> Score (ChordT a)
+-- joinChord = fmap join
+-- 
+-- -- Hence we also have
+-- bindSimult :: Score (ChordT a) -> Score (ChordT a)
+-- bindSimult = joinChord . simultaneous
+-- 
+-- fixSimult :: Score Note3 -> Score Note3
+-- fixSimult = bindSimult
+-- 
+-- mapPartWithout :: (Score a -> Score a) -> Score (PartT n a) -> Score (PartT n a)
+-- mapPartWithout = undefined
 
 {-
 That is: given a score of chords of notes (with harmonics, dynamics, pitch etc), we
@@ -129,6 +123,7 @@ like:
 so generalize:
 -}
 
+{-
 class Splittable t where
     type Head t
     split :: t a -> (Head t, a)
@@ -159,19 +154,6 @@ instance Splittable (PartT n) where
 instance Splittable ChordT where
     type Head ChordT = ()
 
-
-type Note2 = 
-  (ChordT      
-    (PartT BasicPart
-      (TremoloT
-        (TieT
-          (HarmonicT (SlideT
-            (DynamicT (ArticulationT (TextT Pitch)))))))))
-
--- j :: Note -> Note2
--- j = juggle . fmap juggle
-
-
 juggle :: (Splittable t, Splittable u) => t (u a) -> u (t a)
 juggle = (uncurry fuse) . second' (uncurry fuse) . juggle' . second' split . split
 
@@ -179,39 +161,8 @@ juggle = (uncurry fuse) . second' (uncurry fuse) . juggle' . second' split . spl
 juggle' (a, (b, c)) = (b, (a, c))
 second' f (a,b) = (a,f b)
 
--- juggle :: (Splittable t n, Splittable u n) => n -> u a -> t a
--- juggle _ = uncurry (\x y -> fuse x y) . split 
-
-{-
-    instance Splittable t x
-    instance Splittable u y
-
-    juggle x =
-        uncurry (\x ua -> (x, fuse x ua)) . split x
-
-    t (u a) -> u (t a)
-    t (u a)
-    (x, u a)
-    (x, u (t a))
-    u (t a)
-
-
-
-
-    f x (g y a) -> g y (f x a)
-    f x (g y a)
-    (x, g y a)
-    (x, g y (f x a))
-    g y (f x a)
-
 -}
 
-
-
--- How to lift this to outermost level?
--- (Score a -> Score b) -> Score (PartT n a) -> Score (PartT n b)
--- (Score a -> Score b) -> Score (TieT a) -> Score (TieT b)
--- (Score a -> Score b) -> Score (TremoloT a) -> Score (TremoloT b)
 
 
 
@@ -235,9 +186,6 @@ instance HasMusicXml Pitch where
 instance HasLilypond Pitch where
     getLilypond      d = (^*realToFrac (d*4)) . L.note . pitchLy . L.Pitch . spellPitch . (.+^ perfect octave)
     getLilypondChord d = (^*realToFrac (d*4)) . L.chord . fmap (pitchLy . L.Pitch . spellPitch . (.+^ perfect octave))
-
-    -- getLilypondChord d p = L.note (L.NotePitch (L.Pitch (pc,acc,oct+5)) Nothing) ^*(frac d*4)
-        -- where (pc, acc, oct, frac) = spellPitch p
 
 
 spellPitch p = (pc, acc, oct)
