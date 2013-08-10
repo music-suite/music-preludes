@@ -52,20 +52,16 @@ instance Show BasicPart where
 
 type Note = (PartT BasicPart
     (TremoloT
-      -- (ChordT      
-        (TieT
-          (HarmonicT (SlideT
-            (DynamicT (ArticulationT (TextT Pitch))))))))
-            -- )
+      (TextT 
+        (ArticulationT 
+          (HarmonicT 
+            (TieT
+              (SlideT
+                (DynamicT 
+                  (ChordT      
+                    Pitch)))))))))
 
 open = openLy . asScore
-
-
-instance IsPitch a => IsPitch (ChordT a) where
-    fromPitch = ChordT . return . fromPitch
-
-instance HasMidi a => HasMidi (ChordT a) where
-    getMidi = pcat . fmap getMidi . getChordT
 
 
 -----------------------------
@@ -163,6 +159,7 @@ instance Splittable (PartT n) where
 instance Splittable ChordT where
     type Head ChordT = ()
 
+
 type Note2 = 
   (ChordT      
     (PartT BasicPart
@@ -232,19 +229,24 @@ instance HasMidi Pitch where
     getMidi p = getMidi $ semitones (p .-. c)
 
 instance HasMusicXml Pitch where
-    getMusicXml d p = Xml.note (pc, Just acc, oct+4) (frac d)
-        where
-            pc   = toEnum $ fromEnum $ name p
-            acc  = fromIntegral $ accidental p
-            oct  = fromIntegral $ octaves (p .-. c)
-            frac = fromRational . toRational
+    getMusicXml      d = (`Xml.note` (realToFrac d)) . third' Just . spellPitch
+    getMusicXmlChord d = (`Xml.chord` (realToFrac d)) . fmap (third' Just . spellPitch)
 
 instance HasLilypond Pitch where
-    getLilypond d p = L.note (L.NotePitch (L.Pitch (pc,acc,oct+5)) Nothing) ^*(frac d*4)
-        where
-            pc   = toEnum $ fromEnum $ name p
-            acc  = fromIntegral $ accidental p
-            oct  = fromIntegral $ octaves (p .-. c)
-            frac = fromRational . toRational
+    getLilypond      d = (^*realToFrac (d*4)) . L.note . pitchLy . L.Pitch . spellPitch . (.+^ perfect octave)
+    getLilypondChord d = (^*realToFrac (d*4)) . L.chord . fmap (pitchLy . L.Pitch . spellPitch . (.+^ perfect octave))
+
+    -- getLilypondChord d p = L.note (L.NotePitch (L.Pitch (pc,acc,oct+5)) Nothing) ^*(frac d*4)
+        -- where (pc, acc, oct, frac) = spellPitch p
+
+
+spellPitch p = (pc, acc, oct)
+    where
+        pc   = toEnum $ fromEnum $ name p
+        acc  = fromIntegral $ accidental p
+        oct  = fromIntegral $ (+ 4) $ octaves (p .-. c)
+-- TODO move
+pitchLy a = L.NotePitch a Nothing
+third' f (a, b, c) = (a, f b, c)
 
 
