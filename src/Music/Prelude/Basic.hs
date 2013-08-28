@@ -169,9 +169,14 @@ second' f (a,b) = (a,f b)
 
 -- TODO These instances should be moved, see music-score #67
 
-instance HasPitch Pitch where { type PitchOf Pitch = Pitch ; getPitch = id; modifyPitch = id }
+instance HasPitch Pitch where
+        type PitchOf Pitch = Pitch
+        getPitch = id
+        modifyPitch = id
 
-instance Tiable Pitch where { beginTie = id ; endTie = id }
+instance Tiable Pitch where
+        beginTie = id
+        endTie = id
 
 instance HasMidi Semitones where
     getMidi a = getMidi $ (60 + fromIntegral a :: Integer)
@@ -186,6 +191,68 @@ instance HasMusicXml Pitch where
 instance HasLilypond Pitch where
     getLilypond      d = (^*realToFrac (d*4)) . L.note . pitchLy . L.Pitch . spellPitch . (.+^ perfect octave)
     getLilypondChord d = (^*realToFrac (d*4)) . L.chord . fmap (pitchLy . L.Pitch . spellPitch . (.+^ perfect octave))
+
+instance Alterable a => Alterable (Score a) where
+    sharpen = fmap sharpen
+    flatten = fmap flatten
+instance Alterable a => Alterable (ChordT a) where
+    sharpen = fmap sharpen
+    flatten = fmap flatten
+instance Alterable a => Alterable (DynamicT a) where
+    sharpen = fmap sharpen
+    flatten = fmap flatten
+instance Alterable a => Alterable (SlideT a) where
+    sharpen = fmap sharpen
+    flatten = fmap flatten
+instance Alterable a => Alterable (TieT a) where
+    sharpen = fmap sharpen
+    flatten = fmap flatten
+instance Alterable a => Alterable (HarmonicT a) where
+    sharpen = fmap sharpen
+    flatten = fmap flatten
+instance Alterable a => Alterable (ArticulationT a) where
+    sharpen = fmap sharpen
+    flatten = fmap flatten
+instance Alterable a => Alterable (TextT a) where
+    sharpen = fmap sharpen
+    flatten = fmap flatten
+instance Alterable a => Alterable (TremoloT a) where
+    sharpen = fmap sharpen
+    flatten = fmap flatten
+instance Alterable a => Alterable (PartT n a) where
+    sharpen = fmap sharpen
+    flatten = fmap flatten
+instance Augmentable a => Augmentable (Score a) where
+    augment = fmap augment
+    diminish = fmap diminish
+instance Augmentable a => Augmentable (ChordT a) where
+    augment = fmap augment
+    diminish = fmap diminish
+instance Augmentable a => Augmentable (DynamicT a) where
+    augment = fmap augment
+    diminish = fmap diminish
+instance Augmentable a => Augmentable (SlideT a) where
+    augment = fmap augment
+    diminish = fmap diminish
+instance Augmentable a => Augmentable (TieT a) where
+    augment = fmap augment
+    diminish = fmap diminish
+instance Augmentable a => Augmentable (HarmonicT a) where
+    augment = fmap augment
+    diminish = fmap diminish
+instance Augmentable a => Augmentable (ArticulationT a) where
+    augment = fmap augment
+    diminish = fmap diminish
+instance Augmentable a => Augmentable (TextT a) where
+    augment = fmap augment
+    diminish = fmap diminish
+instance Augmentable a => Augmentable (TremoloT a) where
+    augment = fmap augment
+    diminish = fmap diminish
+instance Augmentable a => Augmentable (PartT n a) where
+    augment = fmap augment
+    diminish = fmap diminish
+
 
 
 spellPitch p = (pc, acc, oct)
