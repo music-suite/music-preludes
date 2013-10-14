@@ -24,8 +24,14 @@ module Music.Prelude.Piano (
         asScore
   ) where
 
-import Music.Score
+import Music.Pitch
+import Music.Score hiding (Pitch, Interval, Note)
+import Music.Dynamics.Literal --TODO
 import Data.Typeable
+import Data.AffineSpace.Point
+import qualified Music.Score as Score
+import qualified Music.Lilypond as Lilypond
+import qualified Music.MusicXml.Simple as Xml
 
 asScore :: Score Note -> Score Note
 asScore = id
