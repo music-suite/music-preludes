@@ -31,6 +31,7 @@ module Music.Prelude.Basic (
 import Music.Pitch
 import Music.Score hiding (Pitch, Interval, Note)
 import Music.Dynamics.Literal --TODO
+import Data.Default
 import Data.Typeable
 import Data.AffineSpace.Point
 import qualified Music.Score as Score
@@ -48,7 +49,7 @@ asTrack = id
 
 newtype BasicPart = BasicPart { getBasicPart :: Integer }
     deriving (Eq, Ord, Enum, Typeable)
-
+instance Default BasicPart where def = BasicPart 0
 instance Show BasicPart where
     show _  = ""
 
