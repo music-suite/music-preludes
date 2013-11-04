@@ -6,3 +6,4 @@ dist
 *.png
 tests
 *.pdf
+.shelly
