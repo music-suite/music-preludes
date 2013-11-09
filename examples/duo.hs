@@ -36,7 +36,7 @@ pres5 = delay 0 (subj1^*(2/3)) </> delay 4 (subj1^*(2/2))
 pres6 = delay 0 (subj1^*(2/3)) </> delay 4 (subj1^*(2/2))
 
 
-toLydian = modifyPitches (\p -> if p == c then cs else p)
+toLydian = modifyPitch (\p -> if p == c then cs else p)
 
 -- (|>) :: Score a -> Score a -> Score a
 -- a |> b = mcatMaybes $ fmap Just a ||> fmap Just b
