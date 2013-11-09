@@ -48,11 +48,11 @@ asTrack :: Track Note -> Track Note
 asTrack = id
 
 newtype BasicPart = BasicPart { getBasicPart :: Integer }
-    deriving (Eq, Ord, Enum, Typeable)
+    deriving (Eq, Ord, Num, Integral, Real, Enum, Typeable)
 instance HasPart BasicPart where type Part BasicPart = BasicPart; getPart = id ; modifyPart = id
 instance Default BasicPart where def = BasicPart 0
 instance Show BasicPart where
-    show _  = ""
+    show (BasicPart x)  = "Voice " ++ show x
 
 type Note = (PartT BasicPart
     (TremoloT
