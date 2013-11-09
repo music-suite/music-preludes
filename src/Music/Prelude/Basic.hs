@@ -29,7 +29,7 @@ module Music.Prelude.Basic (
   ) where
 
 import Music.Pitch
-import Music.Score hiding (Pitch, Interval, Note)
+import Music.Score hiding (Pitch, Interval, Fifths, Note)
 import Music.Dynamics.Literal --TODO
 import Data.Default
 import Data.Typeable
