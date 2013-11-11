@@ -1,24 +1,22 @@
 
+{-# LANGUAGE
+    OverloadedStrings #-}
+
 import Music.Prelude.Basic
 import Data.AffineSpace.Relative
-
-open = openLy . asScore
-main = do
-    return $ asScore score
-    -- writeMidi "test.mid" score
-    -- writeXml "test.xml" $ score^/4
-    openXml score
-    -- openLy score
-    -- playMidiIO "Graphic MIDI" $ score^/10
 
 {-    
     Pärt: Cantus in Memory of Benjamin Britten
     Copied from Abjad
+
+    TODO tempo
+    TODO proper 6/4
 -}
 
--- TODO tempo
--- TODO 6/4
+main :: IO ()
+main = open score
 
+score :: Score Note
 score = meta $ dynamics ppp $ before 30 (bell <> delay 6 strings)
     where
         meta = title "Cantus in Memoriam Benjamin Britten" . composer "Arvo Pärt"
@@ -50,10 +48,6 @@ bell = let
     cue = stretchTo 1 (rest |> a) 
     in text "l.v." $ removeRests $ times 40 $ scat [times 3 $ scat [cue,rest], rest^*2]
 
-fallingScale = [a',g'..a_]
-fallingScaleSect n = {-fmap (annotate (show n)) $-} take n $ fallingScale
-mainSubject = stretch (1/6) $ asScore $ scat $ mapEvensOdds (accent . (^*2)) id $ concatMap fallingScaleSect [1..30]
-
 strings :: Score Note
 strings = let
     vln1 = setClef GClef $ setPart 1 $ octavesUp   1 $ cue
@@ -65,7 +59,14 @@ strings = let
     where
         cue = delay (1/2) $ withTintin (octavesDown 4 a) mainSubject
 
+fallingScale :: [Score Note]
+fallingScale = [a',g'..a_]
 
+fallingScaleSect :: Int -> [Score Note]
+fallingScaleSect n = {-fmap (annotate (show n)) $-} take n $ fallingScale
+
+mainSubject :: Score Note
+mainSubject = stretch (1/6) $ asScore $ scat $ mapEvensOdds (accent . (^*2)) id $ concatMap fallingScaleSect [1..30]
 
 mapEvensOdds :: (b -> a) -> (b -> a) -> [b] -> [a]
 mapEvensOdds f g xs = let

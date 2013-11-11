@@ -44,6 +44,7 @@ library
         Music.Prelude.Basic
         Music.Prelude.Piano
         Music.Prelude.StringQuartet
+        Music.Prelude.Instances
 
 executable "complex"
     build-depends: 
