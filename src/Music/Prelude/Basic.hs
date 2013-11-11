@@ -38,6 +38,9 @@ import qualified Music.Score as Score
 import qualified Music.Lilypond as Lilypond
 import qualified Music.MusicXml.Simple as Xml
 
+asNote :: Note -> Note
+asNote = id
+
 asScore :: Score Note -> Score Note
 asScore = id
 

@@ -1,12 +1,14 @@
 
 import Music.Prelude.Basic
+import Data.AffineSpace.Relative
+
 open = openLy . asScore
 main = do
     return $ asScore score
     -- writeMidi "test.mid" score
     -- writeXml "test.xml" $ score^/4
-    -- openXml score
-    openLy score
+    openXml score
+    -- openLy score
     -- playMidiIO "Graphic MIDI" $ score^/10
 
 {-    
@@ -15,10 +17,11 @@ main = do
 -}
 
 -- TODO tempo
--- TODO title
 -- TODO 6/4
 
-score = before 30 $ bell </> delay 6 strings
+score = meta $ dynamics ppp $ before 30 (bell <> delay 6 strings)
+    where
+        meta = title "Cantus in Memoriam Benjamin Britten" . composer "Arvo Pärt"
 
 withTintin :: Pitch -> Score Note -> Score Note
 withTintin p x = x <> tintin p x
@@ -36,14 +39,10 @@ tintin tonic = modifyPitch (relative tonic tintin')
 tintin' :: Interval -> Interval
 tintin' melInterval 
     | isNegative melInterval = error "tintin: Negative interval"
-    | otherwise = last $ takeWhile (< melInterval) $ tnotes
+    | otherwise = last $ takeWhile (< melInterval) $ tintinNotes
     where
-        tnotes = concat $ iterate (fmap (+ _P8)) minorTriad
-
-    
-
-minorTriad :: [Interval]
-minorTriad = [_P1,m3,_P5]
+        tintinNotes = concat $ iterate (fmap (+ _P8)) minorTriad
+        minorTriad = [_P1,m3,_P5]
 
 
 bell :: Score Note
@@ -53,19 +52,18 @@ bell = let
 
 fallingScale = [a',g'..a_]
 fallingScaleSect n = {-fmap (annotate (show n)) $-} take n $ fallingScale
-mainSubject = stretch (1/6) $ asScore $ scat $ mapEvensOdds (^*2) id $ concatMap fallingScaleSect [1..30]
+mainSubject = stretch (1/6) $ asScore $ scat $ mapEvensOdds (accent . (^*2)) id $ concatMap fallingScaleSect [1..30]
 
 strings :: Score Note
 strings = let
-    vln1 = octavesUp 1 $ showAnnotations $ delay (1/2) $ withTintin (octavesDown 4 a) mainSubject
-    vln2 = octavesDown 1 $ stretch 2 vln1
-    vla  = setClef CClef $ octavesDown 2 $ stretch 4 vln1
-    vc   = setClef FClef $ octavesDown 3 $ stretch 8 vln1
-    db   = setClef FClef $ octavesDown 4 $ stretch 16 vln1
-    in vln1 </> vln2 </> vla </> vc </> db
-
-
-
+    vln1 = setClef GClef $ setPart 1 $ octavesUp   1 $ cue
+    vln2 = setClef GClef $ setPart 2 $ octavesDown 0 $ stretch 2 cue
+    vla  = setClef CClef $ setPart 3 $ octavesDown 1 $ stretch 4 cue
+    vc   = setClef FClef $ setPart 4 $ octavesDown 2 $ stretch 8 cue
+    db   = setClef FClef $ setPart 5 $ octavesDown 3 $ stretch 16 cue
+    in vln1 <> vln2 <> vla <> vc <> db
+    where
+        cue = delay (1/2) $ withTintin (octavesDown 4 a) mainSubject
 
 
 
