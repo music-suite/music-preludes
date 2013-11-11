@@ -61,7 +61,6 @@ instance HasPart BasicPart where type Part BasicPart = BasicPart; getPart = id ;
 instance Default BasicPart where def = BasicPart 0
 instance Show BasicPart where
     show _ = ""
-    -- show (BasicPart x)  = "Voice " ++ show x
 
 type Note = (PartT BasicPart
     (TremoloT
@@ -73,10 +72,6 @@ type Note = (PartT BasicPart
                 (DynamicT
                   (ChordT
                     Pitch)))))))))
-
-type Note3 =
-                  (ChordT
-                    Pitch)
 
 open          = openLy . asScore
 play          = playMidiIO "to Gr" . asScore

@@ -33,8 +33,6 @@ import qualified Music.Score as Score
 import qualified Music.Lilypond as Lilypond
 import qualified Music.MusicXml.Simple as Xml
 
--- TODO These instances should be moved, see music-score #67
-
 instance HasPitch Pitch where
         type Pitch Pitch = Pitch
         getPitches  = return
@@ -72,61 +70,80 @@ spellPitch p = (pitchName, pitchAccidental, octave)
 instance Alterable a => Alterable (Score a) where
     sharpen = fmap sharpen
     flatten = fmap flatten
+
 instance Alterable a => Alterable (ChordT a) where
     sharpen = fmap sharpen
     flatten = fmap flatten
+
 instance Alterable a => Alterable (DynamicT a) where
     sharpen = fmap sharpen
     flatten = fmap flatten
+
 instance Alterable a => Alterable (SlideT a) where
     sharpen = fmap sharpen
     flatten = fmap flatten
+
 instance Alterable a => Alterable (TieT a) where
     sharpen = fmap sharpen
     flatten = fmap flatten
+
 instance Alterable a => Alterable (HarmonicT a) where
     sharpen = fmap sharpen
     flatten = fmap flatten
+
 instance Alterable a => Alterable (ArticulationT a) where
     sharpen = fmap sharpen
     flatten = fmap flatten
+
 instance Alterable a => Alterable (TextT a) where
     sharpen = fmap sharpen
     flatten = fmap flatten
+
 instance Alterable a => Alterable (TremoloT a) where
     sharpen = fmap sharpen
     flatten = fmap flatten
+
 instance Alterable a => Alterable (PartT n a) where
     sharpen = fmap sharpen
     flatten = fmap flatten
+
 instance Augmentable a => Augmentable (Score a) where
     augment = fmap augment
     diminish = fmap diminish
+
 instance Augmentable a => Augmentable (ChordT a) where
     augment = fmap augment
     diminish = fmap diminish
+
 instance Augmentable a => Augmentable (DynamicT a) where
     augment = fmap augment
     diminish = fmap diminish
+
 instance Augmentable a => Augmentable (SlideT a) where
     augment = fmap augment
     diminish = fmap diminish
+
 instance Augmentable a => Augmentable (TieT a) where
     augment = fmap augment
     diminish = fmap diminish
+
 instance Augmentable a => Augmentable (HarmonicT a) where
     augment = fmap augment
     diminish = fmap diminish
+
 instance Augmentable a => Augmentable (ArticulationT a) where
     augment = fmap augment
     diminish = fmap diminish
+
 instance Augmentable a => Augmentable (TextT a) where
     augment = fmap augment
     diminish = fmap diminish
+
 instance Augmentable a => Augmentable (TremoloT a) where
     augment = fmap augment
     diminish = fmap diminish
+
 instance Augmentable a => Augmentable (PartT n a) where
     augment = fmap augment
     diminish = fmap diminish
-                              
+
