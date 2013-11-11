@@ -55,7 +55,8 @@ newtype BasicPart = BasicPart { getBasicPart :: Integer }
 instance HasPart BasicPart where type Part BasicPart = BasicPart; getPart = id ; modifyPart = id
 instance Default BasicPart where def = BasicPart 0
 instance Show BasicPart where
-    show (BasicPart x)  = "Voice " ++ show x
+    show _ = ""
+    -- show (BasicPart x)  = "Voice " ++ show x
 
 type Note = (PartT BasicPart
     (TremoloT
