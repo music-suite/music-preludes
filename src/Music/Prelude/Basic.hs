@@ -4,7 +4,8 @@
     StandaloneDeriving,
     MultiParamTypeClasses,
     DeriveDataTypeable,
-    TypeFamilies #-} 
+    TypeFamilies, 
+    ViewPatterns #-} 
 
 ------------------------------------------------------------------------------------
 -- |
@@ -98,21 +99,23 @@ instance HasMidi Pitch where
     getMidi p = getMidi $ semitones (p .-. c)
 
 instance HasMusicXml Pitch where
-    getMusicXml      d = (`Xml.note` (realToFrac d)) . third' Just . spellPitch
-    getMusicXmlChord d = (`Xml.chord` (realToFrac d)) . fmap (third' Just . spellPitch)
+    getMusicXml      (realToFrac -> d) = (`Xml.note` d) . snd3 Just . spellPitch
+    getMusicXmlChord (realToFrac -> d) = (`Xml.chord` (realToFrac d)) . fmap (snd3 Just . spellPitch)
 
 instance HasLilypond Pitch where
     getLilypond      d = (^*realToFrac (d*4)) . Lilypond.note . pitchLy . Lilypond.Pitch . spellPitch . (.+^ perfect octave)
     getLilypondChord d = (^*realToFrac (d*4)) . Lilypond.chord . fmap (pitchLy . Lilypond.Pitch . spellPitch . (.+^ perfect octave))
 
 -- TODO move
-third' f (a, b, c) = (a, f b, c)
+snd3 f (a, b, c) = (a, f b, c)
 pitchLy a = Lilypond.NotePitch a Nothing
-spellPitch p = (pc, acc, oct)
+
+spellPitch :: (Enum p, Num a, Num o) => Pitch -> (p, a, o)
+spellPitch p = (pitchName, pitchAccidental, octave)
     where
-        pc   = toEnum $ fromEnum $ name p
-        acc  = fromIntegral $ accidental p
-        oct  = fromIntegral $ (+ 4) $ octaves (p .-. c)
+        pitchName       = toEnum $ fromEnum $ name p
+        pitchAccidental = fromIntegral $ accidental p
+        octave          = fromIntegral $ (+ 4) $ octaves (p .-. c)
 
 instance Alterable a => Alterable (Score a) where
     sharpen = fmap sharpen
