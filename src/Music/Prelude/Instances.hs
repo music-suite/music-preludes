@@ -23,15 +23,23 @@
 
 module Music.Prelude.Instances () where
 
-import Music.Pitch
-import Music.Score hiding (Pitch, Interval, Fifths, Note)
-import Music.Dynamics.Literal --TODO
 import Data.Default
 import Data.Typeable
 import Data.AffineSpace.Point
+
+import Music.Pitch
+import Music.Dynamics
+import Music.Parts
+import Music.Score hiding (Pitch, Interval, Fifths, Note)
+
 import qualified Music.Score as Score
 import qualified Music.Lilypond as Lilypond
 import qualified Music.MusicXml.Simple as Xml
+
+instance HasPart BasicPart where
+        type Part BasicPart = BasicPart
+        getPart = id
+        modifyPart = id
 
 instance HasPitch Pitch where
         type Pitch Pitch = Pitch
