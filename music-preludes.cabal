@@ -42,6 +42,7 @@ library
     default-language: Haskell2010
     exposed-modules:
         Music.Prelude.Basic
+        Music.Prelude.Standard
         Music.Prelude.Piano
         Music.Prelude.StringQuartet
         Music.Prelude.Instances

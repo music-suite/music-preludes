@@ -2,7 +2,7 @@
 {-# LANGUAGE
     OverloadedStrings #-}
 
-import Music.Prelude.Basic
+import Music.Prelude.Standard
 import Data.AffineSpace.Relative
 
 {-    
@@ -16,8 +16,11 @@ import Data.AffineSpace.Relative
 main :: IO ()
 main = open score
 
+ensemble :: [Part]
+ensemble = [solo tubularBells] <> (divide 2 (tutti violin)) <> [tutti viola] <> [tutti cello] <> [tutti bass]
+
 score :: Score Note
-score = meta $ dynamics ppp $ before 30 (bell <> delay 6 strings)
+score = meta $ dynamics ppp $ before 60 (bell <> delay 6 strings)
     where
         meta = title "Cantus in Memoriam Benjamin Britten" . composer "Arvo Pärt"
 
@@ -46,15 +49,15 @@ tintin' melInterval
 bell :: Score Note
 bell = let
     cue = stretchTo 1 (rest |> a) 
-    in text "l.v." $ removeRests $ times 40 $ scat [times 3 $ scat [cue,rest], rest^*2]
+    in setPart (ensemble !! 0) $ text "l.v." $ removeRests $ times 40 $ scat [times 3 $ scat [cue,rest], rest^*2]
 
 strings :: Score Note
 strings = let
-    vln1 = setClef GClef $ setPart 1 $ octavesUp   1 $ cue
-    vln2 = setClef GClef $ setPart 2 $ octavesDown 0 $ stretch 2 cue
-    vla  = setClef CClef $ setPart 3 $ octavesDown 1 $ stretch 4 cue
-    vc   = setClef FClef $ setPart 4 $ octavesDown 2 $ stretch 8 cue
-    db   = setClef FClef $ setPart 5 $ octavesDown 3 $ stretch 16 cue
+    vln1 = setClef GClef $ setPart (ensemble !! 1) $ octavesUp   1 $ cue
+    vln2 = setClef GClef $ setPart (ensemble !! 2) $ octavesDown 0 $ stretch 2 cue
+    vla  = setClef CClef $ setPart (ensemble !! 3) $ octavesDown 1 $ stretch 4 cue
+    vc   = setClef FClef $ setPart (ensemble !! 4) $ octavesDown 2 $ stretch 8 cue
+    db   = setClef FClef $ setPart (ensemble !! 5) $ octavesDown 3 $ stretch 16 cue
     in vln1 <> vln2 <> vla <> vc <> db
     where
         cue = delay (1/2) $ withTintin (octavesDown 4 a) mainSubject
