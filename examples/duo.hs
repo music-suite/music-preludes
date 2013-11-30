@@ -28,7 +28,7 @@ pres2 = subj1^*(2/2) </> delay 2 (subj1^*(3/2))
 part1 = pres1 |> pres2
 part2 = pres1 |> pres2  
 
-score = setClef CClef $ dynamics pp $ compress 2 $ part1 |> toLydian part2
+score = clef CClef $ dynamics pp $ compress 2 $ part1 |> toLydian part2
 
 -- (|>) :: Score a -> Score a -> Score a
 -- a |> b = mcatMaybes $ fmap Just a ||> fmap Just b

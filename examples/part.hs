@@ -2,7 +2,7 @@
 {-# LANGUAGE
     OverloadedStrings #-}
 
-import Music.Prelude.Standard hiding (open, play, openAndPlay)
+import Music.Prelude.Standard hiding (tempo, open, play, openAndPlay)
 import Control.Concurrent.Async
 import Control.Applicative
 import Data.AffineSpace.Relative
@@ -62,11 +62,11 @@ bell = let
 
 strings :: Score Note
 strings = let
-    vln1 = setClef GClef $ setPart (ensemble !! 1) $ octavesUp   1 $ cue
-    vln2 = setClef GClef $ setPart (ensemble !! 2) $ octavesDown 0 $ stretch 2 cue
-    vla  = setClef CClef $ setPart (ensemble !! 3) $ octavesDown 1 $ stretch 4 cue
-    vc   = setClef FClef $ setPart (ensemble !! 4) $ octavesDown 2 $ stretch 8 cue
-    db   = setClef FClef $ setPart (ensemble !! 5) $ octavesDown 3 $ stretch 16 cue
+    vln1 = clef GClef $ setPart (ensemble !! 1) $ octavesUp   1 $ cue
+    vln2 = clef GClef $ setPart (ensemble !! 2) $ octavesDown 0 $ stretch 2 cue
+    vla  = clef CClef $ setPart (ensemble !! 3) $ octavesDown 1 $ stretch 4 cue
+    vc   = clef FClef $ setPart (ensemble !! 4) $ octavesDown 2 $ stretch 8 cue
+    db   = clef FClef $ setPart (ensemble !! 5) $ octavesDown 3 $ stretch 16 cue
     in vln1 <> vln2 <> vla <> vc <> db
     where
         cue = delay (1/2) $ withTintin (octavesDown 4 a) mainSubject
@@ -112,7 +112,7 @@ openAudio x = do
 fixClefs :: Score Note -> Score Note
 fixClefs = pcat . fmap (uncurry g) . extractParts'
     where
-        g p x = setClef (case defaultClef p of { 0 -> GClef; 1 -> CClef; 2 -> FClef } ) x
+        g p x = clef (case defaultClef p of { 0 -> GClef; 1 -> CClef; 2 -> FClef } ) x
 
 concurrently_ :: IO a -> IO b -> IO ()
 concurrently_ = concurrentlyWith (\x y -> ())
