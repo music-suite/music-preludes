@@ -22,7 +22,7 @@ module Music.Prelude.Basic (
         module Music.Score,
         module Music.Pitch,
         module Music.Dynamics,
-        BasicPart,
+        module Music.Parts,
         Note,
         asScore,
         asVoice,
@@ -39,7 +39,7 @@ import Data.Typeable
 import Music.Pitch
 import Music.Dynamics
 import Music.Parts
-import Music.Score hiding (Pitch, Interval, Fifths, Note)
+import Music.Score hiding (Pitch, Interval, Fifths, Note, Part)
 
 import Music.Prelude.Instances ()
 
@@ -54,13 +54,6 @@ asVoice = id
 
 asTrack :: Track Note -> Track Note
 asTrack = id
-
--- newtype BasicPart = BasicPart { getBasicPart :: Integer }
---     deriving (Eq, Ord, Num, Integral, Real, Enum, Typeable)
--- 
--- instance Default BasicPart where def = BasicPart 0
--- instance Show BasicPart where
---     show _ = ""
 
 type Note = (PartT BasicPart
     (TremoloT

@@ -23,7 +23,6 @@ module Music.Prelude.Standard (
         module Music.Pitch,
         module Music.Dynamics,
         module Music.Parts,
-        BasicPart,
         Note,
         asScore,
         asVoice,
