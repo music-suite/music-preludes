@@ -4,6 +4,7 @@
 
 import Music.Prelude.Standard
 import Data.AffineSpace.Relative
+import System.Process (system)
 
 {-    
     Pärt: Cantus in Memory of Benjamin Britten
@@ -25,7 +26,7 @@ score = meta $ dynamics ppp $ before 60 (bell <> delay 6 strings)
         meta = title "Cantus in Memoriam Benjamin Britten" . composer "Arvo Pärt"
 
 withTintin :: Pitch -> Score Note -> Score Note
-withTintin p x = x <> tintin p x
+withTintin p x = x {-<> tintin p x-}
 
 -- | Given the melody voice return the tintinnabular voice.
 tintin :: Pitch -> Score Note -> Score Note
@@ -77,4 +78,21 @@ mapEvensOdds f g xs = let
     odds = fmap (xs !!) [1,3..]
     merge xs ys = concatMap (\(x,y) -> [x,y]) $ xs `zip` ys
     in take (length xs) $ map f evens `merge` map g odds
+
+
+openAudacity :: Score Note -> IO ()    
+openAudacity x = do
+    void $ writeMidi "test.mid" $ x
+    void $ system "timidity -Ow test.mid"
+    void $ system "open -a Audacity test.wav"
+
+instance HasMidiProgram Part where
+    getMidiChannel = defaultMidiChannel
+    getMidiProgram = fixStrings . defaultMidiProgram
+        where 
+            fixStrings x = case x of
+                40 -> 48
+                41 -> 48
+                42 -> 48
+                x  -> x
 
