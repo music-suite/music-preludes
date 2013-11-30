@@ -155,3 +155,16 @@ instance Augmentable a => Augmentable (PartT n a) where
     augment = fmap augment
     diminish = fmap diminish
 
+instance HasMidiProgram BasicPart where
+    getMidiChannel _ = 0
+    getMidiProgram _ = 0
+
+instance HasMidiProgram Music.Parts.Part where
+    getMidiChannel = defaultMidiChannel
+    getMidiProgram = fixStrings . defaultMidiProgram
+        where
+            fixStrings x = case x of
+                40 -> 48
+                41 -> 48
+                42 -> 48
+                x  -> x

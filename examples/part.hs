@@ -80,7 +80,16 @@ fallingScaleSect n = {-fmap (annotate (show n)) $-} take n $ fallingScale
 mainSubject :: Score Note
 mainSubject = stretch (1/6) $ asScore $ scat $ mapEvensOdds (accent . (^*2)) id $ concatMap fallingScaleSect [1..30]
 
-mapEvensOdds :: (b -> a) -> (b -> a) -> [b] -> [a]
+
+
+
+
+
+
+
+
+
+mapEvensOdds :: (a -> b) -> (a -> b) -> [a] -> [b]
 mapEvensOdds f g xs = let
     evens = fmap (xs !!) [0,2..]
     odds = fmap (xs !!) [1,3..]
@@ -93,16 +102,6 @@ openAudacity x = do
     void $ writeMidi "test.mid" $ x
     void $ system "timidity -Ow test.mid"
     void $ system "open -a Audacity test.wav"
-
-instance HasMidiProgram Part where
-    getMidiChannel = defaultMidiChannel
-    getMidiProgram = fixStrings . defaultMidiProgram
-        where 
-            fixStrings x = case x of
-                40 -> 48
-                41 -> 48
-                42 -> 48
-                x  -> x
 
 openAudio :: Score Note -> IO ()    
 openAudio x = do
