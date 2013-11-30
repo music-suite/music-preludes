@@ -2,7 +2,9 @@
 {-# LANGUAGE
     OverloadedStrings #-}
 
-import Music.Prelude.Standard
+import Music.Prelude.Standard hiding (open, play, openAndPlay)
+import Control.Concurrent.Async
+import Control.Applicative
 import Data.AffineSpace.Relative
 import System.Process (system)
 
@@ -16,6 +18,12 @@ import System.Process (system)
 
 main :: IO ()
 main = open score
+
+play, open, openAndPlay :: Score Note -> IO ()   
+tempo = 80
+play x = openAudio $ stretch ((60*4)/tempo) $ fixClefs $ x
+open x = openLy' Score $ fixClefs $ x
+openAndPlay x = play x `concurrently_` open x
 
 ensemble :: [Part]
 ensemble = [solo tubularBells] <> (divide 2 (tutti violin)) <> [tutti viola] <> [tutti cello] <> [tutti bass]
@@ -96,3 +104,19 @@ instance HasMidiProgram Part where
                 42 -> 48
                 x  -> x
 
+openAudio :: Score Note -> IO ()    
+openAudio x = do
+    void $ writeMidi "test.mid" $ x
+    void $ system "timidity -Ow test.mid"
+    void $ system "open -a Audacity test.wav"
+
+fixClefs :: Score Note -> Score Note
+fixClefs = pcat . fmap (uncurry g) . extractParts'
+    where
+        g p x = setClef (case defaultClef p of { 0 -> GClef; 1 -> CClef; 2 -> FClef } ) x
+
+concurrently_ :: IO a -> IO b -> IO ()
+concurrently_ = concurrentlyWith (\x y -> ())
+
+concurrentlyWith :: (a -> b -> c) -> IO a -> IO b -> IO c
+concurrentlyWith f x y = uncurry f <$> x `concurrently` y
