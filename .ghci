@@ -1,0 +1,2 @@
+:set -XOverloadedStrings
+:load src/Music/Prelude/Standard.hs
