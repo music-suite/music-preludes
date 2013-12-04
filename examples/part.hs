@@ -61,15 +61,14 @@ bell = let
     in setPart (ensemble !! 0) $ text "l.v." $ removeRests $ times 40 $ scat [times 3 $ scat [cue,rest], rest^*2]
 
 strings :: Score Note
-strings = let
-    vln1 = clef GClef $ setPart (ensemble !! 1) $ octavesUp   1 $ cue
-    vln2 = clef GClef $ setPart (ensemble !! 2) $ octavesDown 0 $ stretch 2 cue
-    vla  = clef CClef $ setPart (ensemble !! 3) $ octavesDown 1 $ stretch 4 cue
-    vc   = clef FClef $ setPart (ensemble !! 4) $ octavesDown 2 $ stretch 8 cue
-    db   = clef FClef $ setPart (ensemble !! 5) $ octavesDown 3 $ stretch 16 cue
-    in vln1 <> vln2 <> vla <> vc <> db
-    where
-        cue = delay (1/2) $ withTintin (octavesDown 4 a) mainSubject
+strings = strings_vln1 <> strings_vln2 <> strings_vla <> strings_vc <> strings_db
+
+strings_vln1 = clef GClef $ setPart (ensemble !! 1) $ octavesUp   1 $ strings_cue
+strings_vln2 = clef GClef $ setPart (ensemble !! 2) $ octavesDown 0 $ stretch 2 strings_cue
+strings_vla  = clef CClef $ setPart (ensemble !! 3) $ octavesDown 1 $ stretch 4 strings_cue
+strings_vc   = clef FClef $ setPart (ensemble !! 4) $ octavesDown 2 $ stretch 8 strings_cue
+strings_db   = clef FClef $ setPart (ensemble !! 5) $ octavesDown 3 $ stretch 16 strings_cue
+strings_cue = delay (1/2) $ withTintin (octavesDown 4 a) mainSubject
 
 fallingScale :: [Score Note]
 fallingScale = [a',g'..a_]
