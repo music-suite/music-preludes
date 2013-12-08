@@ -2,15 +2,12 @@
 import System.Process (runCommand)
 import Music.Prelude.Basic
 
--- | Bela Bartok – “Wandering” from Mikrokosmos, volume III
---   This example was adaptd from Abjad
+{-    
+    Bela Bartok: Wandering from Mikrokosmos, volume III
+    Inspired by the Abjad transcription
+-}
 
-main = do
-    -- writeMidi "test.mid" score
-    -- writeXml "test.xml" $ score^/4
-    -- openXml score
-    openLy score
-    -- playMidiIO "Graphic MIDI" $ score^/10
+main = openLy score
 
 score :: Score Note
 score = let

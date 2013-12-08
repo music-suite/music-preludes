@@ -9,11 +9,8 @@ import Data.AffineSpace.Relative
 import System.Process (system)
 
 {-    
-    Pärt: Cantus in Memory of Benjamin Britten
-    Copied from Abjad
-
-    TODO tempo
-    TODO proper 6/4
+    Arvo Pärt: Cantus in Memory of Benjamin Britten
+    Inspired by the Abjad transcription
 -}
 
 main :: IO ()
