@@ -20,7 +20,7 @@ main :: IO ()
 main = open score
 
 play, open, openAndPlay :: Score Note -> IO ()   
-tempo = 80
+tempo = 120
 play x = openAudio $ stretch ((60*4)/tempo) $ fixClefs $ x
 open x = openLy' Score $ fixClefs $ x
 openAndPlay x = play x `concurrently_` open x
@@ -29,12 +29,12 @@ ensemble :: [Part]
 ensemble = [solo tubularBells] <> (divide 2 (tutti violin)) <> [tutti viola] <> [tutti cello] <> [tutti bass]
 
 score :: Score Note
-score = meta $ dynamics ppp $ before 60 (bell <> delay 6 strings)
+score = meta $ stretch (3/2) $ before 60 (bell <> delay 6 strings)
     where
-        meta = title "Cantus in Memoriam Benjamin Britten" . composer "Arvo Pärt"
+        meta = title "Cantus in Memoriam Benjamin Britten" . composer "Arvo Pärt" . timeSignature (6/4)
 
 withTintin :: Pitch -> Score Note -> Score Note
-withTintin p x = x {-<> tintin p x-}
+withTintin p x = x <> tintin p x
 
 -- | Given the melody voice return the tintinnabular voice.
 tintin :: Pitch -> Score Note -> Score Note
