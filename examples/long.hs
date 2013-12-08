@@ -16,6 +16,6 @@ main = do
 n = 500
 
 score :: Score Note
-score = dynamics ff $ times n (legato m </> ( times 3 . staccato . modifyPitches (subtract  5)) (m^/3)) ^/4
+score = dynamics ff $ times n (legato m </> ( times 3 . staccato . down _P4) (m^/3)) ^/4
 
 m = asScore (scat [c,d,e]) 
