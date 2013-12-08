@@ -14,19 +14,14 @@ main = do
 
 score :: Score Note
 score = let
-        up x = fmap (modifyPitch (+ x))
-        down x = fmap (modifyPitch (subtract x))
-        octave = 12
-        fourth = 5
-
         left = (dynamics pp . legato) 
-               (melody [a,g,f,e] |> d^*2)
+               (scat [a,g,f,e] |> d^*2)
             |> (dynamics ((mp |> mp `cresc` mf |> mf)^*8) . legato) 
-               (melody [g,f,e,d] |> c |> (d |> e)^/2 |> f |> e |> d^*8)
-        right = up fourth . delay 2 $ 
+               (scat [g,f,e,d] |> c |> (d |> e)^/2 |> f |> e |> d^*8)
+        right = up _P4 . delay 2 $ 
                (dynamics pp . legato) 
-               (melody [a,g,f,e] |> d^*2)
+               (scat [a,g,f,e] |> d^*2)
             |> (dynamics mp . legato) 
-               (melody [g,f,e,d] |> c |> (d |> e)^/2 |> f |> e |> d^*8)
+               (scat [g,f,e,d] |> c |> (d |> e)^/2 |> f |> e |> d^*8)
 
-    in  (^*(1/8)) $ left </> down octave right
+    in  (^*(1/8)) $ left </> down _P8 right
