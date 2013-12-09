@@ -2,7 +2,7 @@
 {-# LANGUAGE
     OverloadedStrings #-}
 
-import Music.Prelude.Standard hiding (tempo, open, play, openAndPlay)
+import Music.Prelude.Standard hiding (open, play, openAndPlay)
 import Control.Concurrent.Async
 import Control.Applicative
 import Data.AffineSpace.Relative
@@ -17,8 +17,8 @@ main :: IO ()
 main = open score
 
 play, open, openAndPlay :: Score Note -> IO ()   
-tempo = 120
-play x = openAudio $ stretch ((60*4)/tempo) $ fixClefs $ x
+tempo_ = 120
+play x = openAudio $ stretch ((60*4)/tempo_) $ fixClefs $ x
 open x = openLy' Score $ fixClefs $ x
 openAndPlay x = play x `concurrently_` open x
 
@@ -28,7 +28,7 @@ ensemble = [solo tubularBells] <> (divide 2 (tutti violin)) <> [tutti viola] <> 
 score :: Score Note
 score = meta $ stretch (3/2) $ before 60 (bell <> delay 6 strings)
     where
-        meta = title "Cantus in Memoriam Benjamin Britten" . composer "Arvo Pärt" . timeSignature (6/4)
+        meta = title "Cantus in Memoriam Benjamin Britten" . composer "Arvo Pärt" . timeSignature (time 6 4) . tempo (metronome (1/4) 120)
 
 withTintin :: Pitch -> Score Note -> Score Note
 withTintin p x = x <> tintin p x
