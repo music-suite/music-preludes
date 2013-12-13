@@ -16,12 +16,6 @@ import System.Process (system)
 main :: IO ()
 main = open score
 
-play, open, openAndPlay :: Score Note -> IO ()   
-tempo_ = 120
-play x = openAudio $ stretch ((60*4)/tempo_) $ fixClefs $ x
-open x = openLy' Score $ fixClefs $ x
-openAndPlay x = play x `concurrently_` open x
-
 ensemble :: [Part]
 ensemble = [solo tubularBells] <> (divide 2 (tutti violin)) <> [tutti viola] <> [tutti cello] <> [tutti bass]
 
@@ -85,6 +79,13 @@ mainSubject = stretch (1/6) $ asScore $ scat $ mapEvensOdds (accent . (^*2)) id 
 
 
 
+
+
+
+
+
+
+
 mapEvensOdds :: (a -> b) -> (a -> b) -> [a] -> [b]
 mapEvensOdds f g xs = let
     evens = fmap (xs !!) [0,2..]
@@ -115,3 +116,10 @@ concurrently_ = concurrentlyWith (\x y -> ())
 
 concurrentlyWith :: (a -> b -> c) -> IO a -> IO b -> IO c
 concurrentlyWith f x y = uncurry f <$> x `concurrently` y
+
+play, open, openAndPlay :: Score Note -> IO ()   
+tempo_ = 120
+play x = openAudio $ stretch ((60*4)/tempo_) $ fixClefs $ x
+open x = openLy' Score $ fixClefs $ x
+openAndPlay x = play x `concurrently_` open x
+
