@@ -13,7 +13,7 @@ main = do
     openLy $ asScore score
     -- playMidiIO "Graphic MIDI" $ score^/10
 
-toLydian = modifyPitch (\p -> if p == c then cs else p)
+toLydian = modifyPitch' (\p -> if p == c then cs else p)
 
 subj1 = (^/2) $
     (legato.accent) (b_ |> c) |> (legato.accent) (c |> b_^*2)
@@ -28,6 +28,7 @@ pres2 = subj1^*(2/2) </> delay 2 (subj1^*(3/2))
 part1 = pres1 |> pres2
 part2 = pres1 |> pres2  
 
+-- score :: Score Note
 score = clef CClef $ dynamics pp $ compress 2 $ part1 |> toLydian part2
 
 -- (|>) :: Score a -> Score a -> Score a

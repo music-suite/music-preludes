@@ -26,6 +26,7 @@ module Music.Prelude.Instances () where
 import Data.Default
 import Data.Typeable
 import Data.AffineSpace.Point
+import Data.Substitute
 
 import Music.Pitch
 import Music.Dynamics
@@ -41,10 +42,14 @@ instance HasPart BasicPart where
         getPart = id
         modifyPart = id
 
+type instance Pitch /~ g = Pitch
+
 instance HasPitch Pitch where
         type Pitch Pitch = Pitch
+        type SetPitch g Pitch = Pitch
         getPitches  = return
         modifyPitch = id
+        modifyPitch' = id
 
 instance Tiable Pitch where
         beginTie = id
