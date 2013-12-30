@@ -13,7 +13,7 @@ main = do
     openLy $ asScore score
     -- playMidiIO "Graphic MIDI" $ score^/10
 
-toLydian = modifyPitch' (\p -> if p == c then cs else p)
+toLydian = mapPitch' (\p -> if p == c then cs else p)
 
 subj1 = (^/2) $
     (legato.accent) (b_ |> c) |> (legato.accent) (c |> b_^*2)
