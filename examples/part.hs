@@ -38,7 +38,7 @@ tintin tonic = mapPitch (relative tonic tintin')
 --
 tintin' :: Interval -> Interval
 tintin' melInterval 
-    | isNegative melInterval = error "tintin: Negative interval"
+    | isNegative melInterval = error "tintin: Negative interval"
     | otherwise = last $ takeWhile (< melInterval) $ tintinNotes
     where
         tintinNotes = concat $ iterate (fmap (+ _P8)) minorTriad
