@@ -1,5 +1,7 @@
 
-{-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE 
+    OverloadedStrings, 
+    NoMonomorphismRestriction #-}
 
 module Main where
 

@@ -1,6 +1,5 @@
 
-{-# LANGUAGE
-    OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 import Music.Prelude.Standard hiding (open, play, openAndPlay)
 import Control.Concurrent.Async
@@ -29,7 +28,7 @@ withTintin p x = x <> tintin p x
 
 -- | Given the melody voice return the tintinnabular voice.
 tintin :: Pitch -> Score Note -> Score Note
-tintin tonic = modifyPitch (relative tonic tintin')
+tintin tonic = mapPitch (relative tonic tintin')
 
 -- | 
 -- Given the melody interval (relative tonic), returns the tintinnabular voice interval. 

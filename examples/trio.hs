@@ -1,6 +1,7 @@
 
 {-# LANGUAGE
-    OverloadedStrings #-}
+    OverloadedStrings,
+    NoMonomorphismRestriction #-}
 
 import Music.Prelude.Standard hiding (open, play, openAndPlay)
 import Control.Concurrent.Async
@@ -18,6 +19,7 @@ import System.Process (system)
 vla         = tutti viola
 vc          = tutti cello
 
+score :: Score Note
 score = mainCanon2
 
 tremCanon = compress 4 $

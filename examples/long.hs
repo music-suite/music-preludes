@@ -1,4 +1,6 @@
 
+{-# LANGUAGE OverloadedStrings #-}
+
 import System.Process (runCommand)
 import Music.Prelude.Basic
 

@@ -1,6 +1,12 @@
 
+{-# LANGUAGE OverloadedStrings #-}
+
 import System.Process (runCommand)
 import Music.Prelude.Basic
+
+{-    
+    Franz Schubert: Erlkönig
+-}
 
 main = do
     -- writeMidi "test.mid" score
@@ -11,8 +17,13 @@ main = do
 
 score :: Score Note
 score = let
+        meta = id
+            . title "Erlkönig, op.1  (excerpt)"
+            . composer "Franz Schubert"
+            . timeSignature (4/4)
+            . keySignature (key g False)
+        
         triplet = group 3
-        rest = return Nothing
 
         a `x` b = a^*(3/4) |> b^*(1/4)
         a `l` b = (a |> b)^/2
@@ -28,4 +39,4 @@ score = let
         useCommonTime = True
         scale         = if useCommonTime then id else timeSignature (time 12 8) . stretch (3/2) 
 
-    in scale $ stretch (1/4) $ song </> left </> down _P8 right
+    in meta $ scale $ stretch (1/4) $ song </> left </> down _P8 right
