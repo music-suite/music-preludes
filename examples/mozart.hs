@@ -1,8 +1,11 @@
 
 {-# LANGUAGE
     OverloadedStrings,
+    TypeFamilies,
+    FlexibleContexts,
     NoMonomorphismRestriction #-}
 
+import qualified Music.Score
 import Music.Prelude.Standard hiding (open, play, openAndPlay)
 import Control.Concurrent.Async
 import Control.Applicative
@@ -97,10 +100,10 @@ stanza1_sop = asScore $ delay 8 $ mempty
 stanza1_alto = asScore $ delay 8 $ mempty
     |> ll fs fs    |> ll e e       |> s4 e g fs e          |> ssl e d d   
     |> ls cs cs    |> s4 d d e e   |> lss e (fit2 d cs) d  |> l4 cs
-stanza1_ten = asScore $ delay 8 $ octavesDown 1 $ mempty
+stanza1_ten = asScore $ delay 8 $ octavesDown' 1 $ mempty
     |> ll a  a     |> ll b b       |> ls a   a             |> ll a a   
     |> ls e  e     |> s4 a a b b   |> ls a             a   |> l4 e
-stanza1_bass = asScore $ delay 8 $ octavesDown 1 $ mempty
+stanza1_bass = asScore $ delay 8 $ octavesDown' 1 $ mempty
     |> ll d  d     |> ll d d       |> ls cs  cs            |> ll d d   
     |> ls a  a     |> s4 d d cs cs |> ls d             d   |> l4 a_
 
@@ -113,15 +116,18 @@ stanza1_vl2 = asScore $ mempty
     |> s4 d a_ d e |> s4 fs d fs g
     |> ll fs fs    |> ll e e       |> s4 e g fs e          |> ssl e d d   
     |> ls cs cs    |> s4 d d e e   |> lss e (fit2 d cs) d  |> l4 cs
-stanza1_vla = asScore $ octavesDown 1 $ mempty
+stanza1_vla = asScore $ octavesDown' 1 $ mempty
     |> s4 d a_ d e |> s4 fs d fs g
     |> ll a  a     |> ll b b       |> ls a   a             |> ll a a   
     |> ls e  e     |> s4 a a b b   |> ls a             a   |> l4 e
-stanza1_bc = asScore $ octavesDown 1 $ mempty
+stanza1_bc = asScore $ octavesDown' 1 $ mempty
     |> s4 d a_ d e |> s4 fs d fs g
     |> ll d  d     |> ll d d       |> ls cs  cs            |> ll d d   
     |> ls a  a     |> s4 d d cs cs |> ls d             d   |> l4 a_
 
+
+octavesDown' :: (HasSetPitch' a, AffineSpace p, p ~ Music.Score.Pitch a, IsInterval (Music.Score.Interval a), VectorSpace (Music.Score.Interval a)) => Scalar (Music.Score.Interval a) -> a -> a
+octavesDown' = octavesDown
 -- Stanza 2
 
 

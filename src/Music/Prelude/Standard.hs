@@ -39,7 +39,7 @@ import Data.Typeable
 import Music.Pitch
 import Music.Dynamics
 import Music.Parts
-import Music.Score hiding (Pitch, Interval, Fifths, Note, Part)
+import Music.Score hiding (Pitch, Interval, Fifths, Note, Part, pitch)
 
 import Music.Prelude.Instances ()
 

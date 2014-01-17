@@ -5,6 +5,8 @@
     MultiParamTypeClasses,
     DeriveDataTypeable,
     TypeFamilies, 
+    FlexibleInstances,
+    UndecidableInstances,
     ViewPatterns #-} 
 
 ------------------------------------------------------------------------------------
@@ -26,7 +28,6 @@ module Music.Prelude.Instances () where
 import Data.Default
 import Data.Typeable
 import Data.AffineSpace.Point
-import Data.Substitute
 
 import Music.Pitch
 import Music.Dynamics
@@ -42,18 +43,19 @@ instance HasPart BasicPart where
         getPart = id
         modifyPart = id
 
-type instance Pitch /~ g = Pitch
+-- FIXME
+instance Delayable Pitch      
+instance Stretchable Pitch
+type instance Score.Pitch Pitch = Pitch
 
-instance HasPitch Pitch where
-        type Pitch Pitch = Pitch
-        type SetPitch g Pitch = Pitch
-        getPitches  = return
-        modifyPitch = id
-        modifyPitch' = id
-
+instance HasGetPitch Pitch where
+    getPitch = id
+instance (a ~ Score.Pitch a) => HasSetPitch Pitch a where
+    type SetPitch a Pitch = a
+    mapPitch = id
 instance Tiable Pitch where
-        beginTie = id
-        endTie = id
+    beginTie = id
+    endTie = id
 
 instance HasMidi Semitones where
     getMidi a = getMidi $ (60 + fromIntegral a :: Integer)

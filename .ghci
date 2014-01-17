@@ -1,6 +1,5 @@
 :set -XOverloadedStrings
 :set -XNoMonomorphismRestriction
 :load src/Music/Prelude/Standard.hs
-:m + Music.Score.Import.Sibelius
 
-let foo = "FooBar"
+-- :m + Music.Score.Import.Sibelius

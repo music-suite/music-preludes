@@ -14,18 +14,19 @@ main = do
     openLy score
     -- playMidiIO "Graphic MIDI" $ score^/10
 
-subject = legato $ accent $ scat [c,cs^*2,d,db]
+subject = asScore $ legato $ accent $ scat [c,cs^*2,d,db]
 
 score :: Score Note
-score = 
-    (times 5 $ up _P5   $ subject ^*(2/3 * 1/4)) 
-        </>
-    (times 5 $ up _M3   $ subject ^*(1/4)) 
-        </>
-    (times 5 $ up _P1   $ subject ^*(2/3 * 1/2)) 
-        </>
-    (times 5 $ down _P4 $ subject ^*(1/2)) 
+-- score = 
+--     (times 5 $ up' _P5   $ subject ^*(2/3 * 1/4)) 
+--         </>
+--     (times 5 $ up' _M3   $ subject ^*(1/4)) 
+--         </>
+--     (times 5 $ up' _P1   $ subject ^*(2/3 * 1/2)) 
+--         </>
+--     (times 5 $ down' _P4 $ subject ^*(1/2)) 
+-- 
 
-
+score = mempty
 -- TODO
             
