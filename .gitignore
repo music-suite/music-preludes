@@ -10,3 +10,4 @@ tests
 *.json
 *.wav
 *.dat
+*.svg
