@@ -72,9 +72,6 @@ part = lens getPart (flip setPart)
 part_ :: HasSetPitch a b => Setter a b (Music.Score.Pitch a) (Music.Score.Pitch b)
 part_ = sets mapPitch
 
-pitch_ :: HasSetPitch a b => Setter a b (Music.Score.Pitch a) (Music.Score.Pitch b)
-pitch_ = sets mapPitch
-
 class Normal a where
     normalize :: a -> a
 instance Normal Pitch where
