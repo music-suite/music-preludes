@@ -9,7 +9,7 @@ import System.Process (system)
     Inspired by the Abjad transcription
 -}
 
-main = openLy score
+main = openLilypond score
 
 score :: Score Note
 score = let

@@ -14,7 +14,7 @@ main = do
     -- writeMidi "test.mid" score
     -- writeXml "test.xml" $ score^/4
     -- openXml score
-    openLy $ asScore score
+    openLilypond $ asScore score
     -- playMidiIO "Graphic MIDI" $ score^/10
 
 toLydian :: Score Note -> Score Note

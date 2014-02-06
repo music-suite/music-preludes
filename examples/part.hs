@@ -119,6 +119,6 @@ concurrentlyWith f x y = uncurry f <$> x `concurrently` y
 play, open, openAndPlay :: Score Note -> IO ()   
 tempo_ = 120
 play x = openAudio $ stretch ((60*4)/tempo_) $ fixClefs $ x
-open x = openLy' Score $ fixClefs $ x
+open x = openLilypond' Score $ fixClefs $ x
 openAndPlay x = play x `concurrently_` open x
 

@@ -12,7 +12,7 @@ main = do
     -- writeMidi "test.mid" score
     -- writeXml "test.xml" $ score^/4
     -- openXml score
-    openLy score
+    openLilypond score
     -- playMidiIO "Graphic MIDI" $ score^/10
 
 score :: Score Note

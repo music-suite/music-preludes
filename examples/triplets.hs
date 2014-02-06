@@ -11,7 +11,7 @@ main = do
     -- writeMidi "test.mid" score
     -- writeXml "test.xml" $ score^/4
     -- openXml score
-    openLy score
+    openLilypond score
     -- playMidiIO "Graphic MIDI" $ score^/10
 
 subject = asScore $ legato $ accent $ scat [c,cs^*2,d,db]
