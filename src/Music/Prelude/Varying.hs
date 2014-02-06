@@ -81,7 +81,7 @@ type Note = (PartT Part
                   --   (First
                   --     Pitch))))))))))
 
-open          = openLy . asScore
+open          = openLilypond . asScore
 play          = playMidiIO "to Gr" . asScore
 openAndPlay x = open x >> play x
 

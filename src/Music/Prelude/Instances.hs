@@ -68,12 +68,12 @@ instance HasMusicXml Pitch where
     getMusicXmlChord (realToFrac -> d) = (`Xml.chord` (realToFrac d)) . fmap (snd3 Just . spellPitch)
 
 instance HasLilypond Pitch where
-    getLilypond      d = (^*realToFrac (d*4)) . Lilypond.note . pitchLy . Lilypond.Pitch . spellPitch . (.+^ perfect octave)
-    getLilypondChord d = (^*realToFrac (d*4)) . Lilypond.chord . fmap (pitchLy . Lilypond.Pitch . spellPitch . (.+^ perfect octave))
+    getLilypond      d = (^*realToFrac (d*4)) . Lilypond.note . pitchLilypond . Lilypond.Pitch . spellPitch . (.+^ perfect octave)
+    getLilypondChord d = (^*realToFrac (d*4)) . Lilypond.chord . fmap (pitchLilypond . Lilypond.Pitch . spellPitch . (.+^ perfect octave))
 
 -- TODO move
 snd3 f (a, b, c) = (a, f b, c)
-pitchLy a = Lilypond.NotePitch a Nothing
+pitchLilypond a = Lilypond.NotePitch a Nothing
 
 spellPitch :: (Enum p, Num a, Num o) => Pitch -> (p, a, o)
 spellPitch p = (pitchName, pitchAccidental, octave)
