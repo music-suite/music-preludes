@@ -6,7 +6,7 @@ import qualified Music.Score
 import Music.Prelude.Standard hiding (pitch, open, play, openAndPlay)
 import Control.Concurrent.Async
 import Control.Applicative
-import Data.AffineSpace.Relative
+-- import Data.AffineSpace.Relative
 import System.Process (system)
 import qualified Data.Foldable
 import Control.Lens hiding (Parts)
@@ -16,6 +16,8 @@ import Math.OEIS
 {-    
     Serial composition
     Using sequences from the OEIS
+
+    TODO optimize extendSequence etc (use local caching, possibly `unamb`)
 -}
 
 main :: IO ()
@@ -37,15 +39,19 @@ scale n = case n `mod` 6 of
 seq1 :: Score Integer
 seq1 = scat $ take 500 $ fmap return $ fmap (`mod` 6) $ Data.Foldable.toList $ extendSequence [2,1,1,2,2]
 seq2 = scat $ take 500 $ fmap return $ fmap (`mod` 6) $ Data.Foldable.toList $ extendSequence [2,1,1,2,2,1]
+
+-- Thue–Morse sequence
 seq3 = scat $ take 500 $ fmap return $ fmap (`mod` 6) $ Data.Foldable.toList $ extendSequence [2,1,1,2,2,1,1]
 
-score = (partNs 0 & up (m3^*2) & compress 6) <> (partNs 1 & up (m3^*1) & compress 5) <> (partNs 2 & compress 4)
-  & pitch_ %~ normalize & compress 4
+score = pcat [(partNs 0 & up (m3^*2) & compress 6),
+              (partNs 1 & up (m3^*1) & compress 5),
+              (partNs 2 & compress 4)]
+  & fmap (mapPitch normalize) & compress 4 & staccato
 
 partNs n = part1 n <> part2 n <> part3 n
-part1 n = asScore $ (part .~ (ensemble !! (0+3*n))) $ fmap (\x -> pitch' %~ (.+^ scale x) $ (c::Note)) $ seq1
-part2 n = asScore $ (part .~ (ensemble !! (1+3*n))) $ fmap (\x -> pitch' %~ (.+^ scale x) $ (c::Note)) $ seq2
-part3 n = asScore $ (part .~ (ensemble !! (2+3*n))) $ fmap (\x -> pitch' %~ (.+^ scale x) $ (c::Note)) $ seq3
+part1 n = asScore $ (part .~ (ensemble !! (0+3*n))) $ fmap (\x -> mapPitch (.+^ scale x) $ (c::Note)) $ seq1
+part2 n = asScore $ (part .~ (ensemble !! (1+3*n))) $ fmap (\x -> mapPitch (.+^ scale x) $ (c::Note)) $ seq2
+part3 n = asScore $ (part .~ (ensemble !! (2+3*n))) $ fmap (\x -> mapPitch (.+^ scale x) $ (c::Note)) $ seq3
 
 -- instance Monoid Part where
 --   mempty = def
