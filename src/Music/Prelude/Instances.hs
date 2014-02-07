@@ -38,8 +38,8 @@ import qualified Music.Score as Score
 import qualified Music.Lilypond as Lilypond
 import qualified Music.MusicXml.Simple as Xml
 
+type instance Music.Score.Part BasicPart = BasicPart
 instance HasPart BasicPart where
-        type Part BasicPart = BasicPart
         getPart = id
         modifyPart = id
 
