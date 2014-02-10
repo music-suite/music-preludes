@@ -18,7 +18,7 @@ main = do
     -- playMidiIO "Graphic MIDI" $ score^/10
 
 toLydian :: Score Note -> Score Note
-toLydian = mapPitch (\p -> if p == c then cs else p)
+toLydian = sets __mapPitch %~ (\p -> if p == c then cs else p)
 -- toLydian = id
 
 subj1 = (^/2) $

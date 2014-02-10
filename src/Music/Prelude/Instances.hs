@@ -49,10 +49,10 @@ instance Stretchable Pitch
 type instance Score.Pitch Pitch = Pitch
 
 instance HasGetPitch Pitch where
-    getPitch = id
+    __getPitch = id
 instance (a ~ Score.Pitch a) => HasSetPitch Pitch a where
     type SetPitch a Pitch = a
-    mapPitch = id
+    __mapPitch = id
 instance Tiable Pitch where
     beginTie = id
     endTie = id
