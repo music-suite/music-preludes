@@ -28,7 +28,7 @@ withTintin p x = x <> tintin p x
 
 -- | Given the melody voice return the tintinnabular voice.
 tintin :: Pitch -> Score Note -> Score Note
-tintin tonic = mapPitch (relative tonic tintin')
+tintin tonic = __mapPitch (relative tonic tintin')
 
 -- | 
 -- Given the melody interval (relative tonic), returns the tintinnabular voice interval. 

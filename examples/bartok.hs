@@ -24,7 +24,7 @@ score = let
             |> (dynamics ((mp |> mp `cresc` mf |> mf)^*8) . legato) 
                (scat [g,f,e,d] |> c |> (d |> e)^/2 |> f |> e |> d^*8)
         
-        right = up' _P4 . delay 2 $ 
+        right = up _P4 . delay 2 $ 
                (dynamics pp . legato) 
                (scat [a,g,f,e] |> d^*2)
             |> (dynamics mp . legato) 

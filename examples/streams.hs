@@ -46,12 +46,12 @@ seq3 = scat $ take 500 $ fmap return $ fmap (`mod` 6) $ Data.Foldable.toList $�
 score = pcat [(partNs 0 & up (m3^*2) & compress 6),
               (partNs 1 & up (m3^*1) & compress 5),
               (partNs 2 & compress 4)]
-  & fmap (mapPitch normalize) & compress 4 & staccato
+  & fmap (__mapPitch normalize) & compress 4 & staccato
 
 partNs n = part1 n <> part2 n <> part3 n
-part1 n = asScore $ (part .~ (ensemble !! (0+3*n))) $ fmap (\x -> mapPitch (.+^ scale x) $ (c::Note)) $ seq1
-part2 n = asScore $ (part .~ (ensemble !! (1+3*n))) $ fmap (\x -> mapPitch (.+^ scale x) $ (c::Note)) $ seq2
-part3 n = asScore $ (part .~ (ensemble !! (2+3*n))) $ fmap (\x -> mapPitch (.+^ scale x) $ (c::Note)) $ seq3
+part1 n = asScore $ (part .~ (ensemble !! (0+3*n))) $ fmap (\x -> __mapPitch (.+^ scale x) $ (c::Note)) $ seq1
+part2 n = asScore $ (part .~ (ensemble !! (1+3*n))) $ fmap (\x -> __mapPitch (.+^ scale x) $ (c::Note)) $ seq2
+part3 n = asScore $ (part .~ (ensemble !! (2+3*n))) $ fmap (\x -> __mapPitch (.+^ scale x) $ (c::Note)) $ seq3
 
 -- instance Monoid Part where
 --   mempty = def
@@ -76,7 +76,7 @@ part :: (Default (Music.Score.Part a), HasPart a) => Lens' a (Music.Score.Part a
 part = lens getPart (flip setPart)
 
 part_ :: HasSetPitch a b => Setter a b (Music.Score.Pitch a) (Music.Score.Pitch b)
-part_ = sets mapPitch
+part_ = sets __mapPitch
 
 class Normal a where
     normalize :: a -> a

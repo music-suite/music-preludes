@@ -1,14 +1,14 @@
 
+import Control.Lens
 import Control.Arrow
-import Data.AffineSpace.Relative
 import Music.Prelude.Basic
 
 withOrigin x = (.-. x)
 mapIf p f = uncurry mplus . first f . mpartition p
 
-markPerfect   = text "Perfect consonances"   . mapIf (isPerfectConsonance   . withOrigin c . getPitch) accentAll
-markImperfect = text "Imperfect consonances" . mapIf (isImperfectConsonance . withOrigin c . getPitch) accentAll
-markDiss      = text "Dissonances" . mapIf (isDissonance . withOrigin c . getPitch) accentAll
+markPerfect   = text "Perfect consonances"   . mapIf (isPerfectConsonance   . withOrigin c . view pitch') accentAll
+markImperfect = text "Imperfect consonances" . mapIf (isImperfectConsonance . withOrigin c . view pitch') accentAll
+markDiss      = text "Dissonances" . mapIf (isDissonance . withOrigin c . view pitch') accentAll
 
 main = open $ showAnnotations $ rcat [
     markPerfect   $ scat [c..c'],

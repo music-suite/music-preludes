@@ -6,7 +6,6 @@
 import Music.Prelude.Standard hiding (open, play, openAndPlay)
 import Control.Concurrent.Async
 import Control.Applicative
-import Data.AffineSpace.Relative
 import System.Process (system)
 
 {-    
@@ -31,7 +30,7 @@ tremCanon = compress 4 $
         <>
     (delay 0 $ setPart vc  $ subjs^*2)
     where
-        subjs = repeated [1..40] (\n -> palindrome $ rev $ subj n)
+        subjs = repeated [1..40] (\n -> palindrome $ rev2 $ subj n)
         subj n 
             | n < 8     = a_^*2  |> e^*1   |> a^*1
             | n < 16    = a_^*2  |> e^*1   |> a^*1   |> e^*1   |> a^*1
@@ -118,8 +117,10 @@ concurrently_ = concurrentlyWith (\x y -> ())
 concurrentlyWith :: (a -> b -> c) -> IO a -> IO b -> IO c
 concurrentlyWith f x y = uncurry f <$> x `concurrently` y
 
-palindrome x = rev x |> x
-
+palindrome x = rev2 x |> x
+-- TODO
+-- rev2 = rev
+rev2 = id
 
 
 
