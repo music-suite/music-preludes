@@ -2,9 +2,11 @@
 {-# LANGUAGE
     GeneralizedNewtypeDeriving,
     UndecidableInstances,
+    ViewPatterns,
     DeriveDataTypeable,
     ConstraintKinds,
     RankNTypes,
+    FlexibleInstances, -- For the (Time ->) instances
     MultiParamTypeClasses, -- TODO
     TypeFamilies #-}
 
@@ -53,6 +55,22 @@ import qualified Music.Score -- TODO below
 import Music.Prelude.Instances ()
 
 
+-- TODO debug
+-- type instance Music.Score.Pitch (Score a) = Music.Score.Pitch a
+-- instance (HasSetPitch a b, 
+--             Transformable (Music.Score.Pitch a), 
+--             Transformable (Music.Score.Pitch b)) => 
+--                 HasSetPitch (Score a) (Score b) where
+--     type SetPitch g (Score a) = Score (SetPitch g a)
+--     __mapPitch f  = mapWithSpan (\s -> __mapPitch $ sunder s f)
+--         where
+--             -- TODO is this generally wrong?
+--             sunder s f = sappInv s . f . sapp s
+--             sapp    (view delta -> (t,d)) = delayTime t . stretch d
+--             sappInv (view delta -> (t,d)) = stretch (recip d) . delayTime (mirror t)
+--             -- stretch delay f delay stretch
+
+
 asNote :: Note -> Note
 asNote = id
 
@@ -88,6 +106,9 @@ type B a = Behavior a
         () :: forall a b . (a ~ b, b ~ Int, a ~ Float) => ()
     
 -}
+
+type instance Music.Score.Pitch (Time -> a) = Time -> (Music.Score.Pitch a)
+
 
 type instance Music.Score.Pitch (Behavior a) = Behavior (Music.Score.Pitch a)
 type instance Music.Score.Pitch (First a) =  Music.Score.Pitch a
@@ -208,6 +229,37 @@ instance HasMidi a => HasMidi (Behavior a) where
     getMidi = getMidi . (? 0)
 instance HasMidi a => HasMidi (First a) where
     getMidi = getMidi . getFirst
+
+
+
+
+
+
+
+
+
+
+
+
+instance IsPitch a => IsPitch (Time -> a) where
+    fromPitch = pure . fromPitch
+instance IsInterval a => IsInterval (Time -> a) where
+    fromInterval = pure . fromInterval
+instance IsDynamics a => IsDynamics (Time -> a) where
+    fromDynamics = pure . fromDynamics
+
+instance Tiable a => Tiable (Time -> a) where toTied x = (x,x)
+instance HasLilypond a => HasLilypond (Time -> a) where
+    getLilypond d = getLilypond d . (? 0)
+instance HasMidi a => HasMidi (Time -> a) where
+    getMidi = getMidi . (? 0)
+
+
+
+
+
+
+
 
 open          = openLilypond . asScore
 play          = playMidiIO "to Gr" . asScore
