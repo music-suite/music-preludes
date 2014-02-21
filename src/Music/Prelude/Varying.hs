@@ -1,7 +1,10 @@
 
 {-# LANGUAGE
     GeneralizedNewtypeDeriving,
+    UndecidableInstances,
     DeriveDataTypeable,
+    ConstraintKinds,
+    RankNTypes,
     MultiParamTypeClasses, -- TODO
     TypeFamilies #-}
 
@@ -37,9 +40,10 @@ module Music.Prelude.Varying (
 import Data.Default
 import Data.Typeable
 import Control.Applicative -- TODO below
-import Control.Lens hiding ((??)) -- TODO below
+import Control.Lens hiding ((|>)) -- TODO below
 
 import Music.Pitch
+import Music.Dynamics.Literal -- TODO
 import Music.Dynamics
 import Music.Parts
 import Music.Score hiding (Pitch, Interval, Fifths, Note, Part, pitch)
@@ -68,6 +72,85 @@ asTrack = id
 -- instance Show BasicPart where
 --     show _ = ""
 
+-- DEBUG
+type P a = Music.Score.Pitch a
+type I a = Music.Score.Interval a
+type B a = Behavior a
+{-
+    Test a type constraint like this:
+    
+        :t () :: (Int ~ Float) => ()
+
+        
+        
+    For example this fails:
+
+        () :: forall a b . (a ~ b, b ~ Int, a ~ Float) => ()
+    
+-}
+
+type instance Music.Score.Pitch (Behavior a) = Behavior (Music.Score.Pitch a)
+type instance Music.Score.Pitch (First a) =  Music.Score.Pitch a
+
+instance HasGetPitch a => HasGetPitch (First a) where
+    __getPitch (First a) = __getPitch a
+
+instance AdditiveGroup a => AdditiveGroup (Behavior a) where
+    zeroV = pure zeroV
+    negateV = fmap negateV
+    (^+^) = liftA2 (^+^)
+instance AffineSpace a => AffineSpace (Behavior a) where
+    type Diff (Behavior a) = Behavior (Diff a)
+    (.+^) = liftA2 (.+^)
+    (.-.) = liftA2 (.-.)
+
+-- TODO undecidable
+instance (HasGetPitch a, HasSetPitch a b
+                ) => 
+                HasSetPitch (Behavior a) (Behavior b) where
+    type SetPitch (Behavior p) (Behavior a) = Behavior (SetPitch p a)
+    __mapPitch = foo
+        
+        -- where
+        --     f' :: B (P a) -> B (P b)
+        --     f' = f
+        -- 
+        --     x' :: B a
+        --     x' = x
+        -- 
+        --     r :: B b
+        --     r = undefined   
+
+foo :: (HasGetPitch a, HasSetPitch a b, Applicative f) => (f (P a) -> f (P b)) -> f a -> f b
+foo f a = liftA2 __setPitch (f $ (__getPitch) <$> a) a
+
+
+
+
+-- liftA2 __setPitch (f ((__getPitch) <$> a)) a
+-- foo a = 
+    -- where ap = fmap (__getPitch) ap
+
+    -- __mapPitch f = fmap (spitch %~ f)
+
+instance (HasSetPitch a b
+            -- , Transformable (Music.Score.Pitch a)
+            -- , Transformable (Music.Score.Pitch b)
+            ) => 
+                HasSetPitch (First a) (First b) where
+    type SetPitch p (First a) = First (SetPitch p a)
+    __mapPitch f = fmap (spitch %~ f) 
+
+type Isom a b = (a -> b, b -> a)
+-- type Yup  dummy = forall a b . (a ~ b, dummy ~ dummy)
+-- type Nope dummy = forall a b . (a ~ b, b ~ Int, a ~ Float)
+
+spitch :: HasSetPitch a b => Setter a b (P a) (P b)
+spitch = sets __mapPitch
+
+spitch' :: HasSetPitch a a => Setter' a (P a)
+spitch' = sets __mapPitch
+
 type Note = (PartT Part
     (TremoloT
       (TextT
@@ -76,10 +159,55 @@ type Note = (PartT Part
             (TieT
               (SlideT
                 (DynamicT
-                  (ChordT Pitch)))))))))
-                  -- (Behavior
-                  --   (First
-                  --     Pitch))))))))))
+                  (Behavior
+                    (First
+                      Pitch))))))))))
+
+
+instance IsPitch a => IsPitch (Behavior a) where
+    fromPitch = pure . fromPitch
+instance IsInterval a => IsInterval (Behavior a) where
+    fromInterval = pure . fromInterval
+instance IsDynamics a => IsDynamics (Behavior a) where
+    fromDynamics = pure . fromDynamics
+
+
+instance Functor First where
+    fmap f (First x) = First (f x)
+instance Applicative First where
+    pure x = First x
+    First f <*> First x = First (f x)
+
+instance Functor Last where
+    fmap f (Last x) = Last (f x)
+instance Applicative Last where
+    pure x = Last x
+    Last f <*> Last x = Last (f x)
+
+instance IsPitch a => IsPitch (First a) where
+    fromPitch = pure . fromPitch
+instance IsInterval a => IsInterval (First a) where
+    fromInterval = pure . fromInterval
+instance IsDynamics a => IsDynamics (First a) where
+    fromDynamics = pure . fromDynamics
+
+instance IsPitch a => IsPitch (Last a) where
+    fromPitch = pure . fromPitch
+instance IsInterval a => IsInterval (Last a) where
+    fromInterval = pure . fromInterval
+instance IsDynamics a => IsDynamics (Last a) where
+    fromDynamics = pure . fromDynamics
+
+instance Tiable a => Tiable (Behavior a) where toTied x = (x,x)
+instance Tiable a => Tiable (First a) where toTied x = (x,x)
+instance HasLilypond a => HasLilypond (Behavior a) where
+    getLilypond d = getLilypond d . (? 0)
+instance HasLilypond a => HasLilypond (First a) where
+    getLilypond d = getLilypond d . getFirst
+instance HasMidi a => HasMidi (Behavior a) where
+    getMidi = getMidi . (? 0)
+instance HasMidi a => HasMidi (First a) where
+    getMidi = getMidi . getFirst
 
 open          = openLilypond . asScore
 play          = playMidiIO "to Gr" . asScore
