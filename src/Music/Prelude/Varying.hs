@@ -1,7 +1,9 @@
 
 {-# LANGUAGE
     GeneralizedNewtypeDeriving,
+    FlexibleContexts,
     UndecidableInstances,
+    TupleSections,
     ViewPatterns,
     DeriveDataTypeable,
     ConstraintKinds,
@@ -55,22 +57,6 @@ import qualified Music.Score -- TODO below
 import Music.Prelude.Instances ()
 
 
--- TODO debug
--- type instance Music.Score.Pitch (Score a) = Music.Score.Pitch a
--- instance (HasSetPitch a b, 
---             Transformable (Music.Score.Pitch a), 
---             Transformable (Music.Score.Pitch b)) => 
---                 HasSetPitch (Score a) (Score b) where
---     type SetPitch g (Score a) = Score (SetPitch g a)
---     __mapPitch f  = mapWithSpan (\s -> __mapPitch $ sunder s f)
---         where
---             -- TODO is this generally wrong?
---             sunder s f = sappInv s . f . sapp s
---             sapp    (view delta -> (t,d)) = delayTime t . stretch d
---             sappInv (view delta -> (t,d)) = stretch (recip d) . delayTime (mirror t)
---             -- stretch delay f delay stretch
-
-
 asNote :: Note -> Note
 asNote = id
 
@@ -82,13 +68,6 @@ asVoice = id
 
 asTrack :: Track Note -> Track Note
 asTrack = id
-
--- newtype BasicPart = BasicPart { getBasicPart :: Integer }
---     deriving (Eq, Ord, Num, Integral, Real, Enum, Typeable)
--- 
--- instance Default BasicPart where def = BasicPart 0
--- instance Show BasicPart where
---     show _ = ""
 
 -- DEBUG
 type P a = Music.Score.Pitch a
@@ -106,65 +85,21 @@ type B a = Behavior a
         () :: forall a b . (a ~ b, b ~ Int, a ~ Float) => ()
     
 -}
+-- type Yup  dummy = forall a b . (a ~ b, dummy ~ dummy)
+-- type Nope dummy = forall a b . (a ~ b, b ~ Int, a ~ Float)
+
 
 type instance Music.Score.Pitch (Time -> a) = Time -> (Music.Score.Pitch a)
 
 
-type instance Music.Score.Pitch (Behavior a) = Behavior (Music.Score.Pitch a)
 type instance Music.Score.Pitch (First a) =  Music.Score.Pitch a
 
 instance HasGetPitch a => HasGetPitch (First a) where
     __getPitch (First a) = __getPitch a
 
-instance AdditiveGroup a => AdditiveGroup (Behavior a) where
-    zeroV = pure zeroV
-    negateV = fmap negateV
-    (^+^) = liftA2 (^+^)
-instance AffineSpace a => AffineSpace (Behavior a) where
-    type Diff (Behavior a) = Behavior (Diff a)
-    (.+^) = liftA2 (.+^)
-    (.-.) = liftA2 (.-.)
-
--- TODO undecidable
-instance (HasGetPitch a, HasSetPitch a b
-                ) => 
-                HasSetPitch (Behavior a) (Behavior b) where
-    type SetPitch (Behavior p) (Behavior a) = Behavior (SetPitch p a)
-    __mapPitch = foo
-        
-        -- where
-        --     f' :: B (P a) -> B (P b)
-        --     f' = f
-        -- 
-        --     x' :: B a
-        --     x' = x
-        -- 
-        --     r :: B b
-        --     r = undefined   
-
-foo :: (HasGetPitch a, HasSetPitch a b, Applicative f) => (f (P a) -> f (P b)) -> f a -> f b
-foo f a = liftA2 __setPitch (f $ (__getPitch) <$> a) a
-
-
-
-
--- liftA2 __setPitch (f ((__getPitch) <$> a)) a
--- foo a = 
-    -- where ap = fmap (__getPitch) ap
-
-    -- __mapPitch f = fmap (spitch %~ f)
-
-instance (HasSetPitch a b
-            -- , Transformable (Music.Score.Pitch a)
-            -- , Transformable (Music.Score.Pitch b)
-            ) => 
-                HasSetPitch (First a) (First b) where
+instance (HasSetPitch a b) => HasSetPitch (First a) (First b) where
     type SetPitch p (First a) = First (SetPitch p a)
     __mapPitch f = fmap (spitch %~ f) 
-
-type Isom a b = (a -> b, b -> a)
--- type Yup  dummy = forall a b . (a ~ b, dummy ~ dummy)
--- type Nope dummy = forall a b . (a ~ b, b ~ Int, a ~ Float)
 
 spitch :: HasSetPitch a b => Setter a b (P a) (P b)
 spitch = sets __mapPitch
@@ -184,49 +119,21 @@ type Note = (PartT Part
                     (First
                       Pitch))))))))))
 
-
-instance IsPitch a => IsPitch (Behavior a) where
-    fromPitch = pure . fromPitch
-instance IsInterval a => IsInterval (Behavior a) where
-    fromInterval = pure . fromInterval
-instance IsDynamics a => IsDynamics (Behavior a) where
-    fromDynamics = pure . fromDynamics
-
-
-instance Functor First where
-    fmap f (First x) = First (f x)
-instance Applicative First where
-    pure x = First x
-    First f <*> First x = First (f x)
-
-instance Functor Last where
-    fmap f (Last x) = Last (f x)
-instance Applicative Last where
-    pure x = Last x
-    Last f <*> Last x = Last (f x)
-
-instance IsPitch a => IsPitch (First a) where
-    fromPitch = pure . fromPitch
-instance IsInterval a => IsInterval (First a) where
-    fromInterval = pure . fromInterval
 instance IsDynamics a => IsDynamics (First a) where
     fromDynamics = pure . fromDynamics
-
-instance IsPitch a => IsPitch (Last a) where
-    fromPitch = pure . fromPitch
-instance IsInterval a => IsInterval (Last a) where
-    fromInterval = pure . fromInterval
 instance IsDynamics a => IsDynamics (Last a) where
     fromDynamics = pure . fromDynamics
 
-instance Tiable a => Tiable (Behavior a) where toTied x = (x,x)
+
+
 instance Tiable a => Tiable (First a) where toTied x = (x,x)
-instance HasLilypond a => HasLilypond (Behavior a) where
-    getLilypond d = getLilypond d . (? 0)
 instance HasLilypond a => HasLilypond (First a) where
     getLilypond d = getLilypond d . getFirst
-instance HasMidi a => HasMidi (Behavior a) where
-    getMidi = getMidi . (? 0)
+
+instance HasMusicXml a => HasMusicXml (First a) where
+    getMusicXml d = getMusicXml d . getFirst
+
+
 instance HasMidi a => HasMidi (First a) where
     getMidi = getMidi . getFirst
 
@@ -266,59 +173,50 @@ play          = playMidiIO "to Gr" . asScore
 openAndPlay x = open x >> play x
 
 
-{-
+-- I.e. majorScale = scale [2,2,1,2,2,1]
+scale :: Integral b => [b] -> b -> b
+scale [] = error "Invalid scale"
+scale s = scaleAbs (scanl (+) 0 s)
 
--- TODO move
+scaleAbs [] x = error "Invalid scale"
+scaleAbs s x = inst*offset + s !! fromIntegral step
+    where
+        (inst, step) = x `divMod` count
+        count = fromIntegral (length s) - 1
+        offset = last s
 
-instance Functor First where
-    fmap f = (pure f <*>)
-instance Applicative First where
-    pure = First
-    First f <*> First x = First $ f x
+pt = stretch 4 $ 
+    varying $ 
+        \t -> spell modal $ scale [1,3,2,2,1,3] $ toSemitones $ (((* 6) $ sin $ realToFrac t*((pi*2)/5))) - 0
 
-type instance Music.Score.Pitch (First a) = Music.Score.Pitch a
-instance HasSetPitch a b => HasSetPitch (First a) (First b) where
-    type SetPitch g (First a) = First (SetPitch g a)
-    mapPitch f = fmap (mapPitch f)
+score = asScore $ compress 1 $ pcat [p1,p2,p3,p4]
+p1 = part .~ (vl2)          $ spitch' %~ (.+^ (stretch 2.1 pt)) $ times 80 (stretchTo 2 $ c' |> (b^*(2/4))^/1)
+p2 = part .~ (vl1)          $ spitch' %~ (.+^ (stretch 2.2 pt)) $ times 80 (stretchTo 3 $ c' |> (b^*(2/4))^/1)
+p3 = part .~ (tutti viola)  $ spitch' %~ (.+^ (stretch 2.3 pt)) $ times 80 (stretchTo 4 $ c' |> (b^*(2/4))^/1)
+p4 = part .~ (tutti cello)  $ spitch' %~ (.+^ (stretch 2.4 pt)) $ times 80 (stretchTo 5 $ c' |> (b^*(2/4))^/1)
 
-type instance Music.Score.Pitch (Behavior a) = Behavior (Music.Score.Pitch a)
-instance HasSetPitch a b => HasSetPitch (Behavior a) (Behavior b) where
-    type SetPitch g (Behavior a) = Behavior (SetPitch g a)
-    -- mapPitch f = undefined
+[vl1, vl2] = divide 2 (tutti violin)
 
+toSemitones :: RealFrac a => a -> Semitones
+toSemitones = floor
 
+showPitches :: [Pitch] -> Score (PartT Integer (ChordT Pitch))
+showPitches = scat . fmap (return . PartT . (1,) . ChordT  .return . asPitch)
 
-instance HasLilypond a => HasLilypond (Behavior a) where
-    getLilypond d x = getLilypond d (x ?? 0)
-instance HasLilypond a => HasLilypond (First a) where
-    getLilypond d = getLilypond d . getFirst
-instance Tiable a => Tiable (Behavior a) where
-    beginTie = fmap beginTie
-    endTie = fmap endTie    
-instance Tiable a => Tiable (First a) where
-    beginTie = fmap beginTie
-    endTie = fmap endTie    
+part :: (HasPart a, Default (Music.Score.Part a)) => Lens' a (Music.Score.Part a)
+part = lens getPart (flip setPart)
 
-instance HasMidi a => HasMidi (Behavior a) where
-    getMidi x = getMidi (x ?? 0)
-instance HasMidi a => HasMidi (First a) where
-    getMidi = getMidi . getFirst
+toNote :: Pitch -> Note
+-- toNote p = __setPitch (pure p) c
+toNote = pure . pure . pure . pure . pure . pure . pure . pure . pure . pure
 
-instance IsPitch a => IsPitch (Behavior a) where
-    fromPitch = pure . fromPitch
-instance IsInterval a => IsInterval (Behavior a) where
-    fromInterval = pure . fromInterval
-instance IsPitch a => IsPitch (First a) where
-    fromPitch = pure . fromPitch
-instance IsInterval a => IsInterval (First a) where
-    fromInterval = pure . fromInterval
+-- TODO
+instance Monoid (Part)
+instance Applicative (DynamicT)
+instance Applicative (SlideT)
+instance Applicative (TremoloT)
+instance Applicative (TextT)
+instance Applicative (ArticulationT)
+instance Applicative (HarmonicT)
+instance Applicative (TieT)
 
-    
--- instance Semigroup a => Semigroup (Behavior a) where
-    -- (<>) = liftA2 (<>)
-
--- TODO move
-pitch_' :: HasSetPitch' a => Setter' a (Music.Score.Pitch a)
-pitch_' = sets mapPitch
-
--}
