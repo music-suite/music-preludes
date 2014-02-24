@@ -56,17 +56,13 @@ asTrack :: Track Note -> Track Note
 asTrack = id
 
 type Note = (PartT BasicPart
-    (TremoloT
-      (TextT
-        (ArticulationT
-          (HarmonicT
-            (TieT
-              (SlideT
-                (DynamicT
-                  (ChordT
-                    Pitch)))))))))
+    (ArticulationT
+      (TieT
+        (DynamicT
+          (ChordT
+            Pitch)))))
 
 open          = openLilypond . asScore
-play          = playMidiIO "to Gr" . asScore
+play          = playMidiIO mempty . asScore
 openAndPlay x = open x >> play x
 

@@ -74,6 +74,6 @@ type Note = (PartT Part
                     Pitch)))))))))
 
 open          = openLilypond . asScore
-play          = playMidiIO "to Gr" . asScore
+play          = playMidiIO mempty . asScore
 openAndPlay x = open x >> play x
 

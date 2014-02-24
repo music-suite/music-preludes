@@ -263,16 +263,16 @@ instance Monoid Part where
     mappend = const
 instance Applicative DynamicT where
     pure x = DynamicT (False,False,Nothing,x,False,False)
-instance Applicative SlideT where
-    pure x = SlideT (False,False,x,False,False)
-instance Applicative TremoloT where
-    pure x = TremoloT (0,x)
-instance Applicative TextT where
-    pure x = TextT (mempty,x)
-instance Applicative ArticulationT where
-    pure x = ArticulationT (False,False,0,0,x,False)
-instance Applicative HarmonicT where
-    pure x = HarmonicT ((False,0), x)
+-- instance Applicative SlideT where
+--     pure x = SlideT (False,False,x,False,False)
+-- instance Applicative TremoloT where
+--     pure x = TremoloT (0,x)
+-- instance Applicative TextT where
+--     pure x = TextT (mempty,x)
+-- instance Applicative ArticulationT where
+--     pure x = ArticulationT (False,False,0,0,x,False)
+-- instance Applicative HarmonicT where
+--     pure x = HarmonicT ((False,0), x)
 instance Applicative TieT where
-    pure x = TieT (False,x,False)
+    pure x = TieT (False,x,False)      
 
