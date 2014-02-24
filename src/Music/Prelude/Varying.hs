@@ -172,22 +172,69 @@ open          = openLilypond . asScore
 play          = playMidiIO "to Gr" . asScore
 openAndPlay x = open x >> play x
 
+-- TODO move
+instance AdditiveGroup Semitones where
+    zeroV = 0
+    negateV = negate
+    (^+^) = (+)
+instance VectorSpace Semitones where
+    type Scalar Semitones = Semitones
+    (*^) = (*)
+instance IsInterval Semitones where
+    fromInterval = semitones . asInterval . fromInterval
+
+instance AdditiveGroup Hertz where
+    zeroV = 0
+    negateV = negate
+    (^+^) = (+)
+instance VectorSpace Hertz where
+    type Scalar Hertz = Hertz
+    (*^) = (*)
+instance IsInterval Hertz where
+    -- TODO octave
+    fromInterval (IntervalL (_,d,c)) = case (d,c) of
+        (0,0)  -> 1/1
+        (1,2)  -> 9/8 -- or 10/9
+        (2,4)  -> 5/4
+        (3,5)  -> 4/3
+        (4,7)  -> 3/2
+        (5,9)  -> 8/5
+        (5,11) -> 5/3
+        (6,12)  -> 15/8
+
+
+
 
 -- I.e. majorScale = scale [2,2,1,2,2,1]
-scale :: Integral b => [b] -> b -> b
-scale [] = error "Invalid scale"
-scale s = scaleAbs (scanl (+) 0 s)
+-- scale :: (Integral b, AdditiveGroup b) => [b] -> b -> b
 
+
+majorS :: (Integral a, Integral (Scalar v), VectorSpace v, IsInterval v) => a -> v
+majorS = scale [_M2,_M2,m2,_M2,_M2,_M2,m2]
+
+
+minorS :: (Integral a, Integral (Scalar v), VectorSpace v, IsInterval v) => a -> v
+minorS = scale [_M2,m2,_M2,_M2,_M2,_M2,m2]
+
+
+scale :: (Integral a, Integral (Scalar v), VectorSpace v) => [v] -> a -> v
+scale [] = error "Invalid scale"
+scale s = scaleAbs (scanl (^+^) zeroV s)
+
+scaleAbs :: (Integral a, Integral (Scalar v), VectorSpace v) => [v] -> a -> v
 scaleAbs [] x = error "Invalid scale"
-scaleAbs s x = inst*offset + s !! fromIntegral step
+scaleAbs s x = inst*^offset ^+^ s !! fromIntegral step
     where
-        (inst, step) = x `divMod` count
-        count = fromIntegral (length s) - 1
+        (inst, step) = fromIntegral x `divMod` fromIntegral count
+        count = length s - 1
         offset = last s
+
+
+
 
 pt = stretch 4 $ 
     varying $ 
-        \t -> spell modal $ scale [1,3,2,2,1,3] $ toSemitones $ (((* 6) $ sin $ realToFrac t*((pi*2)/5))) - 0
+        \t -> spell modal $ (\x->x :: Semitones) $ scale [1,3,2,2,1,3] $ toSemitones $ (((* 6) $ sin $ realToFrac t*((pi*2)/5))) - 0
 
 score = asScore $ compress 1 $ pcat [p1,p2,p3,p4]
 p1 = part .~ (vl2)          $ spitch' %~ (.+^ (stretch 2.1 pt)) $ times 80 (stretchTo 2 $ c' |> (b^*(2/4))^/1)
@@ -211,12 +258,21 @@ toNote :: Pitch -> Note
 toNote = pure . pure . pure . pure . pure . pure . pure . pure . pure . pure
 
 -- TODO
-instance Monoid (Part)
-instance Applicative (DynamicT)
-instance Applicative (SlideT)
-instance Applicative (TremoloT)
-instance Applicative (TextT)
-instance Applicative (ArticulationT)
-instance Applicative (HarmonicT)
-instance Applicative (TieT)
+instance Monoid Part where
+    mempty = def
+    mappend = const
+instance Applicative DynamicT where
+    pure x = DynamicT (False,False,Nothing,x,False,False)
+instance Applicative SlideT where
+    pure x = SlideT (False,False,x,False,False)
+instance Applicative TremoloT where
+    pure x = TremoloT (0,x)
+instance Applicative TextT where
+    pure x = TextT (mempty,x)
+instance Applicative ArticulationT where
+    pure x = ArticulationT (False,False,0,0,x,False)
+instance Applicative HarmonicT where
+    pure x = HarmonicT ((False,0), x)
+instance Applicative TieT where
+    pure x = TieT (False,x,False)
 
