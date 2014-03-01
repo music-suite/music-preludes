@@ -261,8 +261,8 @@ toNote = pure . pure . pure . pure . pure . pure . pure . pure . pure . pure
 instance Monoid Part where
     mempty = def
     mappend = const
-instance Applicative DynamicT where
-    pure x = DynamicT (False,False,Nothing,x,False,False)
+-- instance Applicative DynamicT where
+    -- pure x = DynamicT (False,False,Nothing,x,False,False)
 -- instance Applicative SlideT where
 --     pure x = SlideT (False,False,x,False,False)
 -- instance Applicative TremoloT where
@@ -273,6 +273,6 @@ instance Applicative DynamicT where
 --     pure x = ArticulationT (False,False,0,0,x,False)
 -- instance Applicative HarmonicT where
 --     pure x = HarmonicT ((False,0), x)
-instance Applicative TieT where
-    pure x = TieT (False,x,False)      
+-- instance Applicative TieT where
+    -- pure x = TieT (False,x,False)      
 
