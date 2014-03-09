@@ -169,10 +169,11 @@ openAudio x = do
     void $ system "timidity -Ow test.mid"
     void $ system "open -a Audacity test.wav"
 
-fixClefs :: Score Note -> Score Note
-fixClefs = pcat . fmap (uncurry g) . extractParts'
-    where
-        g p x = clef (case defaultClef p of { 0 -> GClef; 1 -> CClef; 2 -> FClef } ) x
+-- fixClefs :: Score Note -> Score Note
+-- fixClefs = pcat . fmap (uncurry g) . extractParts'
+--     where
+--         g p x = clef (case defaultClef p of { 0 -> GClef; 1 -> CClef; 2 -> FClef } ) x
+fixClefs = id
 
 concurrently_ :: IO a -> IO b -> IO ()
 concurrently_ = concurrentlyWith (\x y -> ())

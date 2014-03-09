@@ -90,7 +90,7 @@ mapEvensOdds f g xs = let
     evens = fmap (xs !!) [0,2..]
     odds = fmap (xs !!) [1,3..]
     merge xs ys = concatMap (\(x,y) -> [x,y]) $ xs `zip` ys
-    in take (length xs) $ map f evens `merge` map g odds
+    in take (length xs) $ map f evens `merge` map g odds
 
 
 openAudacity :: Score Note -> IO ()    
@@ -106,9 +106,10 @@ openAudio x = do
     void $ system "open -a Audacity test.wav"
 
 fixClefs :: Score Note -> Score Note
-fixClefs = pcat . fmap (uncurry g) . extractParts'
-    where
-        g p x = clef (case defaultClef p of { 0 -> GClef; 1 -> CClef; 2 -> FClef } ) x
+fixClefs = id
+-- fixClefs = pcat . fmap (uncurry g) . extractParts'
+--     where
+--         g p x = clef (case defaultClef p of { 0 -> GClef; 1 -> CClef; 2 -> FClef } ) x
 
 concurrently_ :: IO a -> IO b -> IO ()
 concurrently_ = concurrentlyWith (\x y -> ())

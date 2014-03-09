@@ -1,8 +1,7 @@
 
-{-# LANGUAGE
-    GeneralizedNewtypeDeriving,
-    DeriveDataTypeable,
-    TypeFamilies #-}
+{-# LANGUAGE DeriveDataTypeable         #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE TypeFamilies               #-}
 
 ------------------------------------------------------------------------------------
 -- |
@@ -27,40 +26,42 @@ module Music.Prelude.Basic (
         asScore,
         asVoice,
         asTrack,
-        asNote,
+        asBasicNote,
         open,
         play,
         openAndPlay
   ) where
 
-import Data.Default
-import Data.Typeable
+import           Data.Default
+import           Data.Typeable
 
-import Music.Pitch
-import Music.Dynamics
-import Music.Parts
-import Music.Score hiding (Pitch, Interval, Fifths, Note, Part, pitch)
+import           Music.Dynamics
+import           Music.Parts             hiding (Part)
+import           Music.Pitch             hiding (Fifths, Interval, Note, Part,
+                                          Pitch, pitch)
+import qualified Music.Pitch             as Pitch
+import           Music.Score
 
-import Music.Prelude.Instances ()
+import           Music.Prelude.Instances ()
 
-asNote :: Note -> Note
-asNote = id
+asBasicNote :: BasicNote -> BasicNote
+asBasicNote = id
 
-asScore :: Score Note -> Score Note
+asScore :: Score BasicNote -> Score BasicNote
 asScore = id
 
-asVoice :: Voice Note -> Voice Note
+asVoice :: Voice BasicNote -> Voice BasicNote
 asVoice = id
 
-asTrack :: Track Note -> Track Note
+asTrack :: Track BasicNote -> Track BasicNote
 asTrack = id
 
-type Note = (PartT BasicPart
+type BasicNote = (PartT BasicPart
     (ArticulationT
       (TieT
         (DynamicT
           (ChordT
-            Pitch)))))
+            Pitch.Pitch)))))
 
 open          = openLilypond . asScore
 play          = playMidiIO mempty . asScore
