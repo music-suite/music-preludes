@@ -71,7 +71,11 @@ type Note = (PartT Part
               (SlideT
                 (DynamicT
                   (ChordT
-                    Pitch)))))))))
+                    StandardPitch)))))))))
+type StandardPitch = Music.Pitch.Pitch
+-- data StandardPitch = StandardPitch Music.Pitch.Pitch
+    -- deriving (HasMidi, HasLilypond, HasMusicXml, HasPitch)
+
 
 open          = openLilypond . asScore
 play          = playMidiIO mempty . asScore

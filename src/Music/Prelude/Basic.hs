@@ -22,7 +22,10 @@ module Music.Prelude.Basic (
         module Music.Pitch,
         module Music.Dynamics,
         module Music.Parts,
-        Note,
+        module Control.Monad.Plus,
+        module Control.Lens.Operators,
+        BasicNote,
+        BasicPitch,
         asScore,
         asVoice,
         asTrack,
@@ -38,9 +41,14 @@ import           Data.Typeable
 import           Music.Dynamics
 import           Music.Parts             hiding (Part)
 import           Music.Pitch             hiding (Fifths, Interval, Note, Part,
-                                          Pitch, pitch)
-import qualified Music.Pitch             as Pitch
-import           Music.Score
+                                          pitch)
+-- Need to export Pitch.Pitch for transf for now
+
+import qualified Music.Pitch
+import           Music.Score             hiding (Pitch)
+
+import Control.Monad.Plus
+import Control.Lens.Operators
 
 import           Music.Prelude.Instances ()
 
@@ -57,11 +65,17 @@ asTrack :: Track BasicNote -> Track BasicNote
 asTrack = id
 
 type BasicNote = (PartT BasicPart
-    (ArticulationT
-      (TieT
-        (DynamicT
-          (ChordT
-            Pitch.Pitch)))))
+    (TremoloT
+      (TextT
+        (ArticulationT
+          (HarmonicT
+            (TieT
+              (SlideT
+                (DynamicT
+                  (ChordT
+                      BasicPitch)))))))))
+
+type BasicPitch = Music.Pitch.Pitch
 
 open          = openLilypond . asScore
 play          = playMidiIO mempty . asScore
