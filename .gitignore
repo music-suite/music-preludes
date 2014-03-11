@@ -11,3 +11,4 @@ tests
 *.wav
 *.dat
 *.svg
+*sandbox.config
