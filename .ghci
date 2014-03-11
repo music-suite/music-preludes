@@ -1,5 +1,5 @@
 :set -XOverloadedStrings
 :set -XNoMonomorphismRestriction
-:load src/Music/Prelude/Standard.hs
+-- :load src/Music/Prelude/Standard.hs
 
 -- :m + Music.Score.Import.Sibelius
