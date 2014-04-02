@@ -4,11 +4,11 @@
 import Music.Prelude.Standard hiding (open, play, openAndPlay)
 import Control.Concurrent.Async
 import Control.Applicative
--- import Data.AffineSpace.Relative
 import System.Process (system)
 
 {-    
-    Arvo Pärt: Cantus in Memory of Benjamin Britten
+    Arvo Pärt: Cantus in Memory of Benjamin Britten (1977)
+
     Inspired by the Abjad transcription
 -}
 

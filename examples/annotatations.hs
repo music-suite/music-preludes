@@ -1,7 +1,8 @@
 
 {-
   Annotate a melody with intervals.
-  Example by Carlo Nucera
+
+  Written by Carlo Nucera
 -}
 module Annotations where
 

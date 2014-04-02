@@ -7,7 +7,7 @@ import System.Process (runCommand)
 import Music.Prelude.Basic
 
 {-    
-    Franz Schubert: Erlkönig
+    Franz Schubert: Erlkönig, op. 1 (excerpt)
 -}
 
 main = do

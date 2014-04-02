@@ -6,7 +6,6 @@ import qualified Music.Score
 import Music.Prelude.Standard hiding (pitch, open, play, openAndPlay)
 import Control.Concurrent.Async
 import Control.Applicative
--- import Data.AffineSpace.Relative
 import System.Process (system)
 import qualified Data.Foldable
 import Control.Lens hiding (Parts)
@@ -14,8 +13,7 @@ import Data.Default -- debug
 import Math.OEIS
 
 {-    
-    Serial composition
-    Using sequences from the OEIS
+    A serial composition using sequences from the OEIS (http://oeis.org/)
 
     TODO optimize extendSequence etc (use local caching, possibly `unamb`)
 -}

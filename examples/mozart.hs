@@ -12,7 +12,7 @@ import Control.Applicative
 import System.Process (system)
 
 {-    
-    Mozart - Ave Verum
+    W.A. Mozart: Ave Verum (excerpt)
     
     Transcribed from autograph, see
         http://imslp.org/wiki/Ave_verum_corpus,_K.618_(Mozart,_Wolfgang_Amadeus)
