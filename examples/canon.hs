@@ -2,8 +2,7 @@
 module Main where
 
 {-
-  This simple example shows how to construct a simple 
-  4-part canon using a familiar subject,
+  This simple example shows how to construct a 4-part canon.
 -}
 import Music.Prelude.Basic
 
@@ -17,3 +16,4 @@ frere4 = delay 4 frere2 </> frere2
 
 info = title "Frere Jaques" . tempo (metronome (1/4) 120)
 main = open $ info $ asScore $ frere4
+
