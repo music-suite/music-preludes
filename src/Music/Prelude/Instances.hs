@@ -66,23 +66,23 @@ instance HasMidi Pitch where
     getMidi p = getMidi $ semitones (p .-. c)
 
 instance HasMusicXml Pitch where
-    getMusicXml      (realToFrac -> d) = (`Xml.note` d) . snd3 Just . spellPitch
-    getMusicXmlChord (realToFrac -> d) = (`Xml.chord` (realToFrac d)) . fmap (snd3 Just . spellPitch)
+    getMusicXml      (realToFrac -> d) = (`Xml.note` d) . snd3 Just . spellPitch 4
+    getMusicXmlChord (realToFrac -> d) = (`Xml.chord` (realToFrac d)) . fmap (snd3 Just . spellPitch 4)
 
 instance HasLilypond Pitch where
-    getLilypond      d = (^*realToFrac (d*4)) . Lilypond.note . pitchLilypond . Lilypond.Pitch . spellPitch . (.+^ perfect octave)
-    getLilypondChord d = (^*realToFrac (d*4)) . Lilypond.chord . fmap (pitchLilypond . Lilypond.Pitch . spellPitch . (.+^ perfect octave))
+    getLilypond      d = (^*realToFrac (d*4)) . Lilypond.note . pitchLilypond . Lilypond.Pitch . spellPitch 5
+    getLilypondChord d = (^*realToFrac (d*4)) . Lilypond.chord . fmap (pitchLilypond . Lilypond.Pitch . spellPitch 5)
 
 -- TODO move
 snd3 f (a, b, c) = (a, f b, c)
 pitchLilypond a = Lilypond.NotePitch a Nothing
 
-spellPitch :: (Enum p, Num a, Num o) => Pitch -> (p, a, o)
-spellPitch p = (pitchName, pitchAccidental, octave)
+spellPitch :: (Enum p, Num a, Num o) => Octaves -> Pitch -> (p, a, o)
+spellPitch referenceOctave p = (pitchName, pitchAccidental, octave)
     where
         pitchName       = toEnum $ fromEnum $ name p
         pitchAccidental = fromIntegral $ accidental p
-        octave          = fromIntegral $ (+ 4) $ octaves (p .-. c)
+        octave          = fromIntegral $ (+ referenceOctave) $ octaves (p .-. c)
 
 instance Alterable a => Alterable (Score a) where
     sharpen = fmap sharpen
