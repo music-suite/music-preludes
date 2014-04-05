@@ -1,10 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Main where
-
 {-
   This simple example shows how to construct a 4-part canon.
 -}
+module Main where
+
 import Music.Prelude.Basic
 
 frere = mempty
