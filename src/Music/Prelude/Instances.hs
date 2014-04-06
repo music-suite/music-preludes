@@ -42,8 +42,8 @@ deriving instance Typeable Music.Parts.Part
 
 type instance Music.Score.Part BasicPart = BasicPart
 instance HasPart BasicPart where
-        getPart = id
-        modifyPart = id
+    getPart = id
+    modifyPart = id
 
 -- FIXME
 instance Delayable Pitch      
