@@ -4,7 +4,6 @@ dist
 .DS_Store
 *.ly
 *.png
-tests
 *.pdf
 .shelly
 *.json
