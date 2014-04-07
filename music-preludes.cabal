@@ -45,3 +45,15 @@ library
                         Music.Prelude.Instances
     hs-source-dirs:     src
     default-language:   Haskell2010
+
+executable "music2ly"
+    build-depends:      base,
+                        split,
+                        unix,
+                        process,
+                        containers,
+                        music-preludes
+    main-is:            music2ly.hs
+    hs-source-dirs:     tools
+    default-language:   Haskell2010
+    
