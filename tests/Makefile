@@ -84,9 +84,9 @@ generate-originals:
 	music2midi	times.music
 	music2ly	times.music
 	music2musicxml	times.music
-	# music2midi	track_single.music
+	music2midi	track_single.music
 	music2ly	track_single.music
 	music2musicxml	track_single.music
 	music2midi	track_single.music
-	music2ly	voice_single.musicvoice_single.music                           
+	music2ly	voice_single.music
 	music2musicxml	voice_single.music
