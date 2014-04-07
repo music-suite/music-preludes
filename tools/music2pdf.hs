@@ -23,4 +23,4 @@ main = do
 main2 args = do
     [inFile] <- return args
     rawSystem "music2ly" [inFile] -- TODO pass outfile    
-    rawSystem "lilypond" ["-o", takeBaseName inFile ++ ".pdf", takeBaseName inFile ++ ".ly"]
+    rawSystem "lilypond" ["-o", takeBaseName inFile, takeBaseName inFile ++ ".ly"]
