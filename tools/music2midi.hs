@@ -25,5 +25,5 @@ run (Options prelude outFile inFile) =
 main :: IO ()
 main = do
   pgmName <- getProgName
-  let opts = info (helper <*> options) (briefDesc <> header pgmName)
+  let opts = info (helper <*> options) (fullDesc <> header (pgmName ++ "-" ++ versionString))
   execParser opts >>= run

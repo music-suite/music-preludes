@@ -1,11 +1,12 @@
 
 module Music.Prelude.CmdLine (
         translateFileAndRunLilypond,
-        translateFile
+        translateFile,
+        versionString
 ) where
 
--- import           Data.Version          (showVersion)
--- import           Paths_music_preludes  (version)
+import           Data.Version          (showVersion)
+import           Paths_music_preludes  (version)
 import           Data.Char
 import           Data.List          (intercalate)
 import           Data.List.Split
@@ -21,6 +22,10 @@ import           System.IO
 import           System.IO.Temp
 import qualified System.Posix.Env   as PE
 import           System.Process
+
+-- TODO
+versionString = "0.0.0"
+-- versionString = showVersion version
 
 translateFileAndRunLilypond :: String -> Maybe String -> Maybe FilePath -> IO ()
 translateFileAndRunLilypond format preludeName' inFile' = do
