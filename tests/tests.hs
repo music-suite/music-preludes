@@ -25,8 +25,8 @@ testCheckSum =
   goldenVsFile
     "Sanity"
       "golden/sum.sha"
-      "sum.sha"
-      (system "shasum *.music | shasum > sum.sha" >> return ())
+      "current/sum.sha"
+      (system "shasum *.music | shasum > current/sum.sha" >> return ())
 
 golden = testGroup "Regression tests" [
   testCheckSum,
