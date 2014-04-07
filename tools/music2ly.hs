@@ -16,8 +16,10 @@ import           System.Console.GetOpt
 import           System.Environment
 import           System.Exit
 import           System.IO
+import           System.FilePath
 import           System.Process
 import qualified System.Posix.Env as PE
+import           System.IO.Temp
 
 {-
 main :: IO ()
@@ -65,21 +67,33 @@ main2 args = do
   [preludeName, inFile] <- return args
   let prelude   = "Music.Prelude." ++ toCamel preludeName
   let scoreType = "Score " ++ toCamel preludeName ++ "Note"
-  let main      = "(openLilypond)"
+  let main      = "writeLilypond"
+  let outFile   = "test.ly"
   score       <- readFile inFile
-  packagePath <- readProcess "music-util" ["package-path"] ""
   newScore    <- return $ expand templ (Map.fromList [
     ("prelude"   , prelude),
     ("main"      , main),
     ("scoreType" , scoreType),
-    ("score"     , score)
+    ("score"     , score),
+    ("outFile"   , outFile)
     ])
-  writeFile "tempTODO.hs" newScore
-  withEnv "GHC_PACKAGE_PATH" (const packagePath) $ do
-    rawSystem "runhaskell" ["tempTODO.hs"]
+
+  withSystemTempDirectory "music2ly." $ \tmpDir -> do
+    let tmpFile = tmpDir ++ "/" ++ takeFileName inFile
+    putStrLn "Writing..."
+    writeFile tmpFile newScore
+    withMusicSuiteInScope $ do
+      putStrLn "Running..."
+      rawSystem "runhaskell" [tmpFile]
+      
+      -- TODO test
+      putStrLn "Rendering..."
+      rawSystem "lilypond" ["test.ly", "-o", "test.pdf"]
+      rawSystem "open" ["test.pdf"]
+
   return ()
   where
-    templ = "module Main where { import $(prelude); main = $(main) _score_a313445e; _score_a313445e = $(score) :: $(scoreType) }"
+    templ = "module Main where { import $(prelude); main = $(main) \"$(outFile)\" ( $(score) :: $(scoreType) ) }"
 
 
 type Template = String
@@ -93,7 +107,7 @@ type Template = String
 -- @
 -- 
 expand :: Template -> Map String String -> String
-expand t vs = (composed $ fmap (expander vs) $ Map.keys $ vs) t
+expand t vs = (composed $ fmap (expander vs) $ Map.keys $ vs) t
   where
     expander vs k = replace ("$(" ++ k ++ ")") (fromJust $ Map.lookup k vs)
 
@@ -126,3 +140,7 @@ withEnv n f k = do
 -- TODO
 -- packagePath = "/Users/hans/Documents/Kod/hs/music-sandbox/x86_64-osx-ghc-7.6.3-packages.conf.d:/Library/Frameworks/GHC.framework/Versions/7.6.3-x86_64/usr/lib/ghc-7.6.3/package.conf.d"
 
+-- TODO if no music-util, use ""
+withMusicSuiteInScope k = do
+  packagePath <- readProcess "music-util" ["package-path"] ""
+  withEnv "GHC_PACKAGE_PATH" (const packagePath) k

@@ -52,6 +52,8 @@ executable "music2ly"
                         unix,
                         process,
                         containers,
+                        filepath                >= 1.3.0.2 && < 2,
+                        temporary               >= 1.1     && < 2,
                         music-preludes
     main-is:            music2ly.hs
     hs-source-dirs:     tools
