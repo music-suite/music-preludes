@@ -1,19 +1,8 @@
 
-import Control.Exception
-import Control.Monad (when)
--- import Control.Monad.Error hiding (mapM)
--- import Control.Monad.Plus hiding (mapM)
--- import Data.Semigroup hiding (Option)
--- import Data.List (find)
--- import Data.Maybe (fromMaybe, maybeToList)
--- import Data.Traversable (mapM)
--- import Data.Typeable
-import           System.Console.GetOpt
+module Main where
+
+import           Music.Prelude.CmdLine
 import           System.Environment
-import           System.Exit
-import           System.IO
-import           System.FilePath
-import           System.Process
 
 -- TODO
 main = do
@@ -21,7 +10,5 @@ main = do
   main2 args
 
 main2 args = do
-    [inFile] <- return args
-    rawSystem "music2ly" [inFile] -- TODO pass outfile    
-    rawSystem "lilypond" ["--png", "-o", takeBaseName inFile, takeBaseName inFile ++ ".ly"]
-    runCommand $ "rm -f " ++ takeBaseName inFile ++ "-*.tex " ++ takeBaseName inFile ++ "-*.texi " ++ takeBaseName inFile ++ "-*.count " ++ takeBaseName inFile ++ "-*.eps " ++ takeBaseName inFile ++ "-*.pdf " ++ takeBaseName inFile ++ ".eps"
+  [inFile] <- return args
+  translateFileAndRunLilypond "png" (Just "basic") (Just inFile)

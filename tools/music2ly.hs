@@ -35,4 +35,4 @@ main = getArgs >>= main2
 
 main2 args = do
   let [inFile] = args
-  translateFile "writeLilypond" (Just "basic") (Just inFile) Nothing
+  translateFile "writeLilypond" "ly" (Just "basic") (Just inFile) Nothing

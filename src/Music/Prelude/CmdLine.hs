@@ -19,11 +19,22 @@ import           System.IO.Temp
 import qualified System.Posix.Env   as PE
 import           System.Process
 
-translateFile :: String -> Maybe String -> Maybe FilePath -> Maybe FilePath -> IO ()
-translateFile translationFunction preludeName' inFile' outFile' = do
+translateFileAndRunLilypond :: String -> Maybe String -> Maybe FilePath -> IO ()
+translateFileAndRunLilypond format preludeName' inFile' = do
   let inFile      = fromMaybe "test.music" inFile'
   let preludeName = fromMaybe "basic" preludeName'
-  let outFile     = fromMaybe (takeBaseName inFile ++ ".ly") outFile'
+  let lyFile      = takeBaseName inFile ++ ".ly"
+
+  translateFile "writeLilypond" "ly" (Just preludeName) (Just inFile) (Just lyFile)
+  rawSystem "lilypond" ["--" ++ format, "-o", takeBaseName inFile, lyFile]
+  runCommand $ "rm -f " ++ takeBaseName inFile ++ "-*.tex " ++ takeBaseName inFile ++ "-*.texi " ++ takeBaseName inFile ++ "-*.count " ++ takeBaseName inFile ++ "-*.eps " ++ takeBaseName inFile ++ "-*.pdf " ++ takeBaseName inFile ++ ".eps"
+  return ()
+
+translateFile :: String -> String -> Maybe String -> Maybe FilePath -> Maybe FilePath -> IO ()
+translateFile translationFunction outSuffix preludeName' inFile' outFile' = do
+  let inFile      = fromMaybe "test.music" inFile'
+  let preludeName = fromMaybe "basic" preludeName'
+  let outFile     = fromMaybe (takeBaseName inFile ++ "." ++ outSuffix) outFile'
 
   let prelude   = "Music.Prelude." ++ toCamel preludeName
   let scoreType = "Score " ++ toCamel preludeName ++ "Note"
