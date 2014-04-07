@@ -8,37 +8,20 @@ import Control.Monad (when)
 -- import Data.Maybe (fromMaybe, maybeToList)
 -- import Data.Traversable (mapM)
 -- import Data.Typeable
-import System.IO
-import System.Exit
-import System.Environment
-import System.Console.GetOpt
+import           System.Console.GetOpt
+import           System.Environment
+import           System.Exit
+import           System.IO
+import           System.FilePath
+import           System.Process
 
-import Prelude hiding (readFile, writeFile)
-
-main :: IO ()
+-- TODO
 main = do
-    (opts, args, optErrs) <- getOpt Permute options `fmap` getArgs
+  args <- getArgs
+  main2 args
 
-    let usage = usageInfo (header "music2ly") options
-    let printUsage   = putStr (usage ++ "\n")   >> exitSuccess
-    let printVersion = putStr (version "music2ly" ++ "\n") >> exitSuccess
-
-    when (1 `elem` opts) printUsage
-    when (2 `elem` opts) printVersion
-    printVersion
-
-version name = name ++ "-0.8"
-header  name = "Usage: "++name++" [options]\n" ++
-               "Usage: "++name++" [options] files...\n" ++
-               "\n" ++
-               "Options:"
-
-options = [
-    Option ['h'] ["help"]          (NoArg 1)   "Print help and exit",
-    Option ['v'] ["version"]       (NoArg 2)   "Print version and exit"
-  ]
-
-
--- Load the file into the interpreter
--- Get the 'score' variable
--- Run (writeLy path score)
+main2 args = do
+    [inFile] <- return args
+    rawSystem "music2ly" [inFile] -- TODO pass outfile    
+    rawSystem "lilypond" ["--png", "-o", takeBaseName inFile, takeBaseName inFile ++ ".ly"]
+    runCommand $ "rm -f " ++ takeBaseName inFile ++ "-*.tex " ++ takeBaseName inFile ++ "-*.texi " ++ takeBaseName inFile ++ "-*.count " ++ takeBaseName inFile ++ "-*.eps " ++ takeBaseName inFile ++ "-*.pdf " ++ takeBaseName inFile ++ ".eps"

@@ -67,4 +67,13 @@ executable "music2pdf"
     main-is:            music2pdf.hs
     hs-source-dirs:     tools
     default-language:   Haskell2010
+
+executable "music2png"
+    build-depends:      base,
+                        process,
+                        filepath                >= 1.3.0.2 && < 2,
+                        music-preludes
+    main-is:            music2png.hs
+    hs-source-dirs:     tools
+    default-language:   Haskell2010
     
