@@ -4,6 +4,9 @@ clean:
 	rm *.xml
 	rm *.ly
 
+sum:
+	shasum *.music | shasum
+
 generate-originals:
 	music2midi	articulation_all_accents.music
 	music2ly	articulation_all_accents.music

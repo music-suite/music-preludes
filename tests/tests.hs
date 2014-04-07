@@ -21,7 +21,15 @@ testMusicFileAs ext name =
     (name ++ "." ++ ext) -- TODO use the golden file
     (rawSystem "" [] >> return ())
 
+testCheckSum =
+  goldenVsFile
+    "Sanity"
+      "golden/sum.sha"
+      "sum.sha"
+      (system "shasum *.music | shasum > sum.sha" >> return ())
+
 golden = testGroup "Regression tests" [
+  testCheckSum,
   testMusicFile "articulation_all_accents",
   testMusicFile "articulation_all_separations",
   testMusicFile "articulation_legato"
