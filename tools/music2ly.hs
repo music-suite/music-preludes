@@ -59,16 +59,19 @@ options = [
   Execute
 -}
 
+-- TODO
 main = do
   args <- getArgs
   main2 args
 
 main2 args = do
-  [preludeName, inFile] <- return args
+  [inFile] <- return args
+  let preludeName = "basic"
+  let outFile   = takeBaseName inFile ++ ".ly"
+  
   let prelude   = "Music.Prelude." ++ toCamel preludeName
   let scoreType = "Score " ++ toCamel preludeName ++ "Note"
   let main      = "writeLilypond"
-  let outFile   = "test.ly"
   score       <- readFile inFile
   newScore    <- return $ expand templ (Map.fromList [
     ("prelude"   , prelude),
@@ -85,11 +88,7 @@ main2 args = do
     withMusicSuiteInScope $ do
       putStrLn "Running..."
       rawSystem "runhaskell" [tmpFile]
-      
-      -- TODO test
-      putStrLn "Rendering..."
-      rawSystem "lilypond" ["test.ly", "-o", "test.pdf"]
-      rawSystem "open" ["test.pdf"]
+
 
   return ()
   where
@@ -136,9 +135,6 @@ withEnv n f k = do
   case x of
     Nothing -> PE.unsetEnv n
     Just x2 -> PE.setEnv n x2 True  
-
--- TODO
--- packagePath = "/Users/hans/Documents/Kod/hs/music-sandbox/x86_64-osx-ghc-7.6.3-packages.conf.d:/Library/Frameworks/GHC.framework/Versions/7.6.3-x86_64/usr/lib/ghc-7.6.3/package.conf.d"
 
 -- TODO if no music-util, use ""
 withMusicSuiteInScope k = do
