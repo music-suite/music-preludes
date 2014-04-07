@@ -1,38 +1,29 @@
 
 module Main where
 
+import           Data.Monoid
 import           Music.Prelude.CmdLine
+import           Options.Applicative
 import           System.Environment
 
-{-
+data Options = Options {
+    prelude :: Maybe String,
+    outFile :: Maybe FilePath,
+    inFile  :: FilePath
+  } deriving (Show)
+
+options :: Parser Options
+options = Options
+  <$> (optional $ strOption $ mconcat [long "prelude", metavar "<name>"])
+  <*> (optional $ strOption $ mconcat [short 'o', long "output", metavar "<file>"])
+  <*> (argument str $ metavar "<input>")
+
+run :: Options -> IO ()
+run (Options prelude outFile inFile) =
+  translateFile "writeMidi" "mid" prelude (Just inFile) outFile
+
 main :: IO ()
 main = do
-    (opts, args, optErrs) <- getOpt Permute options `fmap` getArgs
-    prg <- getProgName
-
-    let usage        = usageInfo (header "music2ly") options
-    let printUsage   = putStr (usage ++ "\n")   >> exitSuccess
-    let printVersion = putStr (prg ++ "-" ++ showVersion version ++ "\n") >> exitSuccess
-
-    when (1 `elem` opts) printUsage
-    when (2 `elem` opts) printVersion
-    printVersion
-
-header  name = "Usage: "++name++" [options]\n" ++
-               "Usage: "++name++" [options] files...\n" ++
-               "\n" ++
-               "Options:"
-
-options = [
-    Option ['h'] ["help"]          (NoArg 1)   "Print help and exit",
-    Option ['v'] ["version"]       (NoArg 2)   "Print version and exit"
-  ]
-
--}
-
--- TODO parse options
-main = getArgs >>= main2
-
-main2 args = do
-  let [inFile] = args
-  translateFile "writeMidi" "mid" (Just "basic") (Just inFile) Nothing
+  pgmName <- getProgName
+  let opts = info (helper <*> options) (briefDesc <> header pgmName)
+  execParser opts >>= run
