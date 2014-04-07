@@ -95,3 +95,4 @@ generate-originals:
 	music2midi	track_single.music
 	music2ly	voice_single.music
 	music2musicxml	voice_single.music
+
