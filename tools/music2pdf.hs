@@ -24,3 +24,4 @@ main2 args = do
     [inFile] <- return args
     rawSystem "music2ly" [inFile] -- TODO pass outfile    
     rawSystem "lilypond" ["-o", takeBaseName inFile, takeBaseName inFile ++ ".ly"]
+    runCommand $ "rm -f " ++ takeBaseName inFile ++ "-*.tex " ++ takeBaseName inFile ++ "-*.texi " ++ takeBaseName inFile ++ "-*.count " ++ takeBaseName inFile ++ "-*.eps " ++ takeBaseName inFile ++ "-*.pdf " ++ takeBaseName inFile ++ ".eps"
