@@ -21,7 +21,7 @@ testMusicFileAs ext name =
     (name ++ "." ++ ext) -- TODO use the golden file
     (rawSystem "" [] >> return ())
 
-golden = testGroup "Golden" [
+golden = testGroup "Regression tests" [
   testMusicFile "articulation_all_accents",
   testMusicFile "articulation_all_separations",
   testMusicFile "articulation_legato"
