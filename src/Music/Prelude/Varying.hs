@@ -1,16 +1,14 @@
 
-{-# LANGUAGE
-    GeneralizedNewtypeDeriving,
-    FlexibleContexts,
-    UndecidableInstances,
-    TupleSections,
-    ViewPatterns,
-    DeriveDataTypeable,
-    ConstraintKinds,
-    RankNTypes,
-    FlexibleInstances, -- For the (Time ->) instances
-    MultiParamTypeClasses, -- TODO
-    TypeFamilies #-}
+{-# LANGUAGE ConstraintKinds            #-}
+{-# LANGUAGE DeriveDataTypeable         #-}
+{-# LANGUAGE FlexibleContexts           #-}
+{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE RankNTypes                 #-}
+{-# LANGUAGE TupleSections              #-}
+{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE UndecidableInstances       #-}
 
 ------------------------------------------------------------------------------------
 -- |
@@ -41,20 +39,21 @@ module Music.Prelude.Varying (
         openAndPlay
   ) where
 
-import Data.Default
-import Data.Typeable
-import Control.Applicative -- TODO below
-import Control.Lens hiding ((|>)) -- TODO below
+import           Control.Applicative
+import           Control.Lens            hiding ((|>))
+import           Data.Default
+import           Data.Typeable
 
-import Music.Pitch
-import Music.Dynamics.Literal -- TODO
-import Music.Dynamics
-import Music.Parts
-import Music.Score hiding (Pitch, Interval, Fifths, Note, Part, pitch)
-import Music.Time.Behavior -- TODO
-import qualified Music.Score -- TODO below
+import           Music.Dynamics
+import           Music.Dynamics.Literal
+import           Music.Parts
+import           Music.Pitch
+import           Music.Score             hiding (Fifths, Interval, Note, Part,
+                                          Pitch, pitch)
+import qualified Music.Score
+import           Music.Time.Behavior
 
-import Music.Prelude.Instances ()
+import           Music.Prelude.Instances ()
 
 
 asNote :: Note -> Note
@@ -75,18 +74,18 @@ type I a = Music.Score.Interval a
 type B a = Behavior a
 {-
     Test a type constraint like this:
-    
+
         :t () :: (Int ~ Float) => ()
 
-        
-        
+
+
     For example this fails:
 
-        () :: forall a b . (a ~ b, b ~ Int, a ~ Float) => ()
-    
+        () :: forall a b . (a ~ b, b ~ Int, a ~ Float) => ()
+
 -}
 -- type Yup  dummy = forall a b . (a ~ b, dummy ~ dummy)
--- type Nope dummy = forall a b . (a ~ b, b ~ Int, a ~ Float)
+-- type Nope dummy = forall a b . (a ~ b, b ~ Int, a ~ Float)
 
 
 type instance Music.Score.Pitch (Time -> a) = Time -> (Music.Score.Pitch a)
@@ -99,7 +98,7 @@ instance HasGetPitch a => HasGetPitch (First a) where
 
 instance (HasSetPitch a b) => HasSetPitch (First a) (First b) where
     type SetPitch p (First a) = First (SetPitch p a)
-    __mapPitch f = fmap (spitch %~ f) 
+    __mapPitch f = fmap (spitch %~ f)
 
 spitch :: HasSetPitch a b => Setter a b (P a) (P b)
 spitch = sets __mapPitch
@@ -232,15 +231,15 @@ scaleAbs s x = inst*^offset ^+^ s !! fromIntegral step
 
 
 
-pt = stretch 4 $ 
-    varying $ 
+pt = stretch 4 $
+    varying $
         \t -> spell modal $ (\x->x :: Semitones) $ scale [1,3,2,2,1,3] $ toSemitones $ (((* 6) $ sin $ realToFrac t*((pi*2)/5))) - 0
 
 score = asScore $ compress 1 $ pcat [p1,p2,p3,p4]
-p1 = part .~ (vl2)          $ spitch' %~ (.+^ (stretch 2.1 pt)) $ times 80 (stretchTo 2 $ c' |> (b^*(2/4))^/1)
-p2 = part .~ (vl1)          $ spitch' %~ (.+^ (stretch 2.2 pt)) $ times 80 (stretchTo 3 $ c' |> (b^*(2/4))^/1)
-p3 = part .~ (tutti viola)  $ spitch' %~ (.+^ (stretch 2.3 pt)) $ times 80 (stretchTo 4 $ c' |> (b^*(2/4))^/1)
-p4 = part .~ (tutti cello)  $ spitch' %~ (.+^ (stretch 2.4 pt)) $ times 80 (stretchTo 5 $ c' |> (b^*(2/4))^/1)
+p1 = part .~ (vl2)          $ spitch' %~ (.+^ (stretch 2.1 pt)) $ times 80 (stretchTo 2 $ c' |> (b^*(2/4))^/1)
+p2 = part .~ (vl1)          $ spitch' %~ (.+^ (stretch 2.2 pt)) $ times 80 (stretchTo 3 $ c' |> (b^*(2/4))^/1)
+p3 = part .~ (tutti viola)  $ spitch' %~ (.+^ (stretch 2.3 pt)) $ times 80 (stretchTo 4 $ c' |> (b^*(2/4))^/1)
+p4 = part .~ (tutti cello)  $ spitch' %~ (.+^ (stretch 2.4 pt)) $ times 80 (stretchTo 5 $ c' |> (b^*(2/4))^/1)
 
 [vl1, vl2] = divide 2 (tutti violin)
 
@@ -248,7 +247,7 @@ toSemitones :: RealFrac a => a -> Semitones
 toSemitones = floor
 
 showPitches :: [Pitch] -> Score (PartT Integer (ChordT Pitch))
-showPitches = scat . fmap (return . PartT . (1,) . ChordT  .return . asPitch)
+showPitches = scat . fmap (return . PartT . (1,) . ChordT  .return . asPitch)
 
 part :: (HasPart a, Default (Music.Score.Part a)) => Lens' a (Music.Score.Part a)
 part = lens getPart (flip setPart)
@@ -274,5 +273,5 @@ instance Monoid Part where
 -- instance Applicative HarmonicT where
 --     pure x = HarmonicT ((False,0), x)
 -- instance Applicative TieT where
-    -- pure x = TieT (False,x,False)      
+    -- pure x = TieT (False,x,False)
 

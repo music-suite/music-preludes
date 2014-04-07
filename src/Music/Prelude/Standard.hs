@@ -1,8 +1,7 @@
 
-{-# LANGUAGE
-    GeneralizedNewtypeDeriving,
-    DeriveDataTypeable,
-    TypeFamilies #-}
+{-# LANGUAGE DeriveDataTypeable         #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE TypeFamilies               #-}
 
 ------------------------------------------------------------------------------------
 -- |
@@ -33,15 +32,16 @@ module Music.Prelude.Standard (
         openAndPlay
   ) where
 
-import Data.Default
-import Data.Typeable
+import           Data.Default
+import           Data.Typeable
 
-import Music.Pitch
-import Music.Dynamics
-import Music.Parts
-import Music.Score hiding (Pitch, Interval, Fifths, Note, Part, pitch)
+import           Music.Dynamics
+import           Music.Parts
+import           Music.Pitch
+import           Music.Score             hiding (Fifths, Interval, Note, Part,
+                                          Pitch, pitch)
 
-import Music.Prelude.Instances ()
+import           Music.Prelude.Instances ()
 
 asNote :: Note -> Note
 asNote = id
@@ -57,7 +57,7 @@ asTrack = id
 
 -- newtype BasicPart = BasicPart { getBasicPart :: Integer }
 --     deriving (Eq, Ord, Num, Integral, Real, Enum, Typeable)
--- 
+--
 -- instance Default BasicPart where def = BasicPart 0
 -- instance Show BasicPart where
 --     show _ = ""

@@ -1,5 +1,8 @@
 
-module Music.Prelude.CmdLine where
+module Music.Prelude.CmdLine (
+        translateFileAndRunLilypond,
+        translateFile
+) where
 
 -- import           Data.Version          (showVersion)
 -- import           Paths_music_preludes  (version)

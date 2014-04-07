@@ -1,13 +1,12 @@
 
-{-# LANGUAGE
-    GeneralizedNewtypeDeriving,
-    StandaloneDeriving,
-    MultiParamTypeClasses,
-    DeriveDataTypeable,
-    TypeFamilies, 
-    FlexibleInstances,
-    UndecidableInstances,
-    ViewPatterns #-} 
+{-# LANGUAGE DeriveDataTypeable         #-}
+{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE StandaloneDeriving         #-}
+{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE UndecidableInstances       #-}
+{-# LANGUAGE ViewPatterns               #-}
 
 ------------------------------------------------------------------------------------
 -- |
@@ -25,18 +24,18 @@
 
 module Music.Prelude.Instances () where
 
-import Data.Default
-import Data.Typeable
-import Data.AffineSpace.Point
+import           Data.AffineSpace.Point
+import           Data.Default
+import           Data.Typeable
 
-import Music.Pitch
-import Music.Dynamics
-import Music.Parts
-import Music.Score hiding (Pitch, Interval, Fifths, Note)
+import           Music.Dynamics
+import           Music.Parts
+import           Music.Pitch
+import           Music.Score            hiding (Fifths, Interval, Note, Pitch)
 
-import qualified Music.Score as Score
-import qualified Music.Lilypond as Lilypond
-import qualified Music.MusicXml.Simple as Xml
+import qualified Music.Lilypond         as Lilypond
+import qualified Music.MusicXml.Simple  as Xml
+import qualified Music.Score            as Score
 
 deriving instance Typeable Music.Parts.Part
 
@@ -46,7 +45,7 @@ instance HasPart BasicPart where
     modifyPart = id
 
 -- FIXME
-instance Delayable Pitch      
+instance Delayable Pitch
 instance Stretchable Pitch
 type instance Score.Pitch Pitch = Pitch
 

@@ -47,8 +47,8 @@ import           Music.Pitch             hiding (Fifths, Interval, Note, Part,
 import qualified Music.Pitch
 import           Music.Score             hiding (Pitch)
 
+import           Control.Lens.Operators  hiding ((<.>), (<|), (|>))
 import           Control.Monad.Plus
-import           Control.Lens.Operators   hiding ((|>), (<|), (<.>))
 
 import           Music.Prelude.Instances ()
 

@@ -1,7 +1,6 @@
 
-{-# LANGUAGE
-    GeneralizedNewtypeDeriving,
-    DeriveDataTypeable #-} 
+{-# LANGUAGE DeriveDataTypeable         #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 ------------------------------------------------------------------------------------
 -- |
@@ -23,14 +22,14 @@ module Music.Prelude.StringQuartet (
         asScore
   ) where
 
-import Music.Pitch
-import Music.Score hiding (Pitch, Interval, Note)
-import Music.Dynamics.Literal --TODO
-import Data.Typeable
-import Data.AffineSpace.Point
-import qualified Music.Score as Score
-import qualified Music.Lilypond as Lilypond
-import qualified Music.MusicXml.Simple as Xml
+import           Data.AffineSpace.Point
+import           Data.Typeable
+import           Music.Dynamics.Literal
+import qualified Music.Lilypond         as Lilypond
+import qualified Music.MusicXml.Simple  as Xml
+import           Music.Pitch
+import           Music.Score            hiding (Interval, Note, Pitch)
+import qualified Music.Score            as Score
 
 asScore :: Score Note -> Score Note
 asScore = id
