@@ -20,6 +20,11 @@ testMusicFileAs ext name =
     (name ++ "." ++ ext) -- TODO use the golden file
     (rawSystem "" [] >> return ())
 
+{-
+  This test will always fail if the .music files have been edited.
+  If you intend to commit your changes, please run
+    make generate-checksums
+-}
 testMusicFileCheckSum =
   goldenVsFile
       "Test files OK"

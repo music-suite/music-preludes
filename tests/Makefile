@@ -4,8 +4,8 @@ clean:
 	rm *.xml
 	rm *.ly
 
-sum:
-	shasum *.music | shasum
+generate-checksums:
+	shasum *.music | shasum > golden/sum.sha
 
 generate-originals:
 	music2midi	articulation_all_accents.music
