@@ -5,8 +5,7 @@ import Test.Tasty
 import Test.Tasty.Golden
 import System.Process
 
-main = defaultMain golden
-
+main = defaultMain $ testGroup "All tests" [sanity, golden]
 
 testMusicFile name = testGroup name [
   testMusicFileAs "mid" name,
@@ -21,15 +20,18 @@ testMusicFileAs ext name =
     (name ++ "." ++ ext) -- TODO use the golden file
     (rawSystem "" [] >> return ())
 
-testCheckSum =
+testMusicFileCheckSum =
   goldenVsFile
-    "Sanity"
+      "Test files OK"
       "golden/sum.sha"
       "current/sum.sha"
       (system "shasum *.music | shasum > current/sum.sha" >> return ())
 
+sanity = testGroup "Sanity checks" [
+  testMusicFileCheckSum
+  ]
+
 golden = testGroup "Regression tests" [
-  testCheckSum,
   testMusicFile "articulation_all_accents",
   testMusicFile "articulation_all_separations",
   testMusicFile "articulation_legato"
