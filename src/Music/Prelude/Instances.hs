@@ -59,7 +59,7 @@ instance Tiable Pitch where
     endTie = id
 
 instance HasMidi Semitones where
-    getMidi a = getMidi $ (60 + fromIntegral a :: Integer)
+    getMidi a = getMidi $ (fromIntegral a :: Integer)
 
 instance HasMidi Pitch where
     getMidi p = getMidi $ semitones (p .-. c)
