@@ -1,4 +1,9 @@
 
+clean:	
+	rm *.mid
+	rm *.xml
+	rm *.ly
+
 generate-originals:
 	music2midi	articulation_all_accents.music
 	music2ly	articulation_all_accents.music
