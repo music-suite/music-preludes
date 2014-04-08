@@ -37,6 +37,11 @@ testMusicFileAs ext name =
   
   You should commit all the resulting files along with your edits.
 -}
+sanity = testGroup "Sanity checks" [
+  testMusicFileCheckSum,
+  testGoldenFileChecksum
+  ]
+
 testMusicFileCheckSum =
   goldenVsFile
       "Original file checksums"
@@ -50,11 +55,6 @@ testGoldenFileChecksum =
       "generated_ref.sha"
       "generated_check.sha"
       (system "shasum golden/* | shasum > generated_check.sha" >> return ())
-
-sanity = testGroup "Sanity checks" [
-  testMusicFileCheckSum,
-  testGoldenFileChecksum
-  ]
 
 golden = testGroup "Regression tests" [
   testMusicFile "articulation_all_accents",
