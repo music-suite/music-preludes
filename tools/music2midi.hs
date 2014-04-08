@@ -5,6 +5,4 @@ import           Music.Prelude.CmdLine
 import           System.Environment
 
 main :: IO ()
-main = do
-  pgmName <- getProgName
-  converterMain "writeMidi" "mid" pgmName
+main = getProgName >>= converterMain "writeMidi" "mid"
