@@ -1,2 +1,5 @@
 current/sum.sha
 actual_sum.sha
+!golden/*.mid
+!golden/*.ly
+!golden/*.xml
