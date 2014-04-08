@@ -100,7 +100,7 @@ generate-originals:
 	music2midi	-o golden/track_single.mid			track_single.music
 	music2ly	-o golden/track_single.ly			track_single.music
 	music2musicxml	-o golden/track_single.xml			track_single.music
-	music2midi	-o golden/track_single.mid			track_single.music
+	music2midi	-o golden/voice_single.mid			voice_single.music
 	music2ly	-o golden/voice_single.ly			voice_single.music
 	music2musicxml	-o golden/voice_single.xml			voice_single.music
 

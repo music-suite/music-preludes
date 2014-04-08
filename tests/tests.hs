@@ -27,15 +27,15 @@ testMusicFileAs ext name =
       >> return ())
 
 {-
-  This test will always fail if the .music files have been edited.
+  This test will always fail if the test files have been edited.
 
-  If you intend to make permanent changes to the test files, run
+  If you have edited one or more test files and DEFINITELY intend to make 
+  your changes permanent, please assure that you are in a clean working
+  directory (except for your edits), and then run:
 
-      $ make generate-checksums
+      $ make generate
   
-  and check in the resulting .sha file to ensure that this test
-  will continoue to work in the future.
-
+  You should commit all the resulting files along with your edits.
 -}
 testMusicFileCheckSum =
   goldenVsFile
@@ -59,5 +59,32 @@ sanity = testGroup "Sanity checks" [
 golden = testGroup "Regression tests" [
   testMusicFile "articulation_all_accents",
   testMusicFile "articulation_all_separations",
-  testMusicFile "articulation_legato"
+  testMusicFile "articulation_legato",
+  testMusicFile "articulation_portato",
+  testMusicFile "articulation_staccato",
+  testMusicFile "dynamics_constant",
+  testMusicFile "melody_chords",
+  testMusicFile "meta_annotations",
+  testMusicFile "meta_clef1",
+  testMusicFile "meta_composer",
+  testMusicFile "meta_time_signature",
+  testMusicFile "misc_counterpoint",
+  testMusicFile "octaves",
+  testMusicFile "overlay_chords",
+  testMusicFile "overlay_voices",
+  testMusicFile "pitch_inv",
+  testMusicFile "sharpen",
+  testMusicFile "simple_figure",
+  testMusicFile "simple_start_later",
+  testMusicFile "single_note",
+  testMusicFile "special_gliss",
+  testMusicFile "special_harmonics",
+  testMusicFile "special_text",
+  testMusicFile "special_tremolo",
+  testMusicFile "stretch_single_note1",
+  testMusicFile "stretch_single_note2",
+  testMusicFile "stretch_single_note3",
+  testMusicFile "times",
+  testMusicFile "track_single",
+  testMusicFile "voice_single"
   ]
