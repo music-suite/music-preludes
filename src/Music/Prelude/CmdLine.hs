@@ -9,7 +9,7 @@ module Music.Prelude.CmdLine (
 import           Data.Version          (showVersion)
 import           Data.Monoid
 import           Options.Applicative
-import           Paths_music_preludes  (version)
+-- import           Paths_music_preludes  (version)
 import           Data.Char
 import           Data.List          (intercalate)
 import           Data.List.Split
@@ -80,7 +80,11 @@ translateFile :: String -> String -> Maybe String -> Maybe FilePath -> Maybe Fil
 translateFile translationFunction outSuffix preludeName' inFile' outFile' = do
   let inFile      = fromMaybe "test.music" inFile'
   let preludeName = fromMaybe "basic" preludeName'
-  let outFile     = fromMaybe (takeBaseName inFile ++ "." ++ outSuffix) outFile'
+  let outFile     = fromMaybe (
+                    takeDirectory inFile ++ "/" 
+                    ++ takeBaseName inFile 
+                    ++ "." ++ outSuffix) 
+                    outFile'
 
   let prelude   = "Music.Prelude." ++ toCamel preludeName
   let scoreType = "Score " ++ toCamel preludeName ++ "Note"
