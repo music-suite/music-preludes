@@ -55,16 +55,6 @@ converterMain func ext pgmName = execParser opts >>= runConverter func ext
         (fullDesc <> header (pgmName ++ "-" ++ versionString))
 
 
-
-
-
-
-
-
-
-
-
-
 translateFileAndRunLilypond :: String -> Maybe String -> Maybe FilePath -> IO ()
 translateFileAndRunLilypond format preludeName' inFile' = do
   let inFile      = fromMaybe "test.music" inFile'
