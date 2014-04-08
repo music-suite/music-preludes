@@ -22,8 +22,14 @@ testMusicFileAs ext name =
 
 {-
   This test will always fail if the .music files have been edited.
-  If you intend to commit your changes, please run
-    make generate-checksums
+
+  If you intend to make permanent changes to the test files, run
+
+      $ make generate-checksums
+  
+  and check in the resulting .sha file to ensure that this test
+  will continoue to work in the future.
+
 -}
 testMusicFileCheckSum =
   goldenVsFile
