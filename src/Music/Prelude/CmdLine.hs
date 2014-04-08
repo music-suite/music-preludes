@@ -37,21 +37,21 @@ data Options = Options {
     inFile  :: FilePath
   } deriving (Show)
 
-options :: Parser Options
-options = Options
+converterOptions :: Parser Options
+converterOptions = Options
   <$> (optional $ strOption $ mconcat [long "prelude", metavar "<name>"])
   <*> (optional $ strOption $ mconcat [short 'o', long "output", metavar "<file>"])
   <*> (argument str $ metavar "<input>")
 
-run :: String -> String -> Options -> IO ()
-run func ext (Options prelude outFile inFile) =
+runConverter :: String -> String -> Options -> IO ()
+runConverter func ext (Options prelude outFile inFile) =
   translateFile func ext prelude (Just inFile) outFile
 
 converterMain :: String -> String -> String -> IO ()
-converterMain func ext pgmName = execParser opts >>= run func ext
+converterMain func ext pgmName = execParser opts >>= runConverter func ext
   where 
       opts = info 
-        (helper <*> options) 
+        (helper <*> converterOptions) 
         (fullDesc <> header (pgmName ++ "-" ++ versionString))
 
 
