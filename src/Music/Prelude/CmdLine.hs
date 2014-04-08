@@ -106,10 +106,8 @@ type Template = String
 -- |
 -- Simple templating system.
 --
--- @
 -- >>> expand "me : $(name)" (Map.fromList [("name","Hans")])
 -- "me : Hans"
--- @
 --
 expand :: Template -> Map String String -> String
 expand t vs = (composed $ fmap (expander vs) $ Map.keys $ vs) t
