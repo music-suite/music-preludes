@@ -100,10 +100,10 @@ translateFile translationFunction outSuffix preludeName' inFile' outFile' = do
 
   withSystemTempDirectory "music-suite." $ \tmpDir -> do
     let tmpFile = tmpDir ++ "/" ++ takeFileName inFile
-    putStrLn "Writing..."
+    putStrLn $ "Converting music..."
     writeFile tmpFile newScore
     withMusicSuiteInScope $ do
-      putStrLn "Running..."
+      putStrLn $ "Writing '" ++ outFile ++ "'..."
       rawSystem "runhaskell" [tmpFile]
 
   return ()
