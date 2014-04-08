@@ -1,4 +1,8 @@
 
+run:
+	ghc -threaded -o te tests/tests.hs
+	time ./te -j 4 +RTS -N4 -RTS
+
 clean:	
 	rm -f tests/golden/*.mid
 	rm -f tests/golden/*.xml
