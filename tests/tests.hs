@@ -13,12 +13,18 @@ testMusicFile name = testGroup name [
   testMusicFileAs "ly"  name
   ]
 
+converter ext = case ext of
+  "mid" -> "music2midi"
+  "xml" -> "music2musicxml"
+  "ly"  -> "music2ly"
+
 testMusicFileAs ext name =
   goldenVsFile 
     (name ++ "." ++ ext)
-    (name ++ "." ++ ext)
-    (name ++ "." ++ ext) -- TODO use the golden file
-    (rawSystem "" [] >> return ())
+    ("golden/" ++ name ++ "." ++ ext)
+    ("current/" ++ name ++ "." ++ ext)
+    ((system $ converter ext ++" -o current/"++name++"."++ext++" "++name++".music") 
+      >> return ())
 
 {-
   This test will always fail if the .music files have been edited.
@@ -33,13 +39,21 @@ testMusicFileAs ext name =
 -}
 testMusicFileCheckSum =
   goldenVsFile
-      "Test files OK"
-      "reference_sum.sha"
-      "actual_sum.sha"
-      (system "shasum *.music | shasum > actual_sum.sha" >> return ())
+      "Original file checksums"
+      "originals_ref.sha"
+      "originals_check.sha"
+      (system "shasum *.music | shasum > originals_check.sha" >> return ())
+
+testGoldenFileChecksum =
+  goldenVsFile
+      "Generated file checksums"
+      "generated_ref.sha"
+      "generated_check.sha"
+      (system "shasum golden/* | shasum > generated_check.sha" >> return ())
 
 sanity = testGroup "Sanity checks" [
-  testMusicFileCheckSum
+  testMusicFileCheckSum,
+  testGoldenFileChecksum
   ]
 
 golden = testGroup "Regression tests" [

@@ -3,9 +3,14 @@ clean:
 	rm -f golden/*.mid
 	rm -f golden/*.xml
 	rm -f golden/*.ly
+	rm originals_ref.sha
+	generated_ref.sha
 
-generate-checksums:
-	shasum *.music | shasum > reference_sum.sha
+generate: generate-checksums
+
+generate-checksums: generate-originals
+	shasum *.music  | shasum > originals_ref.sha
+	shasum golden/* | shasum > generated_ref.sha
 
 generate-originals:
 	music2midi	-o golden/articulation_all_accents.mid	articulation_all_accents.music

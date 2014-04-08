@@ -1,5 +1,4 @@
-current/sum.sha
-actual_sum.sha
+*_check.sha
 !golden/*.mid
 !golden/*.ly
 !golden/*.xml
