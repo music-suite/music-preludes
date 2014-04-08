@@ -28,9 +28,9 @@ testMusicFileAs ext name =
 testMusicFileCheckSum =
   goldenVsFile
       "Test files OK"
-      "golden/sum.sha"
-      "current/sum.sha"
-      (system "shasum *.music | shasum > current/sum.sha" >> return ())
+      "reference_sum.sha"
+      "actual_sum.sha"
+      (system "shasum *.music | shasum > actual_sum.sha" >> return ())
 
 sanity = testGroup "Sanity checks" [
   testMusicFileCheckSum

@@ -1,11 +1,11 @@
 
 clean:	
-	rm *.mid
-	rm *.xml
-	rm *.ly
+	rm golden/*.mid
+	rm golden/*.xml
+	rm golden/*.ly
 
 generate-checksums:
-	shasum *.music | shasum > golden/sum.sha
+	shasum *.music | shasum > reference_sum.sha
 
 generate-originals:
 	music2midi	articulation_all_accents.music
