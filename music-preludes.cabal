@@ -90,7 +90,6 @@ executable "music2musicxml"
 
 executable "music2midi"
     build-depends:      base,
-                        optparse-applicative >= 0.8 && < 1,
                         music-preludes
     main-is:            music2midi.hs
     hs-source-dirs:     tools

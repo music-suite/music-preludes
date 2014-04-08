@@ -1,11 +1,14 @@
 
 module Music.Prelude.CmdLine (
+        converterMain,
         translateFileAndRunLilypond,
         translateFile,
         versionString
 ) where
 
 import           Data.Version          (showVersion)
+import           Data.Monoid
+import           Options.Applicative
 import           Paths_music_preludes  (version)
 import           Data.Char
 import           Data.List          (intercalate)
@@ -23,9 +26,44 @@ import           System.IO.Temp
 import qualified System.Posix.Env   as PE
 import           System.Process
 
--- TODO
+-- TODO can not link
+versionString :: String
 versionString = "0.0.0"
 -- versionString = showVersion version
+
+data Options = Options {
+    prelude :: Maybe String,
+    outFile :: Maybe FilePath,
+    inFile  :: FilePath
+  } deriving (Show)
+
+options :: Parser Options
+options = Options
+  <$> (optional $ strOption $ mconcat [long "prelude", metavar "<name>"])
+  <*> (optional $ strOption $ mconcat [short 'o', long "output", metavar "<file>"])
+  <*> (argument str $ metavar "<input>")
+
+run :: String -> String -> Options -> IO ()
+run func ext (Options prelude outFile inFile) =
+  translateFile func ext prelude (Just inFile) outFile
+
+converterMain :: String -> String -> String -> IO ()
+converterMain func ext pgmName = execParser opts >>= run func ext
+  where 
+      opts = info 
+        (helper <*> options) 
+        (fullDesc <> header (pgmName ++ "-" ++ versionString))
+
+
+
+
+
+
+
+
+
+
+
 
 translateFileAndRunLilypond :: String -> Maybe String -> Maybe FilePath -> IO ()
 translateFileAndRunLilypond format preludeName' inFile' = do
