@@ -21,9 +21,9 @@ converter ext = case ext of
 testMusicFileAs ext name =
   goldenVsFile 
     (name ++ "." ++ ext)
-    ("golden/" ++ name ++ "." ++ ext)
-    ("current/" ++ name ++ "." ++ ext)
-    ((system $ converter ext ++" -o current/"++name++"."++ext++" "++name++".music") 
+    ("tests/golden/" ++ name ++ "." ++ ext)
+    ("tests/current/" ++ name ++ "." ++ ext)
+    ((system $ converter ext ++" -o tests/current/"++name++"."++ext++" tests/"++name++".music") 
       >> return ())
 
 {-
@@ -38,23 +38,23 @@ testMusicFileAs ext name =
   You should commit all the resulting files along with your edits.
 -}
 sanity = testGroup "Sanity checks" [
-  testMusicFileCheckSum,
-  testGoldenFileChecksum
+  testMusicFilesCheckSum,
+  testGenratedFilesChecksum
   ]
 
-testMusicFileCheckSum =
+testMusicFilesCheckSum =
   goldenVsFile
       "Original file checksums"
-      "originals_ref.sha"
-      "originals_check.sha"
-      (system "shasum *.music | shasum > originals_check.sha" >> return ())
+      "tests/originals_ref.sha"
+      "tests/originals_check.sha"
+      (system "shasum tests/*.music | shasum > tests/originals_check.sha" >> return ())
 
-testGoldenFileChecksum =
+testGenratedFilesChecksum =
   goldenVsFile
       "Generated file checksums"
-      "generated_ref.sha"
-      "generated_check.sha"
-      (system "shasum golden/* | shasum > generated_check.sha" >> return ())
+      "tests/generated_ref.sha"
+      "tests/generated_check.sha"
+      (system "shasum tests/golden/* | shasum > tests/generated_check.sha" >> return ())
 
 golden = testGroup "Regression tests" [
   testMusicFile "articulation_all_accents",
