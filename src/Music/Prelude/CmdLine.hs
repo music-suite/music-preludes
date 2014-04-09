@@ -26,9 +26,9 @@ import           System.IO.Temp
 import qualified System.Posix.Env   as PE
 import           System.Process
 
--- TODO can not link
+-- TODO Can not link due to haskell/cabal#1759
 versionString :: String
-versionString = "0.0.0"
+versionString = "1.6"
 -- versionString = showVersion version
 
 data Options = Options {
