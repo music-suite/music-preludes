@@ -12,3 +12,5 @@ dist
 *.svg
 *sandbox.config
 tests/gen
+*.hi
+*.o
