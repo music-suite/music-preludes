@@ -6,6 +6,7 @@ module Music.Prelude.CmdLine (
         versionString
 ) where
 
+import           Control.Exception
 import           Data.Version          (showVersion)
 import           Data.Monoid
 import           Options.Applicative
@@ -131,16 +132,18 @@ toCamel (x:xs) = toUpper x : xs
 --    ...
 -- @
 --
-withEnv :: String -> (Maybe String -> String) -> IO a -> IO ()
+withEnv :: String -> (Maybe String -> String) -> IO a -> IO a
 withEnv n f k = do
   x <- PE.getEnv n
   PE.setEnv n (f x) True
-  k
+  res <- k
   case x of
-    Nothing -> PE.unsetEnv n
-    Just x2 -> PE.setEnv n x2 True
+    Nothing -> PE.unsetEnv n >> return res
+    Just x2 -> PE.setEnv n x2 True >> return res
 
--- TODO if no music-util, use ""
+withMusicSuiteInScope :: IO a -> IO a
 withMusicSuiteInScope k = do
-  packagePath <- readProcess "music-util" ["package-path"] ""
-  withEnv "GHC_PACKAGE_PATH" (const packagePath) k
+  r <- try $ readProcess "music-util" ["package-path"] ""
+  case r of
+    Left x            -> let _ = (x::SomeException) in withEnv "GHC_PACKAGE_PATH" (const "") k
+    Right packagePath -> withEnv "GHC_PACKAGE_PATH" (const packagePath) k
