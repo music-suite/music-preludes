@@ -78,6 +78,6 @@ type StandardPitch = Music.Pitch.Pitch
 
 
 open          = openLilypond . asScore
-play          = playMidiIO mempty . asScore
+play          = error "Not implemented: play"
 openAndPlay x = open x >> play x
 

@@ -168,7 +168,7 @@ instance HasMidi a => HasMidi (Time -> a) where
 
 
 open          = openLilypond . asScore
-play          = playMidiIO "to Gr" . asScore
+play          = error "Not implemented: play"
 openAndPlay x = open x >> play x
 
 -- TODO move
