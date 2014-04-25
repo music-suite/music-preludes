@@ -40,12 +40,12 @@ import           Data.Typeable
 
 import           Music.Dynamics
 import           Music.Parts             hiding (Part)
-import           Music.Pitch             hiding (Fifths, Interval, Note, Part,
+import           Music.Pitch             hiding (Fifths, Note, Part,
                                           pitch)
 -- Need to export Pitch.Pitch for transf for now
 
 import qualified Music.Pitch
-import           Music.Score             hiding (Pitch)
+import           Music.Score             hiding (Pitch, Interval)
 
 import           Control.Lens.Operators  hiding ((<.>), (<|), (|>))
 import           Control.Monad.Plus
@@ -65,15 +65,18 @@ asTrack :: Track BasicNote -> Track BasicNote
 asTrack = id
 
 type BasicNote = (PartT BasicPart
-    (TremoloT
-      (TextT
-        (ArticulationT
-          (HarmonicT
-            (TieT
-              (SlideT
-                (DynamicT
-                  (ChordT
-                      BasicPitch)))))))))
+    -- (TremoloT
+    --   (TextT
+    --     (ArticulationT
+    --       (HarmonicT
+    --         (TieT
+    --           (SlideT
+    --             (DynamicT
+    --               (ChordT
+                      [
+                      BasicPitch
+                      ]) 
+                      --))))))))
 
 type BasicPitch = Music.Pitch.Pitch
 

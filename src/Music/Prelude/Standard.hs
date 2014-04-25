@@ -63,15 +63,15 @@ asTrack = id
 --     show _ = ""
 
 type Note = (PartT Part
-    (TremoloT
-      (TextT
-        (ArticulationT
-          (HarmonicT
-            (TieT
-              (SlideT
-                (DynamicT
-                  (ChordT
-                    StandardPitch)))))))))
+    -- (TremoloT
+      -- (TextT
+        -- (ArticulationT
+          -- (HarmonicT
+            -- (TieT
+              -- (SlideT
+                -- (DynamicT
+                  [
+                    StandardPitch]) --)))))))
 type StandardPitch = Music.Pitch.Pitch
 -- data StandardPitch = StandardPitch Music.Pitch.Pitch
     -- deriving (HasMidi, HasLilypond, HasMusicXml, HasPitch)

@@ -39,21 +39,38 @@ import qualified Music.Score            as Score
 
 deriving instance Typeable Music.Parts.Part
 
+instance Transformable Music.Parts.Part where
+  transform _ = id
+type instance Music.Score.Part Music.Parts.Part = Music.Parts.Part
+type instance SetPart a Music.Parts.Part = a
+
+instance (Transformable a, a ~ Music.Score.Part a) => HasPart Music.Parts.Part a where
+  part = ($)
+instance (Transformable a, a ~ Music.Score.Part a) => HasParts Music.Parts.Part a where
+  parts = ($)
+
+
+
+instance Transformable BasicPart where
+  transform _ = id
 type instance Music.Score.Part BasicPart = BasicPart
-instance HasPart BasicPart where
-    getPart = id
-    modifyPart = id
+type instance SetPart a BasicPart = a
 
--- FIXME
-instance Delayable Pitch
-instance Stretchable Pitch
+instance (Transformable a, a ~ Music.Score.Part a) => HasPart BasicPart a where
+  part = ($)
+instance (Transformable a, a ~ Music.Score.Part a) => HasParts BasicPart a where
+  parts = ($)
+
+instance Transformable Pitch where
+  transform _ = id
 type instance Score.Pitch Pitch = Pitch
+type instance SetPitch a Pitch = a
 
-instance HasGetPitch Pitch where
-    __getPitch = id
-instance (a ~ Score.Pitch a) => HasSetPitch Pitch a where
-    type SetPitch a Pitch = a
-    __mapPitch = id
+instance (Transformable a, a ~ Score.Pitch a) => HasPitch Pitch a where
+  pitch = ($)
+instance (Transformable a, a ~ Score.Pitch a) => HasPitches Pitch a where
+  pitches = ($)
+
 instance Tiable Pitch where
     beginTie = id
     endTie = id
@@ -64,9 +81,11 @@ instance HasMidi Semitones where
 instance HasMidi Pitch where
     getMidi p = getMidi $ semitones (p .-. c)
 
+{-
 instance HasMusicXml Pitch where
     getMusicXml      (realToFrac -> d) = (`Xml.note` d) . snd3 Just . spellPitch 4
     getMusicXmlChord (realToFrac -> d) = (`Xml.chord` (realToFrac d)) . fmap (snd3 Just . spellPitch 4)
+-}
 
 instance HasLilypond Pitch where
     getLilypond      d = (^*realToFrac (d*4)) . Lilypond.note . pitchLilypond . Lilypond.Pitch . spellPitch 5
