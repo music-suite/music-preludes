@@ -95,7 +95,7 @@ translateFile translationFunction outSuffix preludeName' inFile' outFile' = do
     writeFile tmpFile newScore
     withMusicSuiteInScope $ do
       putStrLn $ "Writing '" ++ outFile ++ "'..."
-      rawSystem "runhaskell" [tmpFile]
+      rawSystem "runhaskell" [tmpFile]  >>= \e -> if e == ExitSuccess then return () else fail ("Could not convert"++inFile)
 
   return ()
   where

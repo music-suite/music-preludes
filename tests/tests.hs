@@ -1,6 +1,7 @@
 
 module Main where
 
+import System.Exit
 import Test.Tasty
 import Test.Tasty.Golden
 import System.Process
@@ -24,7 +25,7 @@ testMusicFileAs ext name =
     ("tests/golden/" ++ name ++ "." ++ ext)
     ("tests/current/" ++ name ++ "." ++ ext)
     ((system $ converter ext ++" -o tests/current/"++name++"."++ext++" tests/"++name++".music") 
-      >> return ())
+      >>= \e -> if e == ExitSuccess then return () else fail ("Could not convert "++name++".music"))
 
 {-
   This test will always fail if the test files have been edited.
