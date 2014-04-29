@@ -31,6 +31,7 @@ events2 = notes . through event event
 -- over (extracted . elements even) (up m2) $ rcat [c,c,c,c]
 -- toListOf (extracted.each.singleVoice)
 
+{-
 extracted :: (Ord (Part a), HasPart' a) => Iso' (Score a) [Score a]
 extracted = iso extractParts mconcat
 
@@ -38,6 +39,7 @@ extracted = iso extractParts mconcat
 extracted' :: (Ord (Part a), HasPart' a) => Iso' (Score a) [(Part a, Score a)]
 extracted' = iso extractParts' $ mconcat . fmap (uncurry $ set parts)
 
+-}
 
 -- TODO failure
 -- TODO why Transformable?
