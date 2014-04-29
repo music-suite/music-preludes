@@ -2,6 +2,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FunctionalDependencies #-}
 
 module L where
 
@@ -150,7 +151,7 @@ phrases :: HasVoices a b => Traversal' a (Voice b)
 phrases = mvoices . mvoicePhrases . each . _Right
 
 
-class HasVoices a b where
+class HasVoices a b | a -> b where
   mvoices :: Traversal' a (Voice (Maybe b))
 instance HasVoices (Voice (Maybe a)) a where
   mvoices = id
