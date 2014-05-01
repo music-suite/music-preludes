@@ -36,6 +36,7 @@ phrases :: HasVoices a b => Traversal' a (Voice b)
 phrases = mvoices . mvoicePhrases . each . _Right
 
 
+type PVoice a = Voice a
 type MVoice a = Voice (Maybe a)
 
 class HasVoices a b | a -> b where
@@ -46,15 +47,14 @@ instance (HasPart' a, Transformable a, Ord (Part a)) => HasVoices (Score a) a wh
   mvoices = extracted . each . singleMVoice
   
 
-
 -- TODO
-mvoicePhrases :: Iso' (MVoice a) [Either Duration (Voice a)]
+mvoicePhrases :: Iso' (MVoice a) [Either Duration (PVoice a)]
 mvoicePhrases = iso mvoiceToPhrases phrasesToMVoice
   where
-    phrasesToMVoice :: [Either Duration (Voice a)] -> MVoice a
+    phrasesToMVoice :: [Either Duration (PVoice a)] -> MVoice a
     phrasesToMVoice = mconcat . fmap (either restToVoice phraseToVoice)
 
-    mvoiceToPhrases :: MVoice a -> [Either Duration (Voice a)]
+    mvoiceToPhrases :: MVoice a -> [Either Duration (PVoice a)]
     mvoiceToPhrases =
       map ( bimap voiceToRest voiceToPhrase 
           . bimap (^.from unsafeEventsV) (^.from unsafeEventsV) ) 
@@ -65,14 +65,14 @@ mvoicePhrases = iso mvoiceToPhrases phrasesToMVoice
     restToVoice :: Duration -> MVoice a
     restToVoice d = stretch d $ pure Nothing
 
-    phraseToVoice :: Voice a -> MVoice a
+    phraseToVoice :: PVoice a -> MVoice a
     phraseToVoice = fmap Just
 
     voiceToRest :: MVoice a -> Duration
     voiceToRest = sumOf (eventsV.each._1) . fmap (assert "isNothing" isNothing)
     -- TODO just _duration
 
-    voiceToPhrase :: MVoice a -> Voice a
+    voiceToPhrase :: MVoice a -> PVoice a
     voiceToPhrase = fmap fromJust
 
   
@@ -102,10 +102,10 @@ singleMVoice = iso scoreToVoice voiceToScore'
     voiceToScore' = mcatMaybes . voiceToScore
     
 
-instance Cons (Voice a) (Voice b) a b where
+instance (Transformable a, Transformable b) => Cons (Voice a) (Voice b) a b where
   _Cons = undefined
-instance Snoc (Voice a) (Voice b) a b where
-  _Snoc = undefined
+-- instance (Transformable a, Transformable b) => Snoc (Voice a) (Voice b) a b where
+  -- _Snoc = prism' pure (preview lastV)
 
 -- TODO make Voice an instance of Cons/Snoc and remove these
 headV :: Transformable a => Traversal' (Voice a) a
