@@ -12,92 +12,125 @@ import Music.Score.Convert
 import Music.Prelude.Basic
 import Data.Maybe
 import qualified Data.List as List
--- import Control.Lens hiding (transform, parts, )
-
 
 {-
--- TODO poly
-
-tripped :: Iso ((a, b), c) ((a', b'), c') (a, b, c) (a', b', c')
-tripped = iso tripl untripl
-
-event :: Lens (Note a) (Note b) (Time, Duration, a) (Time, Duration, b)
-event = from note . alongside delta id . tripped
-
-events2 :: Transformable a => Lens (Score a) (Score b) [(Time, Duration, a)] [(Time, Duration, b)]
-events2 = notes . through event event
+  Example:
+  
+  let s = rcat $ zipWith delay [0,1,2,3] $ repeat(scat [c,d,e] <> delay 4 (scat [e,d]))
+  over (extracted.elements odd.phrases.headV) (up _A1) s
 -}
-
--- over (extracted . elements even) (up m2) $ rcat [c,c,c,c]
--- toListOf (extracted.each.singleVoice)
-
-{-
-extracted :: (Ord (Part a), HasPart' a) => Iso' (Score a) [Score a]
-extracted = iso extractParts mconcat
-
--- TODO what to use instead of elements to select parts?
-extracted' :: (Ord (Part a), HasPart' a) => Iso' (Score a) [(Part a, Score a)]
-extracted' = iso extractParts' $ mconcat . fmap (uncurry $ set parts)
-
--}
-
--- TODO failure
--- TODO why Transformable?
-singleMVoice :: Transformable a => Prism' (Score a) (Voice (Maybe a))
-singleMVoice = iso scoreToVoice voiceToScore'
-
-
--- Traverse writing to all elements *except* first and last
-_mid = _tail._init
-
-firstS :: Transformable a => Traversal' (Score a) a
-firstS = (notes._head.getNote)
-
-lastS :: Transformable a => Traversal' (Score a) a
-lastS = (notes._last.getNote)
-
-firstV :: Transformable a => Traversal' (Voice a) a
-firstV = (eventsV._head._2)
-
-middleV :: Transformable a => Traversal' (Voice a) a
-middleV = (eventsV._mid.traverse._2)
-
-lastV :: Transformable a => Traversal' (Voice a) a
-lastV = (eventsV._last._2)
-
 
 
 
 -- TODO
-mvoicePhrases :: Iso' (Voice (Maybe a)) [Either Duration (Voice a)]
+-- mvoicePhrases2 :: Iso' (Voice (Maybe a)) (Voice (Maybe (Voice a)))
+
+
+-- This is the famous voice traversal!
+phrasesS :: (Ord (Part a), HasPart' a, Transformable a) => Traversal' (Score a) (Voice a)
+phrasesS = extracted . each . singleMVoice . mvoicePhrases . each . _Right
+
+-- More generally:
+
+phrases :: HasVoices a b => Traversal' a (Voice b)
+phrases = mvoices . mvoicePhrases . each . _Right
+
+
+type MVoice a = Voice (Maybe a)
+
+class HasVoices a b | a -> b where
+  mvoices :: Traversal' a (MVoice b)
+instance HasVoices (MVoice a) a where
+  mvoices = id
+instance (HasPart' a, Transformable a, Ord (Part a)) => HasVoices (Score a) a where
+  mvoices = extracted . each . singleMVoice
+  
+
+
+-- TODO
+mvoicePhrases :: Iso' (MVoice a) [Either Duration (Voice a)]
 mvoicePhrases = iso mvoiceToPhrases phrasesToMVoice
-
-phrasesToMVoice :: [Either Duration (Voice a)] -> (Voice (Maybe a))
-phrasesToMVoice = mconcat . fmap (either restToVoice phraseToVoice)
-
-mvoiceToPhrases :: (Voice (Maybe a)) -> [Either Duration (Voice a)]
-mvoiceToPhrases =
-  map ( bimap voiceToRest voiceToPhrase 
-      . bimap (^.from unsafeEventsV) (^.from unsafeEventsV) ) 
-   . groupDiff' (isJust . snd) 
-   . view eventsV
-
   where
-restToVoice :: Duration -> Voice (Maybe a)
-restToVoice d = stretch d $ pure Nothing
+    phrasesToMVoice :: [Either Duration (Voice a)] -> MVoice a
+    phrasesToMVoice = mconcat . fmap (either restToVoice phraseToVoice)
 
-phraseToVoice :: Voice a -> Voice (Maybe a)
-phraseToVoice = fmap Just
+    mvoiceToPhrases :: MVoice a -> [Either Duration (Voice a)]
+    mvoiceToPhrases =
+      map ( bimap voiceToRest voiceToPhrase 
+          . bimap (^.from unsafeEventsV) (^.from unsafeEventsV) ) 
+       . groupDiff' (isJust . snd) 
+       . view eventsV
 
-voiceToRest :: Voice (Maybe a) -> Duration
-voiceToRest = sumOf (eventsV.each._1) . fmap (assert "isNothing" isNothing)
--- TODO just _duration
+      where
+    restToVoice :: Duration -> MVoice a
+    restToVoice d = stretch d $ pure Nothing
 
-voiceToPhrase :: Voice (Maybe a) -> Voice a
-voiceToPhrase = fmap fromJust
+    phraseToVoice :: Voice a -> MVoice a
+    phraseToVoice = fmap Just
+
+    voiceToRest :: MVoice a -> Duration
+    voiceToRest = sumOf (eventsV.each._1) . fmap (assert "isNothing" isNothing)
+    -- TODO just _duration
+
+    voiceToPhrase :: MVoice a -> Voice a
+    voiceToPhrase = fmap fromJust
+
+  
+
+
+
+-- TODO failure
+-- TODO why Transformable?
+singleMVoice :: Transformable a => Prism' (Score a) (MVoice a)
+singleMVoice = iso scoreToVoice voiceToScore'
+  where
+    scoreToVoice :: Transformable a => Score a -> MVoice a
+    scoreToVoice = (^. voice) . fmap (^. stretched) . fmap throwTime . addRests . (^. events)
+        where
+           throwTime (t,d,x) = (d,x)
+           addRests = concat . snd . List.mapAccumL g 0
+               where
+                   g u (t, d, x)
+                       | u == t    = (t .+^ d, [(t, d, Just x)])
+                       | u <  t    = (t .+^ d, [(u, t .-. u, Nothing), (t, d, Just x)])
+                       | otherwise = error "addRests: Strange prevTime"
+
+    voiceToScore :: Voice a -> Score a
+    voiceToScore = scat . fmap g . (^. stretcheds) where g = (^. getStretched) . fmap return
+
+    voiceToScore' :: MVoice a -> Score a
+    voiceToScore' = mcatMaybes . voiceToScore
+    
+
+instance Cons (Voice a) (Voice b) a b where
+  _Cons = undefined
+instance Snoc (Voice a) (Voice b) a b where
+  _Snoc = undefined
+
+-- TODO make Voice an instance of Cons/Snoc and remove these
+headV :: Transformable a => Traversal' (Voice a) a
+headV = (eventsV._head._2)
+
+middleV :: Transformable a => Traversal' (Voice a) a
+middleV = (eventsV._middle.traverse._2)
+
+lastV :: Transformable a => Traversal' (Voice a) a
+lastV = (eventsV._last._2)
+
+_middle :: (Snoc s s a a, Cons s s b b) => Traversal' s s
+-- Traverse writing to all elements *except* first and last
+_middle = _tail._init
+
+
+
 
 assert t p x = if p x then x else error ("assertion failed: " ++ t)
         
+
+
+
+
+
 
 -- |
 -- Group contigous sequences matching/not-matching the predicate.
@@ -130,32 +163,3 @@ unsafeEventsV = iso (map (^.from stretched).(^.stretcheds)) ((^.voice).map (^.st
 
 
 
-
-
-
-
-
-
-
-
--- also:
--- mvoicePhrases2 :: Iso' (Voice (Maybe a)) (Voice (Maybe (Voice a)))
--- mvoicePhrases2 = undefined
-
-
--- This is the famous voice traversal!
-phr :: (Ord (Part a), HasPart' a, Transformable a) => Traversal' (Score a) (Voice a)
-phr = extracted . each . singleMVoice . mvoicePhrases . each . _Right
-
--- More generally:
-
-phrases :: HasVoices a b => Traversal' a (Voice b)
-phrases = mvoices . mvoicePhrases . each . _Right
-
-
-class HasVoices a b | a -> b where
-  mvoices :: Traversal' a (Voice (Maybe b))
-instance HasVoices (Voice (Maybe a)) a where
-  mvoices = id
-instance (HasPart' a, Transformable a, Ord (Part a)) => HasVoices (Score a) a where
-  mvoices = extracted . each . singleMVoice
