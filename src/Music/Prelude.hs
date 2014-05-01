@@ -15,7 +15,7 @@
 --
 -------------------------------------------------------------------------------------
 
-module Music.Prelude.Basic (
+module Music.Prelude (
         module Music.Prelude.Standard
   ) where
 
