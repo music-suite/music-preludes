@@ -5,8 +5,9 @@
     FlexibleContexts,
     NoMonomorphismRestriction #-}
 
+module Main where
 import qualified Music.Score
-import Music.Prelude.Standard hiding (open, play, openAndPlay)
+import Music.Prelude.Basic hiding (open, play, openAndPlay)
 import Control.Concurrent.Async
 import Control.Applicative
 import System.Process (system)
@@ -35,16 +36,16 @@ vc          = tutti cello
 [sop, alt]  = divide 2 (tutti violin)
 ten         = tutti viola
 -- bs          = tutti cello
-bc          = tutti bass
+bc          = tutti doubleBass
 
 
-meta = id
+info = id
     . title "Ave Verum Corpus (excerpt)"
     . composer "W.A. Mozart"
     . timeSignature (4/4)
     . keySignature (key g False)
 
-score = meta $ compress 4 $ tempo (metronome (1/4) 30) $ {-delay (4*2) $ -} 
+score' = info $ compress 4 $ tempo (metronome (1/4) 30) $ {-delay (4*2) $ -} 
     stanza1_instr </> stanza1_voc
 
 -- Rhythm helper functions
@@ -88,38 +89,38 @@ gb2 = gb ^* 2
     (c d)   :: PitchL           -> Score a
     (c d) e ::                     Score a
 
-    Alternatively, make score instance of IsString and use Lilypond syntax
+    Alternatively, make score' instance of IsString and use Lilypond syntax
 -}
 
 -- Stanza 1
 stanza1_voc = stanza1_sop </> stanza1_alto </> stanza1_ten </> stanza1_bass
-stanza1_sop = asScore $ delay 8 $ mempty
+stanza1_sop = asScore $ delay 8 $ empty
     |> s3 a2 d' fs |> s3 a gs g2   |> s4 g b a g           |> ssl g fs fs
     |> ls e e      |> s4 fs fs g g |> lss g (fit2 fs e) fs |> l4 e
-stanza1_alto = asScore $ delay 8 $ mempty
+stanza1_alto = asScore $ delay 8 $ empty
     |> ll fs fs    |> ll e e       |> s4 e g fs e          |> ssl e d d   
     |> ls cs cs    |> s4 d d e e   |> lss e (fit2 d cs) d  |> l4 cs
-stanza1_ten = asScore $ delay 8 $ octavesDown 1 $ mempty
+stanza1_ten = asScore $ delay 8 $ octavesDown 1 $ empty
     |> ll a  a     |> ll b b       |> ls a   a             |> ll a a   
     |> ls e  e     |> s4 a a b b   |> ls a             a   |> l4 e
-stanza1_bass = asScore $ delay 8 $ octavesDown 1 $ mempty
+stanza1_bass = asScore $ delay 8 $ octavesDown 1 $ empty
     |> ll d  d     |> ll d d       |> ls cs  cs            |> ll d d   
     |> ls a  a     |> s4 d d cs cs |> ls d             d   |> l4 a_
 
 stanza1_instr = stanza1_vl1 </> stanza1_vl2 </> stanza1_vla </> stanza1_bc
-stanza1_vl1 = asScore $ mempty
+stanza1_vl1 = asScore $ empty
     |> s4 d a_ d e |> s4 fs d fs g
     |> lss a d' fs |> ssl a gs g   |> s4 g b a g           |> ssl g fs fs
     |> ls e e      |> s4 fs fs g g |> lss g (fit2 fs e) fs |> l4 e
-stanza1_vl2 = asScore $ mempty
+stanza1_vl2 = asScore $ empty
     |> s4 d a_ d e |> s4 fs d fs g
     |> ll fs fs    |> ll e e       |> s4 e g fs e          |> ssl e d d   
     |> ls cs cs    |> s4 d d e e   |> lss e (fit2 d cs) d  |> l4 cs
-stanza1_vla = asScore $ octavesDown 1 $ mempty
+stanza1_vla = asScore $ octavesDown 1 $ empty
     |> s4 d a_ d e |> s4 fs d fs g
     |> ll a  a     |> ll b b       |> ls a   a             |> ll a a   
     |> ls e  e     |> s4 a a b b   |> ls a             a   |> l4 e
-stanza1_bc = asScore $ octavesDown 1 $ mempty
+stanza1_bc = asScore $ octavesDown 1 $ empty
     |> s4 d a_ d e |> s4 fs d fs g
     |> ll d  d     |> ll d d       |> ls cs  cs            |> ll d d   
     |> ls a  a     |> s4 d d cs cs |> ls d             d   |> l4 a_
@@ -157,6 +158,7 @@ mapEvensOdds f g xs = let
     in take (length xs) $ map f evens `merge` map g odds
 
 
+{-
 openAudacity :: Score Note -> IO ()    
 openAudacity x = do
     void $ writeMidi "test.mid" $ x
@@ -168,6 +170,7 @@ openAudio x = do
     void $ writeMidi "test.mid" $ x
     void $ system "timidity -Ow test.mid"
     void $ system "open -a Audacity test.wav"
+-}
 
 -- fixClefs :: Score Note -> Score Note
 -- fixClefs = pcat . fmap (uncurry g) . extractParts'
@@ -187,11 +190,11 @@ palindrome x = rev x |> x
 
 
 main :: IO ()
-main = open score
+main = open score'
 
-play, open, openAndPlay :: Score Note -> IO ()   
+-- play, open, openAndPlay :: Score Note -> IO ()   
 tempo_ = 80
-play x = openAudio $ stretch ((60*(8/3))/tempo_) $ fixClefs $ x
+play x = return () -- openAudio $ stretch ((60*(8/3))/tempo_) $ fixClefs $ x
 open x = openLilypond' Score $ fixClefs $ x
 openAndPlay x = play x `concurrently_` open x
 
