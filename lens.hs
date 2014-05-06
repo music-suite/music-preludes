@@ -51,9 +51,6 @@ instance (HasPart' a, Transformable a, Ord (Part a)) => HasVoices (Score a) a wh
 mvoicePhrases :: Iso' (MVoice a) [Either Duration (PVoice a)]
 mvoicePhrases = iso mvoiceToPhrases phrasesToMVoice
   where
-    phrasesToMVoice :: [Either Duration (PVoice a)] -> MVoice a
-    phrasesToMVoice = mconcat . fmap (either restToVoice phraseToVoice)
-
     mvoiceToPhrases :: MVoice a -> [Either Duration (PVoice a)]
     mvoiceToPhrases =
       map ( bimap voiceToRest voiceToPhrase 
@@ -61,19 +58,21 @@ mvoicePhrases = iso mvoiceToPhrases phrasesToMVoice
        . groupDiff' (isJust . snd) 
        . view eventsV
 
-      where
-    restToVoice :: Duration -> MVoice a
-    restToVoice d = stretch d $ pure Nothing
-
-    phraseToVoice :: PVoice a -> MVoice a
-    phraseToVoice = fmap Just
-
     voiceToRest :: MVoice a -> Duration
     voiceToRest = sumOf (eventsV.each._1) . fmap (assert "isNothing" isNothing)
     -- TODO just _duration
 
     voiceToPhrase :: MVoice a -> PVoice a
     voiceToPhrase = fmap fromJust
+
+    phrasesToMVoice :: [Either Duration (PVoice a)] -> MVoice a
+    phrasesToMVoice = mconcat . fmap (either restToVoice phraseToVoice)
+
+    restToVoice :: Duration -> MVoice a
+    restToVoice d = stretch d $ pure Nothing
+
+    phraseToVoice :: PVoice a -> MVoice a
+    phraseToVoice = fmap Just
 
   
 
