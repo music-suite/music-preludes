@@ -28,12 +28,12 @@ import qualified Data.List as List
 
 
 -- This is the famous voice traversal!
-phrasesS :: (Ord (Part a), HasPart' a, Transformable a) => Traversal' (Score a) (Voice a)
+phrasesS :: (Ord (Part a), HasPart' a, Transformable a) => Traversal' (Score a) (Phrase a)
 phrasesS = extracted . each . singleMVoice . mvoicePVoice . each . _Right
 
 -- More generally:
 
-phrases :: HasVoices a b => Traversal' a (Voice b)
+phrases :: HasPhrases a b => Traversal' a (Phrase b)
 phrases = mvoices . mvoicePVoice . each . _Right
 
 
@@ -41,13 +41,13 @@ type Phrase a = Voice a
 type MVoice a = Voice (Maybe a)
 type PVoice a = [Either Duration (Phrase a)]
 
-class HasVoices a b | a -> b where
+class HasPhrases a b | a -> b where
   mvoices :: Traversal' a (MVoice b)
-instance HasVoices (MVoice a) a where
+instance HasPhrases (MVoice a) a where
   mvoices = id
-instance HasVoices (PVoice a) a where
+instance HasPhrases (PVoice a) a where
   mvoices = from mvoicePVoice
-instance (HasPart' a, Transformable a, Ord (Part a)) => HasVoices (Score a) a where
+instance (HasPart' a, Transformable a, Ord (Part a)) => HasPhrases (Score a) a where
   mvoices = extracted . each . singleMVoice
   
 
@@ -105,19 +105,19 @@ singleMVoice = iso scoreToVoice voiceToScore'
     voiceToScore' = mcatMaybes . voiceToScore
     
 
-instance (Transformable a, Transformable b) => Cons (Voice a) (Voice b) a b where
+instance (Transformable a, Transformable b) => Cons (Phrase a) (Phrase b) a b where
   _Cons = undefined
--- instance (Transformable a, Transformable b) => Snoc (Voice a) (Voice b) a b where
+-- instance (Transformable a, Transformable b) => Snoc (Phrase a) (Phrase b) a b where
   -- _Snoc = prism' pure (preview lastV)
 
--- TODO make Voice an instance of Cons/Snoc and remove these
-headV :: Transformable a => Traversal' (Voice a) a
+-- TODO make Voice/Phrase an instance of Cons/Snoc and remove these
+headV :: Transformable a => Traversal' (Phrase a) a
 headV = (eventsV._head._2)
 
-middleV :: Transformable a => Traversal' (Voice a) a
+middleV :: Transformable a => Traversal' (Phrase a) a
 middleV = (eventsV._middle.traverse._2)
 
-lastV :: Transformable a => Traversal' (Voice a) a
+lastV :: Transformable a => Traversal' (Phrase a) a
 lastV = (eventsV._last._2)
 
 _middle :: (Snoc s s a a, Cons s s b b) => Traversal' s s
@@ -154,11 +154,11 @@ groupDiff' p (x:xs)
   | p x       = Right (x : List.takeWhile p         xs) : groupDiff' p (List.dropWhile p         xs)
 
 
-eventsV :: Lens (Voice a) (Voice b) [(Duration, a)] [(Duration, b)]
+eventsV :: Lens (Phrase a) (Phrase b) [(Duration, a)] [(Duration, b)]
 eventsV = unsafeEventsV
   --(stretcheds.through (from stretched) (from stretched))
 
-unsafeEventsV :: Iso (Voice a) (Voice b) [(Duration, a)] [(Duration, b)]
+unsafeEventsV :: Iso (Phrase a) (Phrase b) [(Duration, a)] [(Duration, b)]
 unsafeEventsV = iso (map (^.from stretched).(^.stretcheds)) ((^.voice).map (^.stretched))
 
 
