@@ -1,4 +1,5 @@
 
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -23,36 +24,39 @@ import qualified Data.List as List
 
 
 -- TODO
--- mvoicePhrases2 :: Iso' (Voice (Maybe a)) (Voice (Maybe (Voice a)))
+-- mvoicePVoice2 :: Iso' (Voice (Maybe a)) (Voice (Maybe (Voice a)))
 
 
 -- This is the famous voice traversal!
 phrasesS :: (Ord (Part a), HasPart' a, Transformable a) => Traversal' (Score a) (Voice a)
-phrasesS = extracted . each . singleMVoice . mvoicePhrases . each . _Right
+phrasesS = extracted . each . singleMVoice . mvoicePVoice . each . _Right
 
 -- More generally:
 
 phrases :: HasVoices a b => Traversal' a (Voice b)
-phrases = mvoices . mvoicePhrases . each . _Right
+phrases = mvoices . mvoicePVoice . each . _Right
 
 
-type PVoice a = Voice a
+type Phrase a = Voice a
 type MVoice a = Voice (Maybe a)
+type PVoice a = [Either Duration (Phrase a)]
 
 class HasVoices a b | a -> b where
   mvoices :: Traversal' a (MVoice b)
 instance HasVoices (MVoice a) a where
   mvoices = id
+instance HasVoices (PVoice a) a where
+  mvoices = from mvoicePVoice
 instance (HasPart' a, Transformable a, Ord (Part a)) => HasVoices (Score a) a where
   mvoices = extracted . each . singleMVoice
   
 
 -- TODO
-mvoicePhrases :: Iso' (MVoice a) [Either Duration (PVoice a)]
-mvoicePhrases = iso mvoiceToPhrases phrasesToMVoice
+mvoicePVoice :: Iso' (MVoice a) (PVoice a)
+mvoicePVoice = iso mvoiceToPVoice pVoiceToMVoice
   where
-    mvoiceToPhrases :: MVoice a -> [Either Duration (PVoice a)]
-    mvoiceToPhrases =
+    mvoiceToPVoice :: MVoice a -> PVoice a
+    mvoiceToPVoice =
       map ( bimap voiceToRest voiceToPhrase 
           . bimap (^.from unsafeEventsV) (^.from unsafeEventsV) ) 
        . groupDiff' (isJust . snd) 
@@ -62,16 +66,16 @@ mvoicePhrases = iso mvoiceToPhrases phrasesToMVoice
     voiceToRest = sumOf (eventsV.each._1) . fmap (assert "isNothing" isNothing)
     -- TODO just _duration
 
-    voiceToPhrase :: MVoice a -> PVoice a
+    voiceToPhrase :: MVoice a -> Phrase a
     voiceToPhrase = fmap fromJust
 
-    phrasesToMVoice :: [Either Duration (PVoice a)] -> MVoice a
-    phrasesToMVoice = mconcat . fmap (either restToVoice phraseToVoice)
+    pVoiceToMVoice :: (PVoice a) -> MVoice a
+    pVoiceToMVoice = mconcat . fmap (either restToVoice phraseToVoice)
 
     restToVoice :: Duration -> MVoice a
     restToVoice d = stretch d $ pure Nothing
 
-    phraseToVoice :: PVoice a -> MVoice a
+    phraseToVoice :: Phrase a -> MVoice a
     phraseToVoice = fmap Just
 
   
@@ -156,6 +160,10 @@ eventsV = unsafeEventsV
 
 unsafeEventsV :: Iso (Voice a) (Voice b) [(Duration, a)] [(Duration, b)]
 unsafeEventsV = iso (map (^.from stretched).(^.stretcheds)) ((^.voice).map (^.stretched))
+
+
+
+
 
 
 
