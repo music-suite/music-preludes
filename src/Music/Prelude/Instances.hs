@@ -81,11 +81,9 @@ instance HasMidi Semitones where
 instance HasMidi Pitch where
     getMidi p = getMidi $ semitones (p .-. c)
 
-{-
 instance HasMusicXml Pitch where
     getMusicXml      (realToFrac -> d) = (`Xml.note` d) . snd3 Just . spellPitch 4
     getMusicXmlChord (realToFrac -> d) = (`Xml.chord` (realToFrac d)) . fmap (snd3 Just . spellPitch 4)
--}
 
 instance HasLilypond Pitch where
     getLilypond      d = (^*realToFrac (d*4)) . Lilypond.note . pitchLilypond . Lilypond.Pitch . spellPitch 5
