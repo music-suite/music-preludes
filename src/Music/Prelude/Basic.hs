@@ -74,8 +74,8 @@ type BasicNote = (PartT BasicPart
     --             (DynamicT
     --               (ChordT
                       [
-                      BasicPitch
-                      ])))))) 
+                      Behavior BasicPitch
+                      ]))))))
                       --)))
 
 type BasicPitch = Music.Pitch.Pitch
