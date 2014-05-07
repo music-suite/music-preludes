@@ -49,6 +49,7 @@ import           Music.Score             hiding (Pitch, Interval)
 
 import           Control.Lens.Operators  hiding ((<.>), (<|), (|>))
 import           Control.Monad.Plus
+import Data.Semigroup (Product)
 
 import           Music.Prelude.Instances ()
 
@@ -71,16 +72,17 @@ type BasicNote = (PartT BasicPart
           (HarmonicT
             (TieT
               (SlideT
-    --             (DynamicT
+                (DynamicT (Product Double)
     --               (ChordT
                       [
                       Behavior BasicPitch
-                      ]))))))
-                      --)))
+                      ])))))))
+                      --))
 
 type BasicPitch = Music.Pitch.Pitch
 
 open          = openLilypond . asScore
 play          = error "Not implemented: play"
 openAndPlay x = open x >> play x
+
 

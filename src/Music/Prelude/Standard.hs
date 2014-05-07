@@ -69,9 +69,9 @@ type Note = (PartT Part
           (HarmonicT
             (TieT
               (SlideT
-                -- (DynamicT
+                (DynamicT (Behavior (Product Double))
                   [
-                    StandardPitch])))))) -- ))
+                    Behavior StandardPitch]))))))) -- )
 
 type StandardPitch = Music.Pitch.Pitch
 -- data StandardPitch = StandardPitch Music.Pitch.Pitch
