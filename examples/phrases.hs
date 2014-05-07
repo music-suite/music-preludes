@@ -12,6 +12,7 @@ voca v = delay ((4/8)^*v) $ mcatMaybes $ scat $ fmap (\i -> (id $ up (_M2^*i) su
 -- The 
 music = id
   $ title "Phrases"
+  $ composer "Anonymous"
   $ timeSignature (3/8) 
   $ over (phrases.middleV) (octavesAbove 1) 
   $ over phrases fuse 
