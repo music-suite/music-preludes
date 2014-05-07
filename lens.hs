@@ -7,12 +7,19 @@
 
 module L where
 
-import Music.Score
-import Music.Score.Util (tripl, untripl, through)
-import Music.Score.Convert
-import Music.Prelude.Basic
 import Data.Maybe
 import qualified Data.List as List
+import Control.Lens
+import Control.Applicative
+import Data.AffineSpace
+import Data.Semigroup
+import Control.Monad.Plus
+
+import Music.Score (Part, HasPart', extracted)
+-- import Music.Score.Util (tripl, untripl, through)
+import Music.Score.Convert
+import Music.Time
+-- import Music.Prelude.Basic
 
 {-
   Example:
