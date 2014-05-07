@@ -18,7 +18,9 @@ music = id
   $ timeSignatureDuring ((14*3/8) <-> 200) (4/8) 
   $ over phrases (rotateValues 1)
   $ over (phrases.middleV) (octavesAbove 1) 
-  $ over phrases fuse 
-  $ rcat $ map voca [0..3]
+  -- $ over phrases fuse 
+  $ rcat 
+  $ level _f
+  $ map voca [0..3]
 
 main  = open $ asScore $ music
