@@ -20,7 +20,7 @@ music = id
   $ over (phrases.middleV) (octavesAbove 1) 
   -- $ over phrases fuse 
   $ rcat 
-  $ level _f
+  $ fadeIn 4
   $ map voca [0..3]
 
 main  = open $ asScore $ music

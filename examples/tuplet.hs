@@ -8,18 +8,18 @@ import System.Process (runCommand)
 import Music.Prelude.Basic
 
 main = do
-    -- writeMidi "test.mid" score
-    -- writeXml "test.xml" $ score^/4
-    -- openXml score
-    openLilypond score
-    -- playMidiIO "Graphic MIDI" $ score^/10
+    -- writeMidi "test.mid" music
+    -- writeXml "test.xml" $ music^/4
+    -- openXml music
+    openLilypond music
+    -- playMidiIO "Graphic MIDI" $ music^/10
 
 
 -- infixr 7 //
 -- (//) = flip times
 
-score :: Score Note
-score = test 1 </> test 2
+music :: Score BasicNote
+music = fadeIn 1 $ fadeOut 1 $ rcat $ map test [1..5]
 
 test 1  = group 5 c |> c^*3                  
 test 2  = group 3 c |> c^*3                  
@@ -34,3 +34,6 @@ test 9 = times 4 c^/5 |> c^*(1/5+1/3)    -- not ok, needs to be bound from last 
 
 test 99 = group 5 c |> group 3 c |> c^*2
 
+
+
+group n = times n^/(fromIntegral n)

@@ -18,17 +18,17 @@ import System.Process (system)
 vla         = tutti viola
 vc          = tutti cello
 
-score :: Score Note
-score = mainCanon2
+music :: Score Note
+music = mainCanon2
 
 tremCanon = compress 4 $
-    (delay 124 $ setPart vl1 $ subjs^*1)
+    (delay 124 $ set part' vl1 $ subjs^*1)
         <>
-    (delay 120 $ setPart vl2 $ subjs^*1)
+    (delay 120 $ set part' vl2 $ subjs^*1)
         <>
-    (delay 4 $ setPart vla $ subjs^*2)
+    (delay 4 $ set part' vla $ subjs^*2)
         <>
-    (delay 0 $ setPart vc  $ subjs^*2)
+    (delay 0 $ set part' vc  $ subjs^*2)
     where
         subjs = repeated [1..40] (\n -> palindrome $ rev2 $ subj n)
         subj n 
@@ -39,22 +39,22 @@ tremCanon = compress 4 $
 
 mainCanon2 = palindrome mainCanon <> celloEntry
 
-celloEntry = setPart vc e''^*(25*5/8)
+celloEntry = set part' vc e''^*(25*5/8)
 
 mainCanon = timeSignature (time 6 8) $ asScore $ 
-    (setPart vl1 $ harmonic 2 $ times 50 $ legato $ accentLast $ 
+    (set part' vl1 $ harmonic 2 $ times 50 $ legato $ accentLast $ 
         octavesUp 2 $ scat [a_,e,a,cs',cs',a,e,a_]^/8) 
 
         <> 
-    (setPart vl2 $ harmonic 2 $ times 50 $ legato $ accentLast $ 
+    (set part' vl2 $ harmonic 2 $ times 50 $ legato $ accentLast $ 
         octavesUp 2 $ scat [d,g,b,b,g,d]^/8)^*(3/2)
 
         <> 
-    (setPart vla $ harmonic 2 $ times 50 $ legato $ accentLast $ 
+    (set part' vla $ harmonic 2 $ times 50 $ legato $ accentLast $ 
         octavesUp 2 $ scat [a,d,a,a,d,a]^/8)^*(3*2/2)
 
         <> 
-    setPart vc a'^*(25*5/8)
+    set part' vc a'^*(25*5/8)
 
 
 
@@ -117,7 +117,7 @@ concurrently_ = concurrentlyWith (\x y -> ())
 concurrentlyWith :: (a -> b -> c) -> IO a -> IO b -> IO c
 concurrentlyWith f x y = uncurry f <$> x `concurrently` y
 
-palindrome x = rev2 x |> x
+-- palindrome x = rev2 x |> x
 -- TODO
 -- rev2 = rev
 rev2 = id
@@ -125,7 +125,7 @@ rev2 = id
 
 
 main :: IO ()
-main = open score
+main = open music
 
 play, open, openAndPlay :: Score Note -> IO ()   
 tempo_ = 130

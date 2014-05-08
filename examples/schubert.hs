@@ -11,13 +11,13 @@ import Music.Prelude.Basic
 -}
 
 main = do
-    -- writeMidi "test.mid" score
-    -- writeXml "test.xml" $ score^/4
-    -- openXml score
-    openLilypond score
-    -- playMidiIO "Graphic MIDI" $ score^/10
+    -- writeMidi "test.mid" music
+    -- writeXml "test.xml" $ music^/4
+    -- openXml music
+    openLilypond music
+    -- playMidiIO "Graphic MIDI" $ music^/10
 
-score = let
+music = let
         meta = id
             . title "Erlkönig, op.1  (excerpt)"
             . composer "Franz Schubert"

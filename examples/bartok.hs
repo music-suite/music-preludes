@@ -1,5 +1,6 @@
 
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoMonomorphismRestriction #-}
 
 import Music.Prelude.Basic
 import System.Process (system)
@@ -11,10 +12,10 @@ import System.Process (system)
   Inspired by the Abjad transcription
 -}
 
-main = openLilypond score
+main = openLilypond music
 
-score :: Score Note
-score = let
+music :: Score BasicNote
+music = let
     meta = id
       . title "Mikrokosmos (excerpt)"
       . composer "Bela Bartok"
@@ -35,8 +36,11 @@ score = let
   in meta $ compress 8 $ left </> down _P8 right
 
 
-openAudio :: Score Note -> IO ()  
+-- openAudio :: Score Note -> IO ()  
 openAudio x = do
   void $ writeMidi "test.mid" $ x
   void $ system "timidity -Ow test.mid"
   void $ system "open -a Audacity test.wav"
+
+
+cresc = const

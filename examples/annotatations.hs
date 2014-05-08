@@ -21,13 +21,13 @@ subjectDiff :: [Interval]
 subjectDiff = zipWith (.-.) (tail subject) subject
 
 reify :: BasicPitch -> Score BasicNote
-reify = (`up` c) . (.-. c)
+reify = (`up` c) . (.-. c) . pure
 
 intervalAnnotations :: [Interval] -> (Score BasicNote -> Score BasicNote)
 intervalAnnotations = foldr1 (.) . zipWith notate (map spanify [0..])
   where
     spanify :: Duration -> Span
-    spanify t = (origin .+^ t) >-> 1
+    spanify t = (0 .+^ t) >-> 1
 
     notate :: Span -> Interval -> (Score BasicNote -> Score BasicNote)
     notate s n = annotateSpan s ("       " ++ showIntervalName n)

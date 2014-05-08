@@ -5,10 +5,12 @@ import Music.Prelude.Basic
 
 withOrigin x = (.-. x)
 mapIf p f = uncurry mplus . first f . mpartition p
+unb = (! 0)
+mark = above _P8 -- TODO use color or similar
 
-markPerfect   = text "Perfect consonances"   . mapIf (isPerfectConsonance   . withOrigin c . view pitch') accentAll
-markImperfect = text "Imperfect consonances" . mapIf (isImperfectConsonance . withOrigin c . view pitch') accentAll
-markDiss      = text "Dissonances" . mapIf (isDissonance . withOrigin c . view pitch') accentAll
+markPerfect   = text "Perfect consonances"   . mapIf (isPerfectConsonance   . unb . withOrigin c . (head . toListOf pitches)) mark
+markImperfect = text "Imperfect consonances" . mapIf (isImperfectConsonance . unb . withOrigin c . (head . toListOf pitches)) mark
+markDiss      = text "Dissonances"           . mapIf (isDissonance . unb . withOrigin c          . (head . toListOf pitches)) mark
 
 main = open $ showAnnotations $ rcat [
     markPerfect   $ scat [c..c'],
