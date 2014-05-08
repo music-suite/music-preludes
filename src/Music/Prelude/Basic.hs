@@ -72,7 +72,7 @@ type BasicNote = (PartT BasicPart
           (HarmonicT
             (TieT
               (SlideT
-                (DynamicT (Product Double)
+                (DynamicT (Behavior (Product Double))
     --               (ChordT
                       [
                       Behavior BasicPitch
