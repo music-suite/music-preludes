@@ -108,3 +108,69 @@ generate-originals:
 	music2ly	-o tests/golden/voice_single.ly				tests/voice_single.music
 	music2musicxml	-o tests/golden/voice_single.xml			tests/voice_single.music
 
+open:
+	rm *.pdf
+	./tests/open-lilypond tests/current/articulation_all_accents.ly
+	# open -a "Sibelius 7" tests/current/articulation_all_accents.xml
+	./tests/open-lilypond tests/current/articulation_all_separations.ly
+	# open -a "Sibelius 7" tests/current/articulation_all_separations.xml
+	./tests/open-lilypond tests/current/articulation_legato.ly
+	# open -a "Sibelius 7" tests/current/articulation_legato.xml
+	./tests/open-lilypond tests/current/articulation_portato.ly
+	# open -a "Sibelius 7" tests/current/articulation_portato.xml
+	./tests/open-lilypond tests/current/articulation_staccato.ly
+	# open -a "Sibelius 7" tests/current/articulation_staccato.xml
+	./tests/open-lilypond tests/current/dynamics_constant.ly
+	# open -a "Sibelius 7" tests/current/dynamics_constant.xml
+	./tests/open-lilypond tests/current/melody_chords.ly
+	# open -a "Sibelius 7" tests/current/melody_chords.xml
+	./tests/open-lilypond tests/current/meta_annotations.ly
+	# open -a "Sibelius 7" tests/current/meta_annotations.xml
+	./tests/open-lilypond tests/current/meta_clef1.ly
+	# open -a "Sibelius 7" tests/current/meta_clef1.xml
+	./tests/open-lilypond tests/current/meta_composer.ly
+	# open -a "Sibelius 7" tests/current/meta_composer.xml
+	./tests/open-lilypond tests/current/meta_time_signature.ly
+	# open -a "Sibelius 7" tests/current/meta_time_signature.xml
+	./tests/open-lilypond tests/current/misc_counterpoint.ly
+	# open -a "Sibelius 7" tests/current/misc_counterpoint.xml
+	./tests/open-lilypond tests/current/octaves.ly
+	# open -a "Sibelius 7" tests/current/octaves.xml
+	./tests/open-lilypond tests/current/overlay_chords.ly
+	# open -a "Sibelius 7" tests/current/overlay_chords.xml
+	./tests/open-lilypond tests/current/overlay_voices.ly
+	# open -a "Sibelius 7" tests/current/overlay_voices.xml
+	./tests/open-lilypond tests/current/pitch_inv.ly
+	# open -a "Sibelius 7" tests/current/pitch_inv.xml
+	./tests/open-lilypond tests/current/sharpen.ly
+	# open -a "Sibelius 7" tests/current/sharpen.xml
+	./tests/open-lilypond tests/current/simple_figure.ly
+	# open -a "Sibelius 7" tests/current/simple_figure.xml
+	./tests/open-lilypond tests/current/simple_start_later.ly
+	# open -a "Sibelius 7" tests/current/simple_start_later.xml
+	./tests/open-lilypond tests/current/single_note.ly
+	# open -a "Sibelius 7" tests/current/single_note.xml
+	./tests/open-lilypond tests/current/special_gliss.ly
+	# open -a "Sibelius 7" tests/current/special_gliss.xml
+	./tests/open-lilypond tests/current/special_harmonics.ly
+	# open -a "Sibelius 7" tests/current/special_harmonics.xml
+	./tests/open-lilypond tests/current/special_text.ly
+	# open -a "Sibelius 7" tests/current/special_text.xml
+	./tests/open-lilypond tests/current/special_tremolo.ly
+	# open -a "Sibelius 7" tests/current/special_tremolo.xml
+	./tests/open-lilypond tests/current/stretch_single_note1.ly
+	# open -a "Sibelius 7" tests/current/stretch_single_note1.xml
+	./tests/open-lilypond tests/current/stretch_single_note2.ly
+	# open -a "Sibelius 7" tests/current/stretch_single_note2.xml
+	./tests/open-lilypond tests/current/stretch_single_note3.ly
+	# open -a "Sibelius 7" tests/current/stretch_single_note3.xml
+	./tests/open-lilypond tests/current/times.ly
+	# open -a "Sibelius 7" tests/current/times.xml
+	./tests/open-lilypond tests/current/track_single.ly
+	# open -a "Sibelius 7" tests/current/track_single.xml
+	./tests/open-lilypond tests/current/voice_single.ly
+	# open -a "Sibelius 7" tests/current/voice_single.xml
+	open *.pdf
+
+
+
