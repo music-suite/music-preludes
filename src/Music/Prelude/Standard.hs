@@ -65,13 +65,13 @@ asTrack = id
 type Note = (PartT Part
     (TremoloT
       (TextT
-        -- (ArticulationT
+        (ArticulationT ()
           (HarmonicT
             (TieT
               (SlideT
                 (DynamicT (Behavior (Product Double))
                   [
-                    Behavior StandardPitch]))))))) -- )
+                    Behavior StandardPitch]))))))))
 
 type StandardPitch = Music.Pitch.Pitch
 -- data StandardPitch = StandardPitch Music.Pitch.Pitch

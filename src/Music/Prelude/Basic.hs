@@ -66,18 +66,15 @@ asTrack :: Track BasicNote -> Track BasicNote
 asTrack = id
 
 type BasicNote = (PartT BasicPart
-    (TremoloT
-      (TextT
-        -- (ArticulationT
-          (HarmonicT
-            (TieT
-              (SlideT
-                (DynamicT (Behavior (Product Double))
-    --               (ChordT
-                      [
-                      Behavior BasicPitch
-                      ])))))))
-                      --))
+  (TremoloT
+    (TextT
+      (ArticulationT ()
+        (HarmonicT
+          (TieT
+            (SlideT
+              (DynamicT 
+                (Behavior (Product Double))
+                [Behavior BasicPitch]))))))))
 
 type BasicPitch = Music.Pitch.Pitch
 
