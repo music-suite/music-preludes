@@ -1,18 +1,20 @@
 
-import Control.Lens
+{-# LANGUAGE NoMonomorphismRestriction #-}
+
+-- import Control.Lens
 import Control.Arrow
 import Music.Prelude.Basic
 
 withOrigin x = (.-. x)
 mapIf p f = uncurry mplus . first f . mpartition p
 unb = (! 0)
-mark = above _P8 -- TODO use color or similar
+mark = text "!" -- TODO use color or similar
 
-markPerfect   = text "Perfect consonances"   . mapIf (isPerfectConsonance   . unb . withOrigin c . (head . toListOf pitches)) mark
-markImperfect = text "Imperfect consonances" . mapIf (isImperfectConsonance . unb . withOrigin c . (head . toListOf pitches)) mark
-markDiss      = text "Dissonances"           . mapIf (isDissonance . unb . withOrigin c          . (head . toListOf pitches)) mark
+markPerfect   = text "Perfect consonances"   . mapIf (\x -> isPerfectConsonance $ withOrigin c $ unb $ x ^?! pitches) mark
+markImperfect = text "Imperfect consonances" . mapIf (\x -> isImperfectConsonance $ withOrigin c $ unb $ x ^?! pitches) mark
+markDiss      = text "Dissonances"           . mapIf (\x -> isDissonance $ withOrigin c $ unb $ x ^?! pitches) mark
 
-main = open $ showAnnotations $ rcat [
+main = open $ rcat [
     markPerfect   $ scat [c..c'],
     markImperfect $ scat [c..c'],
     markDiss      $ scat [c..c']    

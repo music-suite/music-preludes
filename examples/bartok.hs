@@ -1,6 +1,8 @@
 
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE MultiParamTypeClasses #-} -- TODO debug
+{-# LANGUAGE TypeFamilies #-} -- TODO debug
 
 import Music.Prelude.Basic
 import System.Process (system)
@@ -14,23 +16,25 @@ import System.Process (system)
 
 main = openLilypond music
 
+
+
 music :: Score BasicNote
 music = let
     meta = id
       . title "Mikrokosmos (excerpt)"
       . composer "Bela Bartok"
-      . timeSignatureDuring ((2/4) >-> (3/4)) (3/4) 
       . timeSignature (2/4)
+      . timeSignatureDuring ((2/4) >-> (5/4)) (3/4) 
     
-    left = (dynamics pp . legato) 
+    left = (level pp {-. legato-}) 
          (scat [a,g,f,e] |> d^*2)
-      |> (dynamics ((mp |> mp `cresc` mf |> mf)^*8) . legato) 
+      |> {-(level ((mp |> mp `cresc` mf |> mf)^*8) . legato)-}id 
          (scat [g,f,e,d] |> c |> (d |> e)^/2 |> f |> e |> d^*8)
-    
+    -- 
     right = up _P4 . delay 2 $ 
-         (dynamics pp . legato) 
+         (level pp {-. legato-}) 
          (scat [a,g,f,e] |> d^*2)
-      |> (dynamics mp . legato) 
+      |> (level mp {-. legato-}) 
          (scat [g,f,e,d] |> c |> (d |> e)^/2 |> f |> e |> d^*8)
 
   in meta $ compress 8 $ left </> down _P8 right

@@ -16,6 +16,6 @@ frere = mempty
 frere2 = delay 2 frere </> frere
 frere4 = delay 4 frere2 </> frere2
 
-info = title "Frere Jaques" . tempo (metronome (1/4) 120)
+info = title "Frere Jaques" . composer "Trad." . tempo (metronome (1/4) 120)
 main = open $ info $ asScore $ frere4
 

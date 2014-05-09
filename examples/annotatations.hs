@@ -21,7 +21,7 @@ subjectDiff :: [Interval]
 subjectDiff = zipWith (.-.) (tail subject) subject
 
 reify :: BasicPitch -> Score BasicNote
-reify = (`up` c) . (.-. c) . pure
+reify = (`up` c) . pure . (.-. c)
 
 intervalAnnotations :: [Interval] -> (Score BasicNote -> Score BasicNote)
 intervalAnnotations = foldr1 (.) . zipWith notate (map spanify [0..])
