@@ -2,7 +2,7 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
 module Main where
-import Music.Prelude 
+import Music.Prelude.Standard
 
 -- Get (bar,beat)
 -- 400 bars in 60 BPM
@@ -16,15 +16,20 @@ import Music.Prelude
 --           | 400*4+20 <= t && t < 445*4+20  =  ( (t-20) `div` 4 + 2, (t-20) `mod` 4 + 1 )
 --           | otherwise                     =  447
 
-main = open noteScore
+main = openMusicXml noteScore
 
 noteScore :: Score Note
 noteScore = compress 4 $ {-addInstrChange $-}
+      mempty
 
     -- * Part 1 (first canon and col legno)
-        (colLegno1  </> delay (4*3) colLegno1) 
+    ||> (colLegno1  </> delay (4*3) colLegno1) 
     -- ||> (canon_I <> (delay (4*5) $ moveToPart vl2 $ canon_I))     -- A
     ||> (colLegno2  </> delay (4*3) colLegno2)                  -- B
+
+
+
+
     -- 
     -- -- * Part 2 (canon_II and surrounding)
     -- -- C
@@ -119,21 +124,21 @@ colLegno2Alt = {-staccato $ -} level (mp) $ text "col legno battuto"  $
 -- 
 -- --------------------------------------------------------------------------------
 -- 
--- makeCanon_I :: Double -> Score (Levels Double) -> Score Note -> Score Note -> Score Note
--- makeCanon_I n dn subj1 subj2 =
---         level dn (rev (a </> b </> c </> d) |> (a </> b </> c </> d))
---     where
---         a = (repTimes (5*n/(4/3)) $ subj1 ^*(4/3))
---         b = (repTimes (5*n/1)     $ subj2 ^*1)
---         c = (repTimes (5*n/2)     $ subj1 ^*2)
---         d = (repTimes (5*n/3)     $ subj2 ^*3)
+makeCanon_I :: Rational -> Dynamic Note -> Score Note -> Score Note -> Score Note
+makeCanon_I n dn subj1 subj2 =
+        level dn (rev (a </> b </> c </> d) |> (a </> b </> c </> d))
+    where
+        a = (repTimes (floor $ 5*n/(4/3)) $ subj1 ^*(4/3))
+        b = (repTimes (floor $ 5*n/1)     $ subj2 ^*1)
+        c = (repTimes (floor $ 5*n/2)     $ subj1 ^*2)
+        d = (repTimes (floor $ 5*n/3)     $ subj2 ^*3)
 -- 
--- canon_I :: Score Note
--- canon_I = text "ord" $ (^*2) $ makeCanon_I 1 dn subj1 subj2
---     where
---         subj1 = g_ |> a_^*(3/2) |> g_^*2
---         subj2 = f_^*3 |> bb_^*1 |> a_ |> g_^*3
---         dn   = (repTimes 5 $ (pp `cresc` mf)^*3 |> (mf `dim` pp)^*3 )
+canon_I :: Score Note
+canon_I = text "ord" $ (^*2) $ makeCanon_I 1 {-dn-}mf subj1 subj2
+    where
+        subj1 = g_ |> a_^*(3/2) |> g_^*2
+        subj2 = f_^*3 |> bb_^*1 |> a_ |> g_^*3
+        -- dn   = (repTimes 5 $ (pp `cresc` mf)^*3 |> (mf `dim` pp)^*3 )
 -- 
 -- makeCanon_II :: Score (Levels Double) -> Score Note -> Score Note -> Score Note
 -- makeCanon_II dn subj1 subj2 =
@@ -208,6 +213,7 @@ colLegno2Alt = {-staccato $ -} level (mp) $ text "col legno battuto"  $
 
 
 cresc = const
+dim   = const
 repTimes = times
 
 -- groupWith :: [Int] -> a -> a
@@ -216,3 +222,6 @@ groupWith xs p = scat $ fmap (\n -> group n p) xs
 group n x      = times n x^/(fromIntegral n)
 repWithIndex n f = scat $ fmap f [1..n]
 
+moveToPart p x = parts' .~ p $ x
+
+[vl1, vl2] = divide 2 $ tutti violin
