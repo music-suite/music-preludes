@@ -1,5 +1,6 @@
 
 {-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE DefaultSignatures #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
@@ -46,57 +47,63 @@ import Music.Score
   clef
 -}
 
--- -- Export token type
--- class Export b where
---   type EChord b
---   emptyN  :: b -> EChord b
--- 
--- class ExportN b a where
---   exportN  :: b -> a   -> EChord b -> EChord b
---   exportNs :: b -> [a] -> EChord b -> EChord b
--- 
--- class Functor s => ExportS b s where
---   type EScore b
---   exportS :: b -> s a -> EScore b a
--- 
--- export :: (Functor (EScore b), Export b, ExportS b s, ExportN b a) => b -> s a -> EScore b (EChord b)
--- export = \b x -> (exportS b . fmap (\a -> exportN b a (emptyN b))) x
--- 
--- 
 
 
 class Functor (BackendScore b) => HasBackend b where
-  type BackendScore b :: * -> *
-  type BackendNoteRest b :: *
+  -- | The full music representation
   type BackendMusic b :: *
-  finalize :: b -> BackendScore b (BackendNoteRest b) -> BackendMusic b
+
+  -- | Score, voice and time structure, with output handled by 'HasBackendScore' 
+  type BackendScore b :: * -> *
+
+  -- | Notes, chords and rests, with output handled by 'HasBackendNoteRest' 
+  type BackendNoteRest b :: *
+
+  -- | This type may be used to pass context from 'exportScore' to 'exportNote'.
+  --   If the note export is not context-sensitive, 'Identity' can be used.
+  type BackendContext b :: * -> *
+
+  finalizeExport :: b -> BackendScore b (BackendNoteRest b) -> BackendMusic b
   
 class (HasBackend b, Functor s) => HasBackendScore b s where
-  exportScore :: b -> s a -> BackendScore b a
+  exportScore :: b -> s a -> BackendScore b (BackendContext b a)
+  -- default exportScore :: (BackendContext b ~ Identity) => b -> s a -> BackendScore b (BackendContext b a)
+  -- exportScore b = fmap Identity
 
 class (HasBackend b) => HasBackendNoteRest b a where
-  exportNote :: b -> a -> BackendNoteRest b
+  exportNote :: b -> BackendContext b a -> BackendNoteRest b
 
+  -- exportNote' :: (BackendContext b ~ Identity) => b -> a -> BackendNoteRest b
+  -- exportNote' b x = exportNote b (Identity x)
 
 export :: (HasBackendScore b s, HasBackendNoteRest b a) => b -> s a -> BackendMusic b
-export b = finalize b . 
-  exportScore b 
-  . 
-  fmap (exportNote b) 
+export b = finalizeExport b . export'
+  where
+    -- These commute except for BackendContext
 
-data Ly
-instance HasBackend Ly where
-  type BackendScore Ly = []
-  type BackendNoteRest  Ly = (Int, Int)
-  type BackendMusic Ly = [(Int, Int)]
-  finalize _ = id
-instance HasBackendScore Ly [] where
-  exportScore _ = id
-instance HasBackendNoteRest Ly Int where
-  exportNote _ p = (0,p)
-instance HasBackendNoteRest Ly a => HasBackendNoteRest Ly (DynamicT Int a) where
-  exportNote b (DynamicT (d,p)) = set _1 d $ exportNote b p
+    -- There seems to be a bug in ghc 7.6.3 that allow us to rearrange the two
+    -- composed functions, event though the precence of (BackendContext b) clearly
+    -- prevents this:
+    export' = fmap (exportNote b) . exportScore b
+    
+    -- The offending version:
+    -- export' = exportScore b . fmap (exportNote b)
 
-{-
-  export (undefined::Ly) [DynamicT (4::Int,3::Int)]
--}  
+
+
+data Foo
+instance HasBackend Foo where
+  type BackendScore Foo     = []
+  type BackendContext Foo   = Identity
+  type BackendNoteRest  Foo = [(Sum Int, Int)]
+  type BackendMusic Foo     = [(Sum Int, Int)]
+  finalizeExport _ = concat
+instance HasBackendScore Foo [] where
+  exportScore _ = fmap Identity
+instance HasBackendNoteRest Foo Int where
+  exportNote _ (Identity p) = [(mempty ,p)]
+instance HasBackendNoteRest Foo a => HasBackendNoteRest Foo (DynamicT (Sum Int) a) where
+  exportNote b (Identity (DynamicT (d,ps))) = set (mapped._1) d $ exportNote b (Identity ps)
+
+main = print $ export (undefined::Foo) [DynamicT (Sum 4::Sum Int,3::Int), pure 1]
+
