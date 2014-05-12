@@ -2,6 +2,7 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
 module Main where
+import Music.Score.Util (rotated)
 import Music.Prelude.Standard
 
 -- Get (bar,beat)
@@ -16,7 +17,7 @@ import Music.Prelude.Standard
 --           | 400*4+20 <= t && t < 445*4+20  =  ( (t-20) `div` 4 + 2, (t-20) `mod` 4 + 1 )
 --           | otherwise                     =  447
 
-main = openMusicXml noteScore
+main = {-openMusicXml-}open noteScore
 
 noteScore :: Score Note
 noteScore = compress 4 $ {-addInstrChange $-}
@@ -100,23 +101,23 @@ colLegno2Alt = {-staccato $ -} level (mp) $ text "col legno battuto"  $
 
 -- --------------------------------------------------------------------------------
 -- 
--- makeJete :: Pitch Note -> Bool -> Duration -> Score Note
--- makeJete p v d = text "jeté" $ modifyPitches (+ p) $ g_ |> ((if v then cs else cs_){-^/2-}) {-|> rest^/2-} |> rest^*d
--- 
--- makeJetes :: [Pitch Note] -> [Bool] -> [Duration] -> Score Note
--- makeJetes ps vs ds = scat $ zipWith3 makeJete ps vs ds
--- 
--- jete1 :: Score Note
--- jete1 = (rest <>) $ -- FIXME temporary fix w.r.t onset/padToBar
---         (delay 3  $ up 0    $ makeJetes (rotated 0 ps) (rotated 3 vs) (rotated 1 ds))
---     </> (delay 5  $ up 0    $ makeJetes (rotated 1 ps) (rotated 0 vs) (rotated 3 ds))^*(4/5)
---     </> (delay 7  $ down 12 $ makeJetes (rotated 2 ps) (rotated 1 vs) (rotated 2 ds))
---     </> (delay 12 $ down 12 $ makeJetes (rotated 3 ps) (rotated 2 vs) (rotated 0 ds))^*(4/5)
---     where
---         ps = take n $ cycle [0,6,6,0,6,6,0]
---         vs = take n $ cycle [True,False,True,False,True,False,True,False]
---         ds = take n $ cycle $ fmap (+ 4) [3,7,5,7,5,5,3,7,7,7,7,7,5,3,7,7,7,7,7,3,3,5]
---         n  = 9
+makeJete :: Behavior Pitch -> Bool -> Duration -> Score Note
+makeJete p v d = text "jeté" $ pitches' %~ (+ p) $ mcatMaybes $ g_ |> ((if v then cs else cs_){-^/2-}) {-|> rest^/2-} |> rest^*d
+
+makeJetes :: [Behavior Pitch] -> [Bool] -> [Duration] -> Score Note
+makeJetes ps vs ds = scat $ zipWith3 makeJete ps vs ds
+
+jete1 :: Score Note
+jete1 = id $ -- FIXME temporary fix w.r.t onset/padToBar
+        (delay 3  $ up 0    $ makeJetes (rotated 0 ps) (rotated 3 vs) (rotated 1 ds))
+    </> (delay 5  $ up 0    $ makeJetes (rotated 1 ps) (rotated 0 vs) (rotated 3 ds))^*(4/5)
+    </> (delay 7  $ down 12 $ makeJetes (rotated 2 ps) (rotated 1 vs) (rotated 2 ds))
+    </> (delay 12 $ down 12 $ makeJetes (rotated 3 ps) (rotated 2 vs) (rotated 0 ds))^*(4/5)
+    where
+        ps = take n $ cycle [0,6,6,0,6,6,0]
+        vs = take n $ cycle [True,False,True,False,True,False,True,False]
+        ds = take n $ cycle $ fmap (+ 4) [3,7,5,7,5,5,3,7,7,7,7,7,5,3,7,7,7,7,7,3,3,5]
+        n  = 9
 -- 
 -- -- colLegno3 :: Score Note
 -- -- colLegno3 = (down 12 $ delay 0 $ rep $ [4,4,5,4,5,4]  `groupWith` g |> rest^*6)

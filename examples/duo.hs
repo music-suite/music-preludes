@@ -17,9 +17,9 @@ main = do
     openLilypond $ asScore music
     -- playMidiIO "Graphic MIDI" $ music^/10
 
--- toLydian :: Score BasicNote -> Score BasicNote
-toLydian = pitch' %~ (\p -> if p == c then cs else p)
--- toLydian = id
+toLydian :: Score BasicNote -> Score BasicNote
+toLydian = pitches' %~ (\p -> if ((p::Behavior BasicPitch) ! 0) == ((c::Behavior BasicPitch) ! 0) then cs else p)
+-- TODO cleanup
 
 subj1 = (^/2) $
     (legato.accent) (b_ |> c) |> (legato.accent) (c |> b_^*2)

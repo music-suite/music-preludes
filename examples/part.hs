@@ -19,16 +19,20 @@ ensemble :: [Part]
 ensemble = [solo tubularBells] <> (divide 2 (tutti violin)) <> [tutti viola] <> [tutti cello] <> [tutti doubleBass]
 
 music :: Score Note
-music = meta $ stretch (3/2) $ before 60 (bell <> delay 6 strings)
+music = meta $ stretch (3/2) $ {-before 60-} (mempty <> bell {-<> delay 6 strings-})
     where
-        meta = title "Cantus in Memoriam Benjamin Britten" . composer "Arvo Pärt" . timeSignature (time 6 4) . tempo (metronome (1/4) 120)
+        meta = id
+          . title "Cantus in Memoriam Benjamin Britten" 
+          . composer "Arvo Pärt" 
+          . timeSignature (6/4) 
+          . tempo (metronome (1/4) 120)
 
-withTintin :: Behavior Pitch -> Score Note -> Score Note
+withTintin :: Pitch -> Score Note -> Score Note
 withTintin p x = x <> tintin p x
 
 -- | Given the melody voice return the tintinnabular voice.
-tintin :: Behavior Pitch -> Score Note -> Score Note
-tintin tonic = pitch' %~ (relative tonic $ tintin')
+tintin :: Pitch -> Score Note -> Score Note
+tintin tonic = pitches %~ (fmap $ (relative tonic $ tintin'))
 
 -- | 
 -- Given the melody interval (relative tonic), returns the tintinnabular voice interval. 
@@ -36,7 +40,7 @@ tintin tonic = pitch' %~ (relative tonic $ tintin')
 -- That is return the highest interval that is a member of the tonic minorTriad in any octave
 -- which is also less than the given interval 
 --
--- tintin' :: Interval -> Interval
+tintin' :: Interval -> Interval
 tintin' melInterval 
     | isNegative melInterval = error "tintin: Negative interval"
     | otherwise = last $ takeWhile (< melInterval) $ tintinNotes
@@ -47,17 +51,18 @@ tintin' melInterval
 
 bell :: Score Note
 bell = let
+    cue :: Score (Maybe Note)
     cue = stretchTo 1 (rest |> a) 
-    in part' .~ (ensemble !! 0) $ text "l.v." $ mcatMaybes $ times 40 $ scat [times 3 $ scat [cue,rest], rest^*2]
+    in parts' .~ (ensemble !! 0) $ text "l.v." $ mcatMaybes $ times 40 $ scat [times 3 $ scat [cue,rest], rest^*2]
 
 strings :: Score Note
 strings = strings_vln1 <> strings_vln2 <> strings_vla <> strings_vc <> strings_db
 
-strings_vln1 = clef GClef $ part' .~ (ensemble !! 1) $ up (_P8^*1)   $ strings_cue
-strings_vln2 = clef GClef $ part' .~ (ensemble !! 2) $ up (_P8^*0)   $ stretch 2 strings_cue
-strings_vla  = clef CClef $ part' .~ (ensemble !! 3) $ down (_P8^*1) $ stretch 4 strings_cue
-strings_vc   = clef FClef $ part' .~ (ensemble !! 4) $ down (_P8^*2) $ stretch 8 strings_cue
-strings_db   = clef FClef $ part' .~ (ensemble !! 5) $ down (_P8^*3) $ stretch 16 strings_cue
+strings_vln1 = clef GClef $ parts' .~ (ensemble !! 1) $ up (_P8^*1)   $ strings_cue
+strings_vln2 = clef GClef $ parts' .~ (ensemble !! 2) $ up (_P8^*0)   $ stretch 2 strings_cue
+strings_vla  = clef CClef $ parts' .~ (ensemble !! 3) $ down (_P8^*1) $ stretch 4 strings_cue
+strings_vc   = clef FClef $ parts' .~ (ensemble !! 4) $ down (_P8^*2) $ stretch 8 strings_cue
+strings_db   = clef FClef $ parts' .~ (ensemble !! 5) $ down (_P8^*3) $ stretch 16 strings_cue
 strings_cue = delay (1/2) $ withTintin (down (_P8^*4) $ asPitch a) $ mainSubject
 
 fallingScale :: [Score Note]
@@ -95,13 +100,13 @@ mapEvensOdds f g xs = let
 
 openAudacity :: Score Note -> IO ()    
 openAudacity x = do
-    void $ writeMidi "test.mid" $ x
+    -- void $ writeMidi "test.mid" $ x
     void $ system "timidity -Ow test.mid"
     void $ system "open -a Audacity test.wav"
 
 openAudio :: Score Note -> IO ()    
 openAudio x = do
-    void $ writeMidi "test.mid" $ x
+    -- void $ writeMidi "test.mid" $ x
     void $ system "timidity -Ow test.mid"
     void $ system "open -a Audacity test.wav"
 

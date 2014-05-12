@@ -22,15 +22,15 @@ music :: Score Note
 music = mainCanon2
 
 tremCanon = compress 4 $
-    (delay 124 $ set part' vl1 $ subjs^*1)
+    (delay 124 $ set parts' vl1 $ subjs^*1)
         <>
-    (delay 120 $ set part' vl2 $ subjs^*1)
+    (delay 120 $ set parts' vl2 $ subjs^*1)
         <>
-    (delay 4 $ set part' vla $ subjs^*2)
+    (delay 4 $ set parts' vla $ subjs^*2)
         <>
-    (delay 0 $ set part' vc  $ subjs^*2)
+    (delay 0 $ set parts' vc  $ subjs^*2)
     where
-        subjs = repeated [1..40] (\n -> palindrome $ rev2 $ subj n)
+        subjs = scat $ map (\n -> palindrome $ rev2 $ subj n) [1..40]
         subj n 
             | n < 8     = a_^*2  |> e^*1   |> a^*1
             | n < 16    = a_^*2  |> e^*1   |> a^*1   |> e^*1   |> a^*1
@@ -39,22 +39,22 @@ tremCanon = compress 4 $
 
 mainCanon2 = palindrome mainCanon <> celloEntry
 
-celloEntry = set part' vc e''^*(25*5/8)
+celloEntry = set parts' vc e''^*(25*5/8)
 
 mainCanon = timeSignature (time 6 8) $ asScore $ 
-    (set part' vl1 $ harmonic 2 $ times 50 $ legato $ accentLast $ 
+    (set parts' vl1 $ harmonic 2 $ times 50 $ legato $ accentLast $ 
         octavesUp 2 $ scat [a_,e,a,cs',cs',a,e,a_]^/8) 
 
         <> 
-    (set part' vl2 $ harmonic 2 $ times 50 $ legato $ accentLast $ 
+    (set parts' vl2 $ harmonic 2 $ times 50 $ legato $ accentLast $ 
         octavesUp 2 $ scat [d,g,b,b,g,d]^/8)^*(3/2)
 
         <> 
-    (set part' vla $ harmonic 2 $ times 50 $ legato $ accentLast $ 
+    (set parts' vla $ harmonic 2 $ times 50 $ legato $ accentLast $ 
         octavesUp 2 $ scat [a,d,a,a,d,a]^/8)^*(3*2/2)
 
         <> 
-    set part' vc a'^*(25*5/8)
+    set parts' vc a'^*(25*5/8)
 
 
 

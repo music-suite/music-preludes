@@ -19,10 +19,10 @@ import Math.OEIS
 -}
 
 main :: IO ()
-main = openAndPlay score
+main = openAndPlay music
 
 ensemble :: [Part]
-ensemble = (divide 4 (tutti violin)) <> (divide 2 (tutti viola)) <> (divide 2 (tutti cello)) <> [tutti bass]
+ensemble = (divide 4 (tutti violin)) <> (divide 2 (tutti viola)) <> (divide 2 (tutti cello)) <> [tutti doubleBass]
 
 type Scale = Integer -> Interval
 scale :: Scale
@@ -34,22 +34,24 @@ scale n = case n `mod` 6 of
   4 -> _P5
   5 -> _M6
 
+len = 1500
+
 seq1 :: Score Integer
-seq1 = scat $ take 500 $ fmap return $ fmap (`mod` 6) $ Data.Foldable.toList $ extendSequence [2,1,1,2,2]
-seq2 = scat $ take 500 $ fmap return $ fmap (`mod` 6) $ Data.Foldable.toList $ extendSequence [2,1,1,2,2,1]
+seq1 = scat $ take len $ fmap return $ fmap (`mod` 6) $ Data.Foldable.toList $ extendSequence [2,1,1,2,2]
+seq2 = scat $ take len $ fmap return $ fmap (`mod` 6) $ Data.Foldable.toList $ extendSequence [2,1,1,2,2,1]
 
 -- Thue–Morse sequence
-seq3 = scat $ take 500 $ fmap return $ fmap (`mod` 6) $ Data.Foldable.toList $ extendSequence [2,1,1,2,2,1,1]
+seq3 = scat $ take len $ fmap return $ fmap (`mod` 6) $ Data.Foldable.toList $ extendSequence [2,1,1,2,2,1,1]
 
-score = pcat [(partNs 0 & up (m3^*2) & compress 6),
+music = pcat [(partNs 0 & up (m3^*2) & compress 6),
               (partNs 1 & up (m3^*1) & compress 5),
               (partNs 2 & compress 4)]
-  & fmap (__mapPitch normalize) & compress 4 & staccato
+  & fmap (pitches' %~ normalize) & compress 4 & staccato
 
 partNs n = part1 n <> part2 n <> part3 n
-part1 n = asScore $ (part .~ (ensemble !! (0+3*n))) $ fmap (\x -> __mapPitch (.+^ scale x) $ (c::Note)) $ seq1
-part2 n = asScore $ (part .~ (ensemble !! (1+3*n))) $ fmap (\x -> __mapPitch (.+^ scale x) $ (c::Note)) $ seq2
-part3 n = asScore $ (part .~ (ensemble !! (2+3*n))) $ fmap (\x -> __mapPitch (.+^ scale x) $ (c::Note)) $ seq3
+part1 n = asScore $ (parts' .~ (ensemble !! (0+3*n))) $ fmap (\x -> pitches' %~ (.+^ pure (scale x)) $ (c::Note)) $ seq1
+part2 n = asScore $ (parts' .~ (ensemble !! (1+3*n))) $ fmap (\x -> pitches' %~ (.+^ pure (scale x)) $ (c::Note)) $ seq2
+part3 n = asScore $ (parts' .~ (ensemble !! (2+3*n))) $ fmap (\x -> pitches' %~ (.+^ pure (scale x)) $ (c::Note)) $ seq3
 
 -- instance Monoid Part where
 --   mempty = def
@@ -67,6 +69,7 @@ part3 n = asScore $ (part .~ (ensemble !! (2+3*n))) $ fmap (\x -> __mapPitch (.+
 
 
 -- TODO remove Default 
+{-
 parts :: (Default (Music.Score.Part a), Traversable t, HasPart a) => Traversal' (t a) (Music.Score.Part a) 
 parts = traverse . part
 
@@ -75,11 +78,14 @@ part = lens getPart (flip setPart)
 
 part_ :: HasSetPitch a b => Setter a b (Music.Score.Pitch a) (Music.Score.Pitch b)
 part_ = sets __mapPitch
+-}
 
 class Normal a where
     normalize :: a -> a
 instance Normal Pitch where
-    normalize = relative c (spell modal)
+    normalize = relative c (spell modally)
+instance Normal a => Normal (Behavior a) where
+    normalize = fmap normalize
 
 
 
@@ -124,5 +130,5 @@ play, open, openAndPlay :: Score Note -> IO ()
 tempo_ = 120
 play x = openAudio $ stretch ((60*4)/tempo_) $ fixClefs $ x
 open x = openLilypond' Score $ fixClefs $ x
-openAndPlay x = play x `concurrently_` open x
+openAndPlay x = play x `concurrently_` openMusicXml x
 
