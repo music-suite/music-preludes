@@ -1,11 +1,11 @@
 let
-    x = [ (1, c),
-          (1, d),
-          (1, f),
-          (1, e) ]^.voice
+    x = [ (1, c)^.stretched,
+          (1, d)^.stretched,
+          (1, f)^.stretched,
+          (1, e)^.stretched ]^.voice
 
-    y = join $ [ (1, x), 
-                 (0.5, up _P5 x), 
-                 (4, up _P8 x) ]^.voice
+    y = join $ [ (1, x)^.stretched, 
+                 (0.5, up _P5 x)^.stretched, 
+                 (4, up _P8 x)^.stretched ]^.voice
 
-in stretch (1/8) $ voiceToScore $ y
+in stretch (1/8) $ view (re singleMVoice) . fmap Just $ y

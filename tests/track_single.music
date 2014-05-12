@@ -1,7 +1,9 @@
 let
-    x = [ (0, c), (1, d), (2, e) ]^.track
-    y = join $ [ (0, x), 
-                (1.5,  up _P5 x), 
-                (3.25, up _P8 x) ]^.track
+    x = [ (0, c)^.delayed, (1, d)^.delayed, (2, e)^.delayed ]^.track
+    y = join $ [ (0, x)^.delayed, 
+                (1.5,  up _P5 x)^.delayed, 
+                (3.25, up _P8 x)^.delayed ]^.track
 
+    trackToScore d = view score . map (view note . (\(t,x) -> (t >-> d,x)) . (view $ from delayed)) . view delayeds
+    
 in trackToScore (1/8) y
