@@ -65,13 +65,25 @@ asVoice = id
 asTrack :: Track BasicNote -> Track BasicNote
 asTrack = id
 
+{-
+TODO missing:
+  
+  HasDynamics ClefT ClefT
+
+  HasArticulations Slide
+  HasArticulations DynamicT DynamicT -- not strictly necessary
+
+  HasArticulations BasicNote BasicNote???
+  
+
+-}
 type BasicNote = (PartT BasicPart
-  (TremoloT
-    (TextT
-      (ArticulationT ()
-        (HarmonicT
-          (TieT
-            (SlideT
+  (TextT
+    (TieT
+      (SlideT
+        (TremoloT
+          (HarmonicT
+            (ArticulationT ()
               (DynamicT 
                 (Behavior (Product Double))
                 [Behavior BasicPitch]))))))))
