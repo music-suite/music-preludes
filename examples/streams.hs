@@ -19,7 +19,7 @@ import Math.OEIS
 -}
 
 main :: IO ()
-main = openAndPlay music
+main = openMusicXml music
 
 ensemble :: [Part]
 ensemble = (divide 4 (tutti violin)) <> (divide 2 (tutti viola)) <> (divide 2 (tutti cello)) <> [tutti doubleBass]
@@ -34,7 +34,7 @@ scale n = case n `mod` 6 of
   4 -> _P5
   5 -> _M6
 
-len = 1500
+len = 90
 
 seq1 :: Score Integer
 seq1 = scat $ take len $ fmap return $ fmap (`mod` 6) $ Data.Foldable.toList $ extendSequence [2,1,1,2,2]
@@ -83,7 +83,7 @@ part_ = sets __mapPitch
 class Normal a where
     normalize :: a -> a
 instance Normal Pitch where
-    normalize = relative c (spell modally)
+    normalize = relative c (spell usingSharps)
 instance Normal a => Normal (Behavior a) where
     normalize = fmap normalize
 
