@@ -109,7 +109,7 @@ generate-originals:
 	music2musicxml	-o tests/golden/voice_single.xml			tests/voice_single.music
 
 open:
-	rm *.pdf
+	rm -f *.pdf
 	./tests/open-lilypond tests/current/articulation_all_accents.ly
 	# open -a "Sibelius 7" tests/current/articulation_all_accents.xml
 	./tests/open-lilypond tests/current/articulation_all_separations.ly
