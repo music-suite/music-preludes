@@ -17,10 +17,10 @@
 }
 
 <<
-    \new Staff {   \set Staff.instrumentName = "" \set Staff.shortInstrumentName = "" \time 2/4 \clef treble c'2-\flageolet
+    \new Staff {   \set Staff.instrumentName = "" \set Staff.shortInstrumentName = "" \time 2/4 \clef treble c'2-\mf-\flageolet
                }
-    \new Staff {   \set Staff.instrumentName = "" \set Staff.shortInstrumentName = "" \time 2/4 \clef treble c'2-\flageolet
+    \new Staff {   \set Staff.instrumentName = "" \set Staff.shortInstrumentName = "" \time 2/4 \clef treble c'2-\mf-\flageolet
                }
-    \new Staff {   \set Staff.instrumentName = "" \set Staff.shortInstrumentName = "" \time 2/4 \clef treble c'2-\flageolet
+    \new Staff {   \set Staff.instrumentName = "" \set Staff.shortInstrumentName = "" \time 2/4 \clef treble c'2-\mf-\flageolet
                }
 >>

@@ -18,8 +18,8 @@
 
 <<
     \new Staff {   \set Staff.instrumentName = "" \set Staff.shortInstrumentName = "" \time 4/4 \clef treble {   \repeat tremolo 8
-                                                                                                                                 c'16 \repeat tremolo 8
-                                                                                                                                                      d'16
+                                                                                                                                 c'16-\mf \repeat tremolo 8
+                                                                                                                                                          d'16
                                                                                                              } \repeat tremolo 8
                                                                                                                                c'16 \repeat tremolo 8
                                                                                                                                                     d'16

@@ -40,13 +40,6 @@
           <line>2</line>
         </clef>
       </attributes>
-      <direction>
-        <direction-type>
-          <dynamics>
-            <fff />
-          </dynamics>
-        </direction-type>
-      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -59,13 +52,6 @@
       </note>
     </measure>
     <measure number="2">
-      <direction>
-        <direction-type>
-          <dynamics>
-            <ff />
-          </dynamics>
-        </direction-type>
-      </direction>
       <note>
         <pitch>
           <step>D</step>
@@ -78,13 +64,6 @@
       </note>
     </measure>
     <measure number="3">
-      <direction>
-        <direction-type>
-          <dynamics>
-            <f />
-          </dynamics>
-        </direction-type>
-      </direction>
       <note>
         <pitch>
           <step>E</step>
@@ -97,13 +76,6 @@
       </note>
     </measure>
     <measure number="4">
-      <direction>
-        <direction-type>
-          <dynamics>
-            <mf />
-          </dynamics>
-        </direction-type>
-      </direction>
       <note>
         <pitch>
           <step>F</step>
@@ -116,13 +88,6 @@
       </note>
     </measure>
     <measure number="5">
-      <direction>
-        <direction-type>
-          <dynamics>
-            <mp />
-          </dynamics>
-        </direction-type>
-      </direction>
       <note>
         <pitch>
           <step>G</step>
@@ -135,13 +100,6 @@
       </note>
     </measure>
     <measure number="6">
-      <direction>
-        <direction-type>
-          <dynamics>
-            <p />
-          </dynamics>
-        </direction-type>
-      </direction>
       <note>
         <pitch>
           <step>A</step>
@@ -154,13 +112,6 @@
       </note>
     </measure>
     <measure number="7">
-      <direction>
-        <direction-type>
-          <dynamics>
-            <pp />
-          </dynamics>
-        </direction-type>
-      </direction>
       <note>
         <pitch>
           <step>B</step>
@@ -173,13 +124,6 @@
       </note>
     </measure>
     <measure number="8">
-      <direction>
-        <direction-type>
-          <dynamics>
-            <ppp />
-          </dynamics>
-        </direction-type>
-      </direction>
       <note>
         <pitch>
           <step>C</step>

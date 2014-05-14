@@ -48,12 +48,6 @@
         <voice>1</voice>
         <type>half</type>
       </note>
-      <attributes>
-        <clef>
-          <sign>G</sign>
-          <line>2</line>
-        </clef>
-      </attributes>
       <note>
         <pitch>
           <step>C</step>

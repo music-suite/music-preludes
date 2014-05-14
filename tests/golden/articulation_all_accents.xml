@@ -52,13 +52,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <accent />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -142,13 +135,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <strong-accent />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>

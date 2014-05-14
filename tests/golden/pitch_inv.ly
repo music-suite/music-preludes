@@ -18,19 +18,19 @@
 
 <<
     \new Staff {   \set Staff.instrumentName = "" \set Staff.shortInstrumentName = "" \time 4/4 \clef treble \times 4/5
-                                                                                                                    {   c'2 d'2 e'4~
+                                                                                                                    {   c'2-\mf d'2 e'4~
                                                                                                                     } \times 4/5
                                                                                                                              {   e'4 f'2 g'2
                                                                                                                              }
                }
     \new Staff {   \set Staff.instrumentName = "" \set Staff.shortInstrumentName = "" \time 4/4 \clef treble \times 4/5
-                                                                                                                    {   c'2 bes2 aes4~
+                                                                                                                    {   c'2-\mf bes2 aes4~
                                                                                                                     } \times 4/5
                                                                                                                              {   aes4 g2 f2
                                                                                                                              }
                }
     \new Staff {   \set Staff.instrumentName = "" \set Staff.shortInstrumentName = "" \time 4/4 \clef treble \times 4/5
-                                                                                                                    {   gis'2 fis'2 e'4~
+                                                                                                                    {   gis'2-\mf fis'2 e'4~
                                                                                                                     } \times 4/5
                                                                                                                              {   e'4 dis'2 cis'2
                                                                                                                              }

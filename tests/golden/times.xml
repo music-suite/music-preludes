@@ -49,12 +49,6 @@
         <duration>192</duration>
         <voice>1</voice>
         <type>16th</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations />
-          <slur number="1" type="start" />
-        </notations>
       </note>
       <note>
         <pitch>
@@ -105,12 +99,6 @@
         <duration>192</duration>
         <voice>1</voice>
         <type>16th</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations />
-          <slur number="1" type="stop" />
-        </notations>
       </note>
       <note>
         <pitch>
@@ -121,12 +109,6 @@
         <duration>192</duration>
         <voice>1</voice>
         <type>16th</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations />
-          <slur number="1" type="start" />
-        </notations>
       </note>
       <note>
         <pitch>
@@ -177,12 +159,6 @@
         <duration>192</duration>
         <voice>1</voice>
         <type>16th</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations />
-          <slur number="1" type="stop" />
-        </notations>
       </note>
       <note>
         <pitch>
@@ -193,12 +169,6 @@
         <duration>192</duration>
         <voice>1</voice>
         <type>16th</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations />
-          <slur number="1" type="start" />
-        </notations>
       </note>
       <note>
         <pitch>
@@ -257,12 +227,6 @@
         <duration>192</duration>
         <voice>1</voice>
         <type>16th</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations />
-          <slur number="1" type="stop" />
-        </notations>
       </note>
       <note>
         <pitch>
@@ -273,12 +237,6 @@
         <duration>192</duration>
         <voice>1</voice>
         <type>16th</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations />
-          <slur number="1" type="start" />
-        </notations>
       </note>
       <note>
         <pitch>
@@ -329,12 +287,6 @@
         <duration>192</duration>
         <voice>1</voice>
         <type>16th</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations />
-          <slur number="1" type="stop" />
-        </notations>
       </note>
     </measure>
   </part>

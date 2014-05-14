@@ -36,8 +36,8 @@
       </attributes>
       <attributes>
         <clef>
-          <sign>F</sign>
-          <line>4</line>
+          <sign>G</sign>
+          <line>2</line>
         </clef>
       </attributes>
       <note>
@@ -49,13 +49,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -66,13 +59,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -83,13 +69,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -100,20 +79,7 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
-      <attributes>
-        <clef>
-          <sign>C</sign>
-          <line>3</line>
-        </clef>
-      </attributes>
       <note>
         <pitch>
           <step>A</step>
@@ -123,13 +89,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -140,13 +99,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -157,13 +109,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -174,13 +119,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
     </measure>
     <measure number="2">
@@ -189,12 +127,6 @@
           <beats>2</beats>
           <beat-type>4</beat-type>
         </time>
-      </attributes>
-      <attributes>
-        <clef>
-          <sign>G</sign>
-          <line>2</line>
-        </clef>
       </attributes>
       <note>
         <pitch>
@@ -205,13 +137,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -222,13 +147,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -239,13 +157,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -256,15 +167,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-            <accent />
-          </articulations>
-          <technical />
-        </notations>
       </note>
     </measure>
   </part>

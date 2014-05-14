@@ -64,12 +64,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations />
-          <slur number="1" type="start" />
-        </notations>
       </note>
       <note>
         <pitch>
@@ -110,12 +104,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations />
-          <slur number="1" type="stop" />
-        </notations>
       </note>
     </measure>
   </part>
@@ -159,13 +147,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -176,13 +157,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -193,13 +167,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -210,13 +177,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -227,13 +187,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
     </measure>
   </part>
@@ -277,15 +230,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-          <technical />
-          <slur number="1" type="start" />
-        </notations>
       </note>
       <note>
         <pitch>
@@ -296,13 +240,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -313,13 +250,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -330,13 +260,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -347,15 +270,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-          </articulations>
-          <technical />
-          <slur number="1" type="stop" />
-        </notations>
       </note>
     </measure>
   </part>
@@ -399,13 +313,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <tenuto />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -416,13 +323,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <tenuto />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -433,13 +333,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <tenuto />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -450,13 +343,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <tenuto />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -467,13 +353,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <tenuto />
-          </articulations>
-        </notations>
       </note>
     </measure>
   </part>
@@ -517,15 +396,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-            <tenuto />
-          </articulations>
-          <technical />
-        </notations>
       </note>
       <note>
         <pitch>
@@ -536,15 +406,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-            <tenuto />
-          </articulations>
-          <technical />
-        </notations>
       </note>
       <note>
         <pitch>
@@ -555,15 +416,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-            <tenuto />
-          </articulations>
-          <technical />
-        </notations>
       </note>
       <note>
         <pitch>
@@ -574,15 +426,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-            <tenuto />
-          </articulations>
-          <technical />
-        </notations>
       </note>
       <note>
         <pitch>
@@ -593,15 +436,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccato />
-            <tenuto />
-          </articulations>
-          <technical />
-        </notations>
       </note>
     </measure>
   </part>
@@ -645,13 +479,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccatissimo />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -662,13 +489,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccatissimo />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -679,13 +499,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccatissimo />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -696,13 +509,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccatissimo />
-          </articulations>
-        </notations>
       </note>
       <note>
         <pitch>
@@ -713,13 +519,6 @@
         <duration>384</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <notations>
-          <ornaments />
-          <technical />
-          <articulations>
-            <staccatissimo />
-          </articulations>
-        </notations>
       </note>
     </measure>
   </part>
