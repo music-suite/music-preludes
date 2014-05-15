@@ -1,8 +1,6 @@
 
 module Main where
 
-import           Music.Prelude.CmdLine
-import           System.Environment
+import Music.Prelude.CmdLine
 
-main :: IO ()
-main = getProgName >>= converterMain "writeMusicXml" "xml"
+main = converterMain "writeMusicXml" "xml"

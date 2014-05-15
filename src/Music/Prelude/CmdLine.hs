@@ -48,8 +48,11 @@ runConverter :: String -> String -> Options -> IO ()
 runConverter func ext (Options prelude outFile inFile) =
   translateFile func ext prelude (Just inFile) outFile
 
-converterMain :: String -> String -> String -> IO ()
-converterMain func ext pgmName = execParser opts >>= runConverter func ext
+converterMain :: String -> String -> IO ()
+converterMain func ext = getProgName >>= converterMain' func ext
+
+converterMain' :: String -> String -> String -> IO ()
+converterMain' func ext pgmName = execParser opts >>= runConverter func ext
   where 
       opts = info 
         (helper <*> converterOptions) 
