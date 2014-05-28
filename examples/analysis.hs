@@ -1,20 +1,22 @@
 
-{-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE TypeFamilies #-}
 
--- import Control.Lens
-import Control.Arrow
 import Music.Prelude.Standard
-import Data.Colour.Names as Color
+import qualified Music.Score as Score
+import Data.Colour.Names (red)
 
-withOrigin x = (.-. x)
-mapIf p f = uncurry mplus . first f . mpartition p
-unb = (! 0)
--- mark = text "!" -- TODO use color or similar
-mark = color Color.red
+markIf :: (HasColor a, HasPitches' a, Score.Pitch a ~ Behavior Pitch) => (Interval -> Bool) -> Score a -> Score a
+markIf p     = mapIf (\x -> p $ withOrigin c $ unb $ x ^?! pitches) mark
+  where
+    mark         = color red
+    mapIf p f    = uncurry mplus . over _1 f . mpartition p
+    unb          = (! 0)
+    withOrigin x = (.-. x)
 
-markPerfect   = text "Perfect consonances"   . mapIf (\x -> isPerfectConsonance $ withOrigin c $ unb $ x ^?! pitches) mark
-markImperfect = text "Imperfect consonances" . mapIf (\x -> isImperfectConsonance $ withOrigin c $ unb $ x ^?! pitches) mark
-markDiss      = text "Dissonances"           . mapIf (\x -> isDissonance $ withOrigin c $ unb $ x ^?! pitches) mark
+markPerfect   = text "Perfect consonances"   . markIf isPerfectConsonance
+markImperfect = text "Imperfect consonances" . markIf isImperfectConsonance
+markDiss      = text "Dissonances"           . markIf isDissonance
+
 
 main = openLilypond $ asScore $ rcat [
     markPerfect   $ scat [c..c'],

@@ -6,11 +6,14 @@ import Music.Prelude
 -- A simple subject
 subj  = times 20 $ scat [c,d,e,f]^/8 |> scat [g,fs]^/2
 
+unb :: Behavior a -> a
+unb = (! 0)
 
 -- The 
 music = id
   $ title "Dynamics"
   $ composer "Anonymous"
-  $ (level (stretch 7.9 sine*fff) $ subj) </> (level (stretch 5.5 sine*fff) $ subj)
+  $ fmap (over dynamics (! 0)) $ 
+    rcat $ map (\phase -> level (stretch phase sine*fff) $ subj) [5.0,5.2..6.0]
 
 main  = open $ asScore $ music

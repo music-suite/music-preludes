@@ -12,7 +12,7 @@ import Music.Pitch (Interval)
 main :: IO ()
 main = openLilypond . showAnnotations' ""
      . intervalAnnotations subjectDiff
-     . scat $ map reify subject
+     . scat $ map (fromPitch'.pure) subject
 
 subject :: [BasicPitch]
 subject = [c, d, f, e, f, g, a, g, e, d, c]
@@ -20,8 +20,8 @@ subject = [c, d, f, e, f, g, a, g, e, d, c]
 subjectDiff :: [Interval]
 subjectDiff = zipWith (.-.) (tail subject) subject
 
-reify :: BasicPitch -> Score BasicNote
-reify = (`up` c) . pure . (.-. c)
+-- reify :: BasicPitch -> Score BasicNote
+-- reify = (`up` c) . pure . (.-. c)
 
 intervalAnnotations :: [Interval] -> (Score BasicNote -> Score BasicNote)
 intervalAnnotations = foldr1 (.) . zipWith notate (map spanify [0..])

@@ -34,7 +34,6 @@ pres2 = subj1^*(2/2) </> delay 2 (subj1^*(3/2))
 part1 = pres1 |> pres2
 part2 = pres1 |> pres2  
 
--- music :: Score Note
 music = asScore $ clef CClef $ level pp $ compress 2 $ part1 |> toLydian part2
 
 -- (|>) :: Score a -> Score a -> Score a
