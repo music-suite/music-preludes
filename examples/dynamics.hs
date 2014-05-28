@@ -13,7 +13,8 @@ unb = (! 0)
 music = id
   $ title "Dynamics"
   $ composer "Anonymous"
-  $ fmap (over dynamics (! 0)) $ 
+  $ fmap (over dynamics (! 0)) 
+  $ 
     rcat $ map (\phase -> level (stretch phase sine*fff) $ subj) [5.0,5.2..6.0]
 
 main  = open $ asScore $ music

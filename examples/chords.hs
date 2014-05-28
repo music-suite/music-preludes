@@ -3,9 +3,9 @@
 
 import Music.Prelude
 
-kStrum = 0.02
+kStrum = 0.00
 
-main   = {-openLilypond music >>-} openMidi music
+main   = openLilypond music >> openMidi music
 guitar = (tutti $ StdInstrument 26)
 alto   = (tutti $ StdInstrument 65)
 
