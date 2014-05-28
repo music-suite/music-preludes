@@ -7,7 +7,7 @@
 
 module Main where
 import qualified Music.Score
-import Music.Prelude.Basic hiding (open, play, openAndPlay)
+import Music.Prelude.Standard hiding (open, play, openAndPlay)
 import Control.Concurrent.Async
 import Control.Applicative
 import System.Process (system)
@@ -195,6 +195,6 @@ main = open score'
 -- play, open, openAndPlay :: Score Note -> IO ()   
 tempo_ = 80
 play x = return () -- openAudio $ stretch ((60*(8/3))/tempo_) $ fixClefs $ x
-open x = openLilypond' Score $ fixClefs $ x
+open x = openLilypond' LyScoreFormat $ fixClefs $ x
 openAndPlay x = play x `concurrently_` open x
 

@@ -1,7 +1,8 @@
 
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, TypeFamilies #-}
 
 import Music.Prelude.Standard hiding (open, play, openAndPlay)
+import qualified Music.Score as Score
 import Control.Concurrent.Async
 import Control.Applicative
 import System.Process (system)
@@ -19,7 +20,7 @@ ensemble :: [Part]
 ensemble = [solo tubularBells] <> (divide 2 (tutti violin)) <> [tutti viola] <> [tutti cello] <> [tutti doubleBass]
 
 music :: Score Note
-music = meta $ stretch (3/2) $ {-before 60-} (mempty <> bell {-<> delay 6 strings-})
+music = meta $ stretch (3/2) $ {-before 60-} (mempty <> bell <> delay 6 strings)
     where
         meta = id
           . title "Cantus in Memoriam Benjamin Britten" 
@@ -27,12 +28,12 @@ music = meta $ stretch (3/2) $ {-before 60-} (mempty <> bell {-<> delay 6 string
           . timeSignature (6/4) 
           . tempo (metronome (1/4) 120)
 
-withTintin :: Pitch -> Score Note -> Score Note
+withTintin :: (HasPitches' a, Score.Pitch a ~ Behavior Pitch) => Pitch -> Score a -> Score a
 withTintin p x = x <> tintin p x
 
 -- | Given the melody voice return the tintinnabular voice.
-tintin :: Pitch -> Score Note -> Score Note
-tintin tonic = pitches %~ (fmap $ (relative tonic $ tintin'))
+tintin :: (HasPitches' a, Score.Pitch a ~ Behavior Pitch) => Pitch -> Score a -> Score a
+tintin tonic = pitches . mapped %~ relative tonic tintin'
 
 -- | 
 -- Given the melody interval (relative tonic), returns the tintinnabular voice interval. 
@@ -125,6 +126,6 @@ concurrentlyWith f x y = uncurry f <$> x `concurrently` y
 play, open, openAndPlay :: Score Note -> IO ()   
 tempo_ = 120
 play x = openAudio $ stretch ((60*4)/tempo_) $ fixClefs $ x
-open x = openLilypond' Score $ fixClefs $ x
+open x = openLilypond' LyScoreFormat $ fixClefs $ x
 openAndPlay x = play x `concurrently_` open x
 
