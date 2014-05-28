@@ -11,12 +11,12 @@
 }
 \header {
   title = ""
-  composer = "Anonymous"
+  composer = ""
 }
 \layout {
 }
 
 <<
-    \new Staff {   \set Staff.instrumentName = "" \set Staff.shortInstrumentName = "" \time 4/4 \clef treble c'1-\mf d'1 e'1 c'1
+    \new Staff {   \set Staff.instrumentName = "" \set Staff.shortInstrumentName = "" \clef treble \time 4/4 c'1-\mf d'1 e'1 c'1
                }
 >>

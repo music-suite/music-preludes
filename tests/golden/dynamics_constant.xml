@@ -12,13 +12,13 @@
   <part id="P1">
     <measure number="1">
       <attributes>
+        <divisions>768</divisions>
+      </attributes>
+      <attributes>
         <key>
           <fifths>0</fifths>
           <mode>major</mode>
         </key>
-      </attributes>
-      <attributes>
-        <divisions>768</divisions>
       </attributes>
       <direction>
         <direction-type>
@@ -29,17 +29,29 @@
         </direction-type>
       </direction>
       <attributes>
-        <time>
-          <beats>4</beats>
-          <beat-type>4</beat-type>
-        </time>
-      </attributes>
-      <attributes>
         <clef>
           <sign>G</sign>
           <line>2</line>
         </clef>
       </attributes>
+      <attributes>
+        <time>
+          <beats>4</beats>
+          <beat-type>4</beat-type>
+        </time>
+      </attributes>
+      <direction>
+        <direction-type>
+          <wedge type="diminuendo" />
+        </direction-type>
+      </direction>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <fff />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -124,6 +136,18 @@
       </note>
     </measure>
     <measure number="8">
+      <direction>
+        <direction-type>
+          <wedge type="stop" />
+        </direction-type>
+      </direction>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <ppp />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>C</step>

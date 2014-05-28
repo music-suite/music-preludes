@@ -15,13 +15,13 @@
   <part id="P1">
     <measure number="1">
       <attributes>
+        <divisions>768</divisions>
+      </attributes>
+      <attributes>
         <key>
           <fifths>0</fifths>
           <mode>major</mode>
         </key>
-      </attributes>
-      <attributes>
-        <divisions>768</divisions>
       </attributes>
       <direction>
         <direction-type>
@@ -32,17 +32,24 @@
         </direction-type>
       </direction>
       <attributes>
-        <time>
-          <beats>4</beats>
-          <beat-type>4</beat-type>
-        </time>
-      </attributes>
-      <attributes>
         <clef>
           <sign>G</sign>
           <line>2</line>
         </clef>
       </attributes>
+      <attributes>
+        <time>
+          <beats>4</beats>
+          <beat-type>4</beat-type>
+        </time>
+      </attributes>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>G</step>
@@ -214,13 +221,13 @@
   <part id="P2">
     <measure number="1">
       <attributes>
+        <divisions>768</divisions>
+      </attributes>
+      <attributes>
         <key>
           <fifths>0</fifths>
           <mode>major</mode>
         </key>
-      </attributes>
-      <attributes>
-        <divisions>768</divisions>
       </attributes>
       <direction>
         <direction-type>
@@ -231,17 +238,24 @@
         </direction-type>
       </direction>
       <attributes>
-        <time>
-          <beats>4</beats>
-          <beat-type>4</beat-type>
-        </time>
-      </attributes>
-      <attributes>
         <clef>
           <sign>G</sign>
           <line>2</line>
         </clef>
       </attributes>
+      <attributes>
+        <time>
+          <beats>4</beats>
+          <beat-type>4</beat-type>
+        </time>
+      </attributes>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>C</step>

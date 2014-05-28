@@ -12,13 +12,13 @@
   <part id="P1">
     <measure number="1">
       <attributes>
+        <divisions>768</divisions>
+      </attributes>
+      <attributes>
         <key>
           <fifths>0</fifths>
           <mode>major</mode>
         </key>
-      </attributes>
-      <attributes>
-        <divisions>768</divisions>
       </attributes>
       <direction>
         <direction-type>
@@ -29,17 +29,24 @@
         </direction-type>
       </direction>
       <attributes>
-        <time>
-          <beats>4</beats>
-          <beat-type>4</beat-type>
-        </time>
-      </attributes>
-      <attributes>
         <clef>
           <sign>G</sign>
           <line>2</line>
         </clef>
       </attributes>
+      <attributes>
+        <time>
+          <beats>4</beats>
+          <beat-type>4</beat-type>
+        </time>
+      </attributes>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -70,6 +77,13 @@
       </note>
     </measure>
     <measure number="2">
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>D</step>
@@ -92,6 +106,13 @@
         <voice>1</voice>
         <type>eighth</type>
       </note>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>G</step>
@@ -116,6 +137,13 @@
       </note>
     </measure>
     <measure number="3">
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>E</step>
@@ -138,6 +166,13 @@
         <voice>1</voice>
         <type>eighth</type>
       </note>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>A</step>
@@ -168,6 +203,13 @@
         <voice>1</voice>
         <type>quarter</type>
       </note>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -184,6 +226,13 @@
         <voice>1</voice>
         <type>eighth</type>
       </note>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>B</step>
@@ -214,6 +263,13 @@
         <voice>1</voice>
         <type>quarter</type>
       </note>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>D</step>
@@ -250,6 +306,13 @@
         <voice>1</voice>
         <type>quarter</type>
       </note>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>E</step>

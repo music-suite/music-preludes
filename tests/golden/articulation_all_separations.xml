@@ -27,13 +27,13 @@
   <part id="P1">
     <measure number="1">
       <attributes>
+        <divisions>768</divisions>
+      </attributes>
+      <attributes>
         <key>
           <fifths>0</fifths>
           <mode>major</mode>
         </key>
-      </attributes>
-      <attributes>
-        <divisions>768</divisions>
       </attributes>
       <direction>
         <direction-type>
@@ -44,17 +44,24 @@
         </direction-type>
       </direction>
       <attributes>
-        <time>
-          <beats>5</beats>
-          <beat-type>8</beat-type>
-        </time>
-      </attributes>
-      <attributes>
         <clef>
           <sign>G</sign>
           <line>2</line>
         </clef>
       </attributes>
+      <attributes>
+        <time>
+          <beats>5</beats>
+          <beat-type>8</beat-type>
+        </time>
+      </attributes>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -110,13 +117,13 @@
   <part id="P2">
     <measure number="1">
       <attributes>
+        <divisions>768</divisions>
+      </attributes>
+      <attributes>
         <key>
           <fifths>0</fifths>
           <mode>major</mode>
         </key>
-      </attributes>
-      <attributes>
-        <divisions>768</divisions>
       </attributes>
       <direction>
         <direction-type>
@@ -127,17 +134,24 @@
         </direction-type>
       </direction>
       <attributes>
-        <time>
-          <beats>5</beats>
-          <beat-type>8</beat-type>
-        </time>
-      </attributes>
-      <attributes>
         <clef>
           <sign>G</sign>
           <line>2</line>
         </clef>
       </attributes>
+      <attributes>
+        <time>
+          <beats>5</beats>
+          <beat-type>8</beat-type>
+        </time>
+      </attributes>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -193,13 +207,13 @@
   <part id="P3">
     <measure number="1">
       <attributes>
+        <divisions>768</divisions>
+      </attributes>
+      <attributes>
         <key>
           <fifths>0</fifths>
           <mode>major</mode>
         </key>
-      </attributes>
-      <attributes>
-        <divisions>768</divisions>
       </attributes>
       <direction>
         <direction-type>
@@ -210,17 +224,24 @@
         </direction-type>
       </direction>
       <attributes>
-        <time>
-          <beats>5</beats>
-          <beat-type>8</beat-type>
-        </time>
-      </attributes>
-      <attributes>
         <clef>
           <sign>G</sign>
           <line>2</line>
         </clef>
       </attributes>
+      <attributes>
+        <time>
+          <beats>5</beats>
+          <beat-type>8</beat-type>
+        </time>
+      </attributes>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -276,13 +297,13 @@
   <part id="P4">
     <measure number="1">
       <attributes>
+        <divisions>768</divisions>
+      </attributes>
+      <attributes>
         <key>
           <fifths>0</fifths>
           <mode>major</mode>
         </key>
-      </attributes>
-      <attributes>
-        <divisions>768</divisions>
       </attributes>
       <direction>
         <direction-type>
@@ -293,17 +314,24 @@
         </direction-type>
       </direction>
       <attributes>
-        <time>
-          <beats>5</beats>
-          <beat-type>8</beat-type>
-        </time>
-      </attributes>
-      <attributes>
         <clef>
           <sign>G</sign>
           <line>2</line>
         </clef>
       </attributes>
+      <attributes>
+        <time>
+          <beats>5</beats>
+          <beat-type>8</beat-type>
+        </time>
+      </attributes>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -359,13 +387,13 @@
   <part id="P5">
     <measure number="1">
       <attributes>
+        <divisions>768</divisions>
+      </attributes>
+      <attributes>
         <key>
           <fifths>0</fifths>
           <mode>major</mode>
         </key>
-      </attributes>
-      <attributes>
-        <divisions>768</divisions>
       </attributes>
       <direction>
         <direction-type>
@@ -376,17 +404,24 @@
         </direction-type>
       </direction>
       <attributes>
-        <time>
-          <beats>5</beats>
-          <beat-type>8</beat-type>
-        </time>
-      </attributes>
-      <attributes>
         <clef>
           <sign>G</sign>
           <line>2</line>
         </clef>
       </attributes>
+      <attributes>
+        <time>
+          <beats>5</beats>
+          <beat-type>8</beat-type>
+        </time>
+      </attributes>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -442,13 +477,13 @@
   <part id="P6">
     <measure number="1">
       <attributes>
+        <divisions>768</divisions>
+      </attributes>
+      <attributes>
         <key>
           <fifths>0</fifths>
           <mode>major</mode>
         </key>
-      </attributes>
-      <attributes>
-        <divisions>768</divisions>
       </attributes>
       <direction>
         <direction-type>
@@ -459,17 +494,24 @@
         </direction-type>
       </direction>
       <attributes>
-        <time>
-          <beats>5</beats>
-          <beat-type>8</beat-type>
-        </time>
-      </attributes>
-      <attributes>
         <clef>
           <sign>G</sign>
           <line>2</line>
         </clef>
       </attributes>
+      <attributes>
+        <time>
+          <beats>5</beats>
+          <beat-type>8</beat-type>
+        </time>
+      </attributes>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>C</step>

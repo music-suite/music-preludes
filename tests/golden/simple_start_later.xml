@@ -12,13 +12,13 @@
   <part id="P1">
     <measure number="1">
       <attributes>
+        <divisions>768</divisions>
+      </attributes>
+      <attributes>
         <key>
           <fifths>0</fifths>
           <mode>major</mode>
         </key>
-      </attributes>
-      <attributes>
-        <divisions>768</divisions>
       </attributes>
       <direction>
         <direction-type>
@@ -28,6 +28,12 @@
           </metronome>
         </direction-type>
       </direction>
+      <attributes>
+        <clef>
+          <sign>G</sign>
+          <line>2</line>
+        </clef>
+      </attributes>
       <attributes>
         <time>
           <beats>4</beats>
@@ -48,6 +54,13 @@
         <voice>1</voice>
         <type>half</type>
       </note>
+      <direction>
+        <direction-type>
+          <dynamics>
+            <mf />
+          </dynamics>
+        </direction-type>
+      </direction>
       <note>
         <pitch>
           <step>C</step>
