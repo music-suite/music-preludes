@@ -101,7 +101,7 @@ mapEvensOdds f g xs = let
 
 openAudacity :: Score Note -> IO ()    
 openAudacity x = do
-    -- void $ writeMidi "test.mid" $ x
+    void $ writeMidi "test.mid" $ x
     void $ system "timidity -Ow test.mid"
     void $ system "open -a Audacity test.wav"
 
