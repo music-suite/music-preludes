@@ -62,16 +62,17 @@ asTrack = id
 -- instance Show BasicPart where
 --     show _ = ""
 
-type Note = (PartT Part
-    (TremoloT
-      (TextT
-        (ArticulationT ()
-          (HarmonicT
-            (TieT
+type Note = 
+  (PartT Part
+    (TieT
+      (ColorT 
+        (TextT
+          (TremoloT
+            (HarmonicT
               (SlideT
-                (DynamicT (Behavior (Product Double))
-                  [
-                    Behavior StandardPitch]))))))))
+                (ArticulationT ()
+                  (DynamicT (Product Double)
+                    [Behavior StandardPitch])))))))))
 
 type StandardPitch = Music.Pitch.Pitch
 -- data StandardPitch = StandardPitch Music.Pitch.Pitch

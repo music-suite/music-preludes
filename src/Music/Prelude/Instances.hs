@@ -75,19 +75,36 @@ instance Tiable Pitch where
     beginTie = id
     endTie = id
 
-instance HasMidi Semitones where
-    getMidi a = getMidi $ (fromIntegral a :: Integer)
+instance HasBackendNote Midi Semitones where
+  exportNote b = exportNote b . fmap toInteger
+  exportChord b = exportChord b . fmap (fmap toInteger)
 
-instance HasMidi Pitch where
-    getMidi p = getMidi $ semitones (p .-. c)
+instance HasBackendNote Midi Pitch where
+  exportNote b = exportNote b . fmap (\p -> semitones (p .-. c))
+  exportChord b = exportChord b . fmap (fmap (\p -> semitones (p .-. c)))
 
-instance HasMusicXml Pitch where
-    getMusicXml      (realToFrac -> d) = (`Xml.note` d) . snd3 Just . spellPitch 4
-    getMusicXmlChord (realToFrac -> d) = (`Xml.chord` (realToFrac d)) . fmap (snd3 Just . spellPitch 4)
+instance HasBackendNote SuperCollider Semitones where
+  exportNote b = exportNote b . fmap toInteger
+  exportChord b = exportChord b . fmap (fmap toInteger)
 
-instance HasLilypond Pitch where
-    getLilypond      d = (^*realToFrac (d*4)) . Lilypond.note . pitchLilypond . Lilypond.Pitch . spellPitch 5
-    getLilypondChord d = (^*realToFrac (d*4)) . Lilypond.chord . fmap (pitchLilypond . Lilypond.Pitch . spellPitch 5)
+instance HasBackendNote SuperCollider Pitch where
+  exportNote b = exportNote b . fmap (\p -> semitones (p .-. c))
+  exportChord b = exportChord b . fmap (fmap (\p -> semitones (p .-. c)))
+
+
+instance HasBackendNote MusicXml Pitch where
+  exportNote  _ (XmlContext d Nothing)    = Xml.rest (realToFrac d)
+  exportNote  _ (XmlContext d (Just x))   = (`Xml.note` realToFrac d) . snd3 Just . spellPitch 4 $ x
+
+  exportChord _ (XmlContext d Nothing)    = Xml.rest (realToFrac d)
+  exportChord _ (XmlContext d (Just xs))  = (`Xml.chord` (realToFrac d)) . fmap (snd3 Just . spellPitch 4) $ xs
+
+instance HasBackendNote Lilypond Pitch where
+  exportNote  _ (LyContext d Nothing)    = (^*realToFrac (4*d)) Lilypond.rest
+  exportNote  _ (LyContext d (Just x))   = (^*realToFrac (d*4)) . Lilypond.note . pitchLilypond . Lilypond.Pitch . spellPitch 5 $ x
+
+  exportChord _ (LyContext d Nothing)    = (^*realToFrac (4*d)) Lilypond.rest
+  exportChord _ (LyContext d (Just xs))  = (^*realToFrac (d*4)) . Lilypond.chord . fmap (pitchLilypond . Lilypond.Pitch . spellPitch 5) $ xs
 
 -- TODO move
 snd3 f (a, b, c) = (a, f b, c)
