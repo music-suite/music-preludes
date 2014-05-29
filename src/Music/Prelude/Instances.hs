@@ -130,3 +130,16 @@ instance HasMidiProgram Music.Parts.Part where
                 41 -> 48
                 42 -> 48
                 x  -> x
+
+instance HasLilypondInstrument BasicPart where
+    getLilypondClef = 0
+
+instance HasLilypondInstrument Music.Parts.Part where
+    getLilypondClef = defaultClef
+
+instance HasMusicXmlInstrument BasicPart where
+    getMusicXmlClef = 0
+
+instance HasMusicXmlInstrument Music.Parts.Part where
+    getMusicXmlClef = defaultClef
+
