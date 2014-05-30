@@ -16,3 +16,4 @@ tests/gen
 *.o
 diffs
 *.sc
+private
