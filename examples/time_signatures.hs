@@ -1,7 +1,7 @@
 
 {-# LANGUAGE OverloadedStrings #-}
 
-import Music.Prelude.Basic
+import Music.Prelude
 
 main = open music
 

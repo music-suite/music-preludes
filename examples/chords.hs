@@ -39,10 +39,10 @@ melody = octavesDown 1 $ set parts' (tutti horn) $ 
 
 music = asScore  $ 
   (<> melody) $
-  (<> strings) $
-  (<> counterRh) $
+  (<> level _p strings) $
+  (<> level ff counterRh) $
   
-  set parts' guitar $ 
+  set parts' (solo clarinet) $ level mf $ 
   (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [c_,e_,g_,c,e,g])
   |>
   (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [c_,fs_,a_,c,fs,a])

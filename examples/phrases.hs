@@ -1,6 +1,9 @@
 
 {-# LANGUAGE OverloadedStrings #-}
 
+{-
+  
+-}
 import Music.Prelude
 
 -- A simple subject
@@ -17,10 +20,10 @@ music = id
   $ timeSignature (3/8) 
   $ timeSignatureDuring ((14*3/8) <-> 200) (4/8) 
   $ over phrases (rotateValues 1)
-  $ over (phrases.middleV) (octavesAbove 1) 
+  -- $ over (phrases.middleV) (octavesAbove 1) 
   -- $ over phrases fuse 
   $ rcat 
-  $ fadeIn 4
+  -- $ fadeIn 4
   $ map voca [0..3]
 
 main  = open $ asScore $ music

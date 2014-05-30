@@ -19,18 +19,18 @@ main = do
 -- (//) = flip times
 
 music :: Score BasicNote
-music = fadeIn 1 $ fadeOut 1 $ rcat $ map test [1..5]
+music = {-fadeIn 1 $-} {-fadeOut 1 $-} rcat $ map test [1..5]
 
-test 1  = group 5 c |> c^*3                  
-test 2  = group 3 c |> c^*3                  
-test 3  = group 3 c |> group 5 c |> group 3 c |> group 7 c
-test 4  = group 3 c |> group 5 c |> c |> group 7 c
-test 5  = c |> group 5 c |> c |> group 7 c
+test 1  = group 5 g |> g^*3                  
+test 2  = group 3 fs |> fs^*3                  
+test 3  = group 3 f |> group 5 f |> group 3 f |> group 7 f
+test 4  = group 3 e |> group 5 e |> c |> group 7 e
+test 5  = ds |> group 5 ds |> ds |> group 7 ds
 -- all above ok
 
 
-test 8 = times 5 c^/5 |> times 3 c^/3 -- ok
-test 9 = times 4 c^/5 |> c^*(1/5+1/3)    -- not ok, needs to be bound from last quintuplet note
+test 8 = times 5 d^/5 |> times 3 d^/3 -- ok
+test 9 = times 4 cs^/5 |> cs^*(1/5+1/3)    -- not ok, needs to be bound from last quintuplet note
 
 test 99 = group 5 c |> group 3 c |> c^*2
 
