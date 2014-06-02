@@ -83,7 +83,7 @@ type BasicNote = (PartT BasicPart
       (SlideT
         (TremoloT
           (HarmonicT
-            (ArticulationT ()
+            (ArticulationT (Product Double, Product Double)
               (DynamicT (Product Double)
                 [Behavior BasicPitch]))))))))
 

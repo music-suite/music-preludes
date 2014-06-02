@@ -70,7 +70,7 @@ type Note =
           (TremoloT
             (HarmonicT
               (SlideT
-                (ArticulationT ()
+                (ArticulationT (Product Double, Product Double)
                   (DynamicT (Product Double)
                     [Behavior StandardPitch])))))))))
 
