@@ -26,8 +26,8 @@
       <direction>
         <direction-type>
           <metronome>
-            <beat-unit>whole</beat-unit>
-            <per-minute>60</per-minute>
+            <beat-unit>quarter</beat-unit>
+            <per-minute>120</per-minute>
           </metronome>
         </direction-type>
       </direction>
@@ -116,8 +116,8 @@
       <direction>
         <direction-type>
           <metronome>
-            <beat-unit>whole</beat-unit>
-            <per-minute>60</per-minute>
+            <beat-unit>quarter</beat-unit>
+            <per-minute>120</per-minute>
           </metronome>
         </direction-type>
       </direction>
