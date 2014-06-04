@@ -1,6 +1,6 @@
 <?xml version='1.0' ?>
 <score-partwise>
-  <movement-title></movement-title>
+  <movement-title>Piece</movement-title>
   <identification>
     <creator type="composer"></creator>
   </identification>
@@ -51,7 +51,7 @@
         <pitch>
           <step>C</step>
           <alter>0.0</alter>
-          <octave>2</octave>
+          <octave>4</octave>
         </pitch>
         <duration>3072</duration>
         <voice>1</voice>
@@ -61,9 +61,9 @@
     <measure number="2">
       <note>
         <pitch>
-          <step>C</step>
+          <step>D</step>
           <alter>0.0</alter>
-          <octave>3</octave>
+          <octave>4</octave>
         </pitch>
         <duration>3072</duration>
         <voice>1</voice>
@@ -73,7 +73,7 @@
     <measure number="3">
       <note>
         <pitch>
-          <step>C</step>
+          <step>E</step>
           <alter>0.0</alter>
           <octave>4</octave>
         </pitch>
@@ -87,19 +87,7 @@
         <pitch>
           <step>C</step>
           <alter>0.0</alter>
-          <octave>5</octave>
-        </pitch>
-        <duration>3072</duration>
-        <voice>1</voice>
-        <type>whole</type>
-      </note>
-    </measure>
-    <measure number="5">
-      <note>
-        <pitch>
-          <step>C</step>
-          <alter>0.0</alter>
-          <octave>6</octave>
+          <octave>4</octave>
         </pitch>
         <duration>3072</duration>
         <voice>1</voice>

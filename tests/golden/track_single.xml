@@ -23,7 +23,7 @@
       <direction>
         <direction-type>
           <metronome>
-            <beat-unit>quarter</beat-unit>
+            <beat-unit>whole</beat-unit>
             <per-minute>60</per-minute>
           </metronome>
         </direction-type>
@@ -282,15 +282,55 @@
       </note>
       <note>
         <rest />
-        <duration>384</duration>
+        <duration>1024</duration>
         <voice>1</voice>
-        <type>eighth</type>
+        <type>half</type>
+        <time-modification>
+          <actual-notes>3</actual-notes>
+          <normal-notes>2</normal-notes>
+        </time-modification>
+        <notations>
+          <ornaments />
+          <technical />
+          <articulations />
+          <tuplet number="1" type="start" />
+        </notations>
       </note>
       <note>
         <rest />
-        <duration>1536</duration>
+        <duration>512</duration>
         <voice>1</voice>
-        <type>half</type>
+        <type>quarter</type>
+        <time-modification>
+          <actual-notes>3</actual-notes>
+          <normal-notes>2</normal-notes>
+        </time-modification>
+      </note>
+      <note>
+        <rest />
+        <duration>256</duration>
+        <voice>1</voice>
+        <type>eighth</type>
+        <time-modification>
+          <actual-notes>3</actual-notes>
+          <normal-notes>2</normal-notes>
+        </time-modification>
+      </note>
+      <note>
+        <rest />
+        <duration>128</duration>
+        <voice>1</voice>
+        <type>16th</type>
+        <time-modification>
+          <actual-notes>3</actual-notes>
+          <normal-notes>2</normal-notes>
+        </time-modification>
+        <notations>
+          <ornaments />
+          <technical />
+          <articulations />
+          <tuplet number="1" type="stop" />
+        </notations>
       </note>
     </measure>
     <measure number="6">

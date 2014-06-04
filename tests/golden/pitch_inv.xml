@@ -29,7 +29,7 @@
       <direction>
         <direction-type>
           <metronome>
-            <beat-unit>quarter</beat-unit>
+            <beat-unit>whole</beat-unit>
             <per-minute>60</per-minute>
           </metronome>
         </direction-type>
@@ -179,7 +179,7 @@
       <direction>
         <direction-type>
           <metronome>
-            <beat-unit>quarter</beat-unit>
+            <beat-unit>whole</beat-unit>
             <per-minute>60</per-minute>
           </metronome>
         </direction-type>
@@ -329,7 +329,7 @@
       <direction>
         <direction-type>
           <metronome>
-            <beat-unit>quarter</beat-unit>
+            <beat-unit>whole</beat-unit>
             <per-minute>60</per-minute>
           </metronome>
         </direction-type>
