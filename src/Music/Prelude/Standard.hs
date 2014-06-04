@@ -71,7 +71,7 @@ type Note =
             (HarmonicT
               (SlideT
                 (ArticulationT (Product Double, Product Double)
-                  (DynamicT (Product Double)
+                  (DynamicT (Sum Double)
                     [Behavior StandardPitch])))))))))
 
 type StandardPitch = Music.Pitch.Pitch
