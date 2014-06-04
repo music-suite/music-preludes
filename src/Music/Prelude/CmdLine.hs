@@ -94,11 +94,12 @@ translateFile translationFunction outSuffix preludeName' inFile' outFile' = do
 
   withSystemTempDirectory "music-suite." $ \tmpDir -> do
     let tmpFile = tmpDir ++ "/" ++ takeFileName inFile
+    let opts = ["-XOverloadedStrings", "-XNoMonomorphismRestriction", "-XTypeFamilies"]
     putStrLn $ "Converting music..."
     writeFile tmpFile newScore
     withMusicSuiteInScope $ do
       putStrLn $ "Writing '" ++ outFile ++ "'..."
-      rawSystem "runhaskell" [tmpFile]  >>= \e -> if e == ExitSuccess then return () else fail ("Could not convert"++inFile)
+      rawSystem "runhaskell" (opts <> [tmpFile])  >>= \e -> if e == ExitSuccess then return () else fail ("Could not convert"++inFile)
 
   return ()
   where

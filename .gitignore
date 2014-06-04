@@ -17,3 +17,4 @@ tests/gen
 diffs
 *.sc
 private
+foo
