@@ -41,6 +41,9 @@ generate-originals:
 	music2midi	-o tests/golden/meta_annotations.mid			tests/meta_annotations.music
 	music2ly	-o tests/golden/meta_annotations.ly			tests/meta_annotations.music
 	music2musicxml	-o tests/golden/meta_annotations.xml			tests/meta_annotations.music
+	music2midi	-o tests/golden/meta_title.mid				tests/meta_title.music
+	music2ly	-o tests/golden/meta_title.ly				tests/meta_title.music
+	music2musicxml	-o tests/golden/meta_title.xml				tests/meta_title.music
 	music2midi	-o tests/golden/meta_clef1.mid				tests/meta_clef1.music
 	music2ly	-o tests/golden/meta_clef1.ly				tests/meta_clef1.music
 	music2musicxml	-o tests/golden/meta_clef1.xml				tests/meta_clef1.music
@@ -126,6 +129,8 @@ open:
 	# open -a "Sibelius 7" tests/current/melody_chords.xml
 	./tests/open-lilypond tests/current/meta_annotations.ly
 	# open -a "Sibelius 7" tests/current/meta_annotations.xml
+	./tests/open-lilypond tests/current/meta_title.ly
+	# open -a "Sibelius 7" tests/current/meta_title.xml
 	./tests/open-lilypond tests/current/meta_clef1.ly
 	# open -a "Sibelius 7" tests/current/meta_clef1.xml
 	./tests/open-lilypond tests/current/meta_composer.ly

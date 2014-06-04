@@ -66,6 +66,7 @@ golden = testGroup "Regression tests" [
   testMusicFile "dynamics_constant",
   testMusicFile "melody_chords",
   testMusicFile "meta_annotations",
+  testMusicFile "meta_title",
   testMusicFile "meta_clef1",
   testMusicFile "meta_composer",
   testMusicFile "meta_time_signature",
