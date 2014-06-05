@@ -29,7 +29,7 @@ import           System.Process
 
 -- TODO Can not link due to haskell/cabal#1759
 versionString :: String
-versionString = "1.6"
+versionString = "1.7"
 -- versionString = showVersion version
 
 data Options = Options {
