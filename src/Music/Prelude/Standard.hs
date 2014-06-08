@@ -22,7 +22,7 @@ module Music.Prelude.Standard (
         module Music.Pitch,
         module Music.Dynamics,
         module Music.Parts,
-        Note,
+        StandardNote,
         asScore,
         asVoice,
         asTrack,
@@ -43,16 +43,16 @@ import           Music.Score             hiding (Fifths, Interval, Note, Part,
 
 import           Music.Prelude.Instances ()
 
-asNote :: Note -> Note
+asNote :: StandardNote -> StandardNote
 asNote = id
 
-asScore :: Score Note -> Score Note
+asScore :: Score StandardNote -> Score StandardNote
 asScore = id
 
-asVoice :: Voice Note -> Voice Note
+asVoice :: Voice StandardNote -> Voice StandardNote
 asVoice = id
 
-asTrack :: Track Note -> Track Note
+asTrack :: Track StandardNote -> Track StandardNote
 asTrack = id
 
 -- newtype BasicPart = BasicPart { getBasicPart :: Integer }
@@ -62,7 +62,7 @@ asTrack = id
 -- instance Show BasicPart where
 --     show _ = ""
 
-type Note = 
+type StandardNote = 
   (PartT Part
     (TieT
       (ColorT 
