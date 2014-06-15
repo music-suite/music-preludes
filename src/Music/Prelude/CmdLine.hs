@@ -12,7 +12,7 @@ import           Data.Monoid
 import           Options.Applicative
 -- import           Paths_music_preludes  (version)
 import           Data.Char
-import           Data.List          (intercalate)
+import           Data.List          (intercalate, isPrefixOf)
 import           Data.List.Split
 import           Data.Map           (Map)
 import qualified Data.Map           as Map
@@ -89,15 +89,23 @@ translateFile translationFunction outSuffix preludeName' inFile' outFile' = do
   let prelude   = "Music.Prelude." ++ toCamel preludeName
   let scoreType = "Score " ++ toCamel preludeName ++ "Note"
   let main      = translationFunction
-  score       <- readFile inFile
-  newScore    <- return $ expand templ (Map.fromList [
-    ("prelude"   , prelude),
-    ("main"      , main),
-    ("scoreType" , scoreType),
-    ("score"     , score),
-    ("outFile"   , outFile)
-    ])
-
+  code          <- readFile inFile
+  newScore      <- return $ if isNotExpression code 
+    then expand declTempl (Map.fromList [
+      ("prelude"   , prelude),
+      ("main"      , main),
+      ("scoreType" , scoreType),
+      ("code"      , code),
+      ("outFile"   , outFile)
+      ])
+    else expand exprTempl (Map.fromList [
+      ("prelude"   , prelude),
+      ("main"      , main),
+      ("scoreType" , scoreType),
+      ("score"     , code),
+      ("outFile"   , outFile)
+      ])
+  -- putStrLn newScore
   withSystemTempDirectory "music-suite." $ \tmpDir -> do
     let tmpFile = tmpDir ++ "/" ++ takeFileName inFile
     let opts = ["-XOverloadedStrings", "-XNoMonomorphismRestriction", "-XTypeFamilies"]
@@ -109,7 +117,24 @@ translateFile translationFunction outSuffix preludeName' inFile' outFile' = do
 
   return ()
   where
-    templ = "module Main where { import $(prelude); main = $(main) \"$(outFile)\" ( $(score) :: $(scoreType) ) }"
+    exprTempl = "module Main where { import $(prelude); main = $(main) \"$(outFile)\" ( $(score) :: $(scoreType) ) }"
+    declTempl = "module Main where \nimport $(prelude) \n$(code) \nmain = $(main) \"$(outFile)\" ( example  :: $(scoreType) )"
+
+-- TODO hackish, preferably parse using haskell-src-exts or similar
+isNotExpression :: String -> Bool
+isNotExpression t = anyLineStartsWith "type" t || anyLineStartsWith "data" t || anyLineStartsWith "example =" t
+
+
+
+-- |
+-- >>> anyLineStartsWith "h" "ahc"
+-- False
+-- >>> anyLineStartsWith "h" "a\nhc"
+-- True
+-- >>> anyLineStartsWith "h" "hac"
+--
+anyLineStartsWith :: String -> String -> Bool
+anyLineStartsWith t = any (t `isPrefixOf`) . lines
 
 
 type Template = String
