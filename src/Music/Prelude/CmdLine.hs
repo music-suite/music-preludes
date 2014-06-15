@@ -70,7 +70,13 @@ translateFileAndRunLilypond format preludeName' inFile' = do
   runCommand $ "rm -f " ++ takeBaseName inFile ++ "-*.tex " ++ takeBaseName inFile ++ "-*.texi " ++ takeBaseName inFile ++ "-*.count " ++ takeBaseName inFile ++ "-*.eps " ++ takeBaseName inFile ++ "-*.pdf " ++ takeBaseName inFile ++ ".eps"
   return ()
 
-translateFile :: String -> String -> Maybe String -> Maybe FilePath -> Maybe FilePath -> IO ()
+translateFile 
+  :: String         -- ^ Translate function (of type FilePath -> music -> IO ()).
+  -> String         -- ^ Output file suffix.
+  -> Maybe String   -- ^ Prelude to use.
+  -> Maybe FilePath -- ^ Input file.
+  -> Maybe FilePath -- ^ Output file.
+  -> IO ()
 translateFile translationFunction outSuffix preludeName' inFile' outFile' = do
   let inFile      = fromMaybe "test.music" inFile'
   let preludeName = fromMaybe "basic" preludeName'
