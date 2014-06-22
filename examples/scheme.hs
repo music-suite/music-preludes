@@ -48,13 +48,12 @@ lispApi = [
   ("ab", toLisp (ab :: Score Integer)),
   ("bb", toLisp (bb :: Score Integer)),
 
-  ("s01", toLisp (0 <-> 1)),
-  ("pass",    CustFunc $ lift1 (id :: Span -> Span)),
-  
+  ("times",   CustFunc $ lift2 (times   :: Int -> Score Integer -> Score Integer)),
   ("stretch", CustFunc $ lift2 (stretch :: Duration -> Score Integer -> Score Integer)),
   ("move",    CustFunc $ lift2 (delay   :: Duration -> Score Integer -> Score Integer)),
   ("|>",      CustFunc $ lift2 ((|>) :: Score Integer -> Score Integer -> Score Integer)),
   ("<>",      CustFunc $ lift2 ((|>) :: Score Integer -> Score Integer -> Score Integer)),
+  ("</>",     CustFunc $ lift2 ((</>) :: Score Integer -> Score Integer -> Score Integer)),
 
   ("first-argument",  CustFunc $ \(x : _) -> return x),
   ("second-argument", CustFunc $ \(_ : x : _) -> return x)
@@ -90,20 +89,29 @@ instance HasLisp Bool where
     Bool x -> Just x
     _      -> Nothing
 
+instance HasLisp Int where
+  _unlisp = prism' (Number . toInteger) $ \x -> case x of
+    Number x -> Just (fromInteger x)
+    _        -> Nothing
+
 instance HasLisp Integer where
   _unlisp = prism' Number $ \x -> case x of
     Number x -> Just x
     _        -> Nothing
 
-instance HasLisp Double where
-  _unlisp = prism' Float $ \x -> case x of
-    Float x -> Just x
-    _       -> Nothing
-
 instance HasLisp Rational where
   _unlisp = prism' Rational $ \x -> case x of
+    Number   x -> Just (fromIntegral x)
     Rational x -> Just x
+    Float    x -> Just (realToFrac x)
     _       -> Nothing
+
+instance HasLisp Double where
+  _unlisp = prism' Float $ \x -> case x of
+    Number x   -> Just (fromIntegral x)
+    Rational x -> Just (fromRational x)
+    Float x    -> Just x
+    _          -> Nothing
 
 instance HasLisp Duration where
   _unlisp = _unlisp . rationalFrac
