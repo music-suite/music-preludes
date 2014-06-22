@@ -6,6 +6,14 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE FlexibleInstances #-}
 
+{-
+  Basic Scheme bindings
+  
+  For examples, see test1.scm (TODO write more)
+  
+  Requires husk-scheme to be in your path
+    http://hackage.haskell.org/package/husk-scheme
+-}
 module Main where
  
 import Music.Prelude
@@ -23,37 +31,54 @@ import qualified Data.Map as Map
 -- import qualified Data.List
 -- import System.Random
 
+type LispScore = Score Integer
+instance AffineSpace Integer where
+  type Diff Integer = Integer
+  (.-.) = (-)
+  (.+^) = (+)
+
 lispApi = [
-  ("c", toLisp (c :: Score Integer)),
-  ("d", toLisp (d :: Score Integer)),
-  ("e", toLisp (e :: Score Integer)),
-  ("f", toLisp (f :: Score Integer)),
-  ("g", toLisp (g :: Score Integer)),
-  ("a", toLisp (a :: Score Integer)),
-  ("b", toLisp (b :: Score Integer)),
+  ("c", toLisp (c :: LispScore)),
+  ("d", toLisp (d :: LispScore)),
+  ("e", toLisp (e :: LispScore)),
+  ("f", toLisp (f :: LispScore)),
+  ("g", toLisp (g :: LispScore)),
+  ("a", toLisp (a :: LispScore)),
+  ("b", toLisp (b :: LispScore)),
 
-  ("c#", toLisp (cs :: Score Integer)),
-  ("d#", toLisp (ds :: Score Integer)),
-  ("e#", toLisp (es :: Score Integer)),
-  ("f#", toLisp (fs :: Score Integer)),
-  ("g#", toLisp (gs :: Score Integer)),
-  ("a#", toLisp (as :: Score Integer)),
-  ("b#", toLisp (bs :: Score Integer)),
+  ("c#", toLisp (cs :: LispScore)),
+  ("d#", toLisp (ds :: LispScore)),
+  ("e#", toLisp (es :: LispScore)),
+  ("f#", toLisp (fs :: LispScore)),
+  ("g#", toLisp (gs :: LispScore)),
+  ("a#", toLisp (as :: LispScore)),
+  ("b#", toLisp (bs :: LispScore)),
 
-  ("cb", toLisp (cb :: Score Integer)),
-  ("db", toLisp (db :: Score Integer)),
-  ("eb", toLisp (eb :: Score Integer)),
-  ("fb", toLisp (fb :: Score Integer)),
-  ("gb", toLisp (gb :: Score Integer)),
-  ("ab", toLisp (ab :: Score Integer)),
-  ("bb", toLisp (bb :: Score Integer)),
+  ("cb", toLisp (cb :: LispScore)),
+  ("db", toLisp (db :: LispScore)),
+  ("eb", toLisp (eb :: LispScore)),
+  ("fb", toLisp (fb :: LispScore)),
+  ("gb", toLisp (gb :: LispScore)),
+  ("ab", toLisp (ab :: LispScore)),
+  ("bb", toLisp (bb :: LispScore)),
 
-  ("times",   CustFunc $ lift2 (times   :: Int -> Score Integer -> Score Integer)),
-  ("stretch", CustFunc $ lift2 (stretch :: Duration -> Score Integer -> Score Integer)),
-  ("move",    CustFunc $ lift2 (delay   :: Duration -> Score Integer -> Score Integer)),
-  ("|>",      CustFunc $ lift2 ((|>) :: Score Integer -> Score Integer -> Score Integer)),
-  ("<>",      CustFunc $ lift2 ((|>) :: Score Integer -> Score Integer -> Score Integer)),
-  ("</>",     CustFunc $ lift2 ((</>) :: Score Integer -> Score Integer -> Score Integer)),
+  ("m3", toLisp (m3 :: Integer)),
+  ("M3", toLisp (_M3 :: Integer)),
+
+  ("up",       CustFunc $ lift2 (up   :: Integer -> LispScore -> LispScore)),
+
+  ("times",    CustFunc $ lift2 (times   :: Int -> LispScore -> LispScore)),
+  ("stretch",  CustFunc $ lift2 (stretch :: Duration -> LispScore -> LispScore)),
+  ("compress", CustFunc $ lift2 (compress :: Duration -> LispScore -> LispScore)),
+  ("move",     CustFunc $ lift2 (delay   :: Duration -> LispScore -> LispScore)),
+
+  ("scat",    CustFunc $ liftV (scat   :: [LispScore] -> LispScore)),
+  ("pcat",    CustFunc $ liftV (pcat   :: [LispScore] -> LispScore)),
+  ("rcat",    CustFunc $ liftV (rcat   :: [LispScore] -> LispScore)),
+
+  ("|>",      CustFunc $ lift2 ((|>) :: LispScore -> LispScore -> LispScore)),
+  ("<>",      CustFunc $ lift2 ((|>) :: LispScore -> LispScore -> LispScore)),
+  ("</>",     CustFunc $ lift2 ((</>) :: LispScore -> LispScore -> LispScore)),
 
   ("first-argument",  CustFunc $ \(x : _) -> return x),
   ("second-argument", CustFunc $ \(_ : x : _) -> return x)
@@ -66,7 +91,7 @@ main = do
   env <- extendEnv stdEnv (map (over _1 (varNamespace,)) $ lispApi)
   code <- readFile "examples/test1.scm"
   res <- evalLisp' env $ fromRight $ readExpr code
-  let sc = (\x -> x :: Score Integer) $ fromJust $ fromRight $ fmap fromLisp $ res
+  let sc = (\x -> x :: LispScore) $ fromJust $ fromRight $ fmap fromLisp $ res
   -- printScore sc
   openLilypond $ fmap (\x -> PartT(mempty::Part,TieT(mempty,ArticulationT(mempty::(Sum Double,Sum Double),DynamicT(mempty::Sum Double,[x]))))) $ sc
   return ()
@@ -98,6 +123,9 @@ instance HasLisp Integer where
   _unlisp = prism' Number $ \x -> case x of
     Number x -> Just x
     _        -> Nothing
+
+-- instance HasLisp Pitch where
+  -- _unlisp = _unlisp . iso ((c.+^) . spell usingSharps . fromInteger) (toInteger.semitones.(.-. c))
 
 instance HasLisp Rational where
   _unlisp = prism' Rational $ \x -> case x of
@@ -147,6 +175,11 @@ instance HasLisp a => HasLisp [a] where
 
 type LispFunc = [LispVal] -> IOThrowsError LispVal
 
+liftV :: (HasLisp a, HasLisp b) => ([a] -> b) -> LispFunc
+liftV f as = case (sequenceA $ map fromLisp as) of
+  (Just as) -> return $ toLisp $ f as
+  _         -> fail $ "Type error: got " ++ show as
+
 lift1 :: (HasLisp a, HasLisp b) => (a -> b) -> LispFunc
 lift1 f [a1] = case (fromLisp a1) of
   (Just a1) -> return $ toLisp $ f a1
@@ -187,4 +220,4 @@ doubleFrac = iso fromDouble toDouble
       fromDouble = realToFrac
 
 rationalFrac = iso fromRational toRational
-
+integInteg   = iso fromInteger toInteger
