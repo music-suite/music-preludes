@@ -64,8 +64,11 @@ lispApi = [
 
   ("m3", toLisp (m3 :: Integer)),
   ("M3", toLisp (_M3 :: Integer)),
-
   ("up",       CustFunc $ lift2 (up   :: Integer -> LispScore -> LispScore)),
+
+  -- ("ff", toLisp (fff :: Sum Double)),
+  -- ("level",    CustFunc $ lift2 (up   :: Sum Double -> LispScore -> LispScore)),
+
 
   ("times",    CustFunc $ lift2 (times   :: Int -> LispScore -> LispScore)),
   ("stretch",  CustFunc $ lift2 (stretch :: Duration -> LispScore -> LispScore)),

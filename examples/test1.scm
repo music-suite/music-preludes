@@ -15,7 +15,7 @@
       (scat
         (compress 16 (scat c d e))
         (compress 8 (scat c d e))
-        (compress 16 (scat c d e f)))))
+        (compress 16 (scat c d e (pcat f bb))))))
       )
     
     )
