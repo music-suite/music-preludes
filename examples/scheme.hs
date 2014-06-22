@@ -26,10 +26,33 @@ import qualified Data.Map as Map
 lispApi = [
   ("c", toLisp (c :: Score Integer)),
   ("d", toLisp (d :: Score Integer)),
+  ("e", toLisp (e :: Score Integer)),
+  ("f", toLisp (f :: Score Integer)),
+  ("g", toLisp (g :: Score Integer)),
+  ("a", toLisp (a :: Score Integer)),
+  ("b", toLisp (b :: Score Integer)),
+
+  ("c#", toLisp (cs :: Score Integer)),
+  ("d#", toLisp (ds :: Score Integer)),
+  ("e#", toLisp (es :: Score Integer)),
+  ("f#", toLisp (fs :: Score Integer)),
+  ("g#", toLisp (gs :: Score Integer)),
+  ("a#", toLisp (as :: Score Integer)),
+  ("b#", toLisp (bs :: Score Integer)),
+
+  ("cb", toLisp (cb :: Score Integer)),
+  ("db", toLisp (db :: Score Integer)),
+  ("eb", toLisp (eb :: Score Integer)),
+  ("fb", toLisp (fb :: Score Integer)),
+  ("gb", toLisp (gb :: Score Integer)),
+  ("ab", toLisp (ab :: Score Integer)),
+  ("bb", toLisp (bb :: Score Integer)),
+
   ("s01", toLisp (0 <-> 1)),
   ("pass",    CustFunc $ lift1 (id :: Span -> Span)),
   
   ("stretch", CustFunc $ lift2 (stretch :: Duration -> Score Integer -> Score Integer)),
+  ("move",    CustFunc $ lift2 (delay   :: Duration -> Score Integer -> Score Integer)),
   ("|>",      CustFunc $ lift2 ((|>) :: Score Integer -> Score Integer -> Score Integer)),
   ("<>",      CustFunc $ lift2 ((|>) :: Score Integer -> Score Integer -> Score Integer)),
 
@@ -131,8 +154,7 @@ lift2 f _ = fail "Wrong number of args"
 -- lift2 :: (a -> b -> c) -> LispFunc
 
 
-
-
+{-
 makeEnv :: [(String, LispFunc)] -> Env -> Env
 makeEnv bindings = composed $ map (uncurry extendEnv2 . fmap CustFunc) $ bindings
   where
@@ -145,6 +167,7 @@ extendEnv2 k v p = Environment (Just p) (retR $ toMap ("_" ++ k) (retR v)) (retR
       
     retR :: a -> IORef a
     retR = unsafePerformIO . newIORef
+-}
 
 
 doubleFrac = iso fromDouble toDouble
