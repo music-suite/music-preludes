@@ -32,6 +32,11 @@ generate-originals:
 	music2midi	-o tests/golden/articulation_staccato.mid   		tests/articulation_staccato.music
 	music2ly	-o tests/golden/articulation_staccato.ly		tests/articulation_staccato.music
 	music2musicxml	-o tests/golden/articulation_staccato.xml		tests/articulation_staccato.music
+
+	music2midi	-o tests/golden/decl_style1.mid		tests/decl_style1.music
+	music2ly	-o tests/golden/decl_style1.ly		tests/decl_style1.music
+	music2musicxml	-o tests/golden/decl_style1.xml		tests/decl_style1.music
+
 	music2midi	-o tests/golden/dynamics_constant.mid       		tests/dynamics_constant.music
 	music2ly	-o tests/golden/dynamics_constant.ly			tests/dynamics_constant.music
 	music2musicxml	-o tests/golden/dynamics_constant.xml			tests/dynamics_constant.music
@@ -115,6 +120,8 @@ open:
 	rm -f *.pdf
 	./tests/open-lilypond tests/current/articulation_all_accents.ly
 	# open -a "Sibelius 7" tests/current/articulation_all_accents.xml
+	./tests/open-lilypond tests/current/decl_style1.ly
+	# open -a "Sibelius 7" tests/current/decl_style1.xml
 	./tests/open-lilypond tests/current/articulation_all_separations.ly
 	# open -a "Sibelius 7" tests/current/articulation_all_separations.xml
 	./tests/open-lilypond tests/current/articulation_legato.ly

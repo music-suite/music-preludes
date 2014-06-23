@@ -63,6 +63,7 @@ golden = testGroup "Regression tests" [
   testMusicFile "articulation_legato",
   testMusicFile "articulation_portato",
   testMusicFile "articulation_staccato",
+  testMusicFile "decl_style1",
   testMusicFile "dynamics_constant",
   testMusicFile "melody_chords",
   testMusicFile "meta_annotations",
