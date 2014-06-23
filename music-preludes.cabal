@@ -16,6 +16,11 @@ description:
     .
     This library is part of the Music Suite, see <http://music-suite.github.io>.
 
+extra-source-files:     README.md,
+                        examples/*.hs,
+                        examples/*.scm,
+                        examples/*.music
+
 source-repository head
   type:                 git
   location:             git://github.com/music-suite/music-preludes.git
