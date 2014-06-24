@@ -1,33 +1,32 @@
 
+{-# LANGUAGE FlexibleInstances         #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE ViewPatterns #-}
-{-# LANGUAGE TupleSections #-}
-{-# LANGUAGE TypeSynonymInstances #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TupleSections             #-}
+{-# LANGUAGE TypeFamilies              #-}
+{-# LANGUAGE TypeSynonymInstances      #-}
 
 {-
   Basic Scheme bindings
-  
+
   For examples, see test1.scm (TODO write more)
-  
+
   Requires husk-scheme to be in your path
     http://hackage.haskell.org/package/husk-scheme
 -}
 module Main where
- 
-import Music.Prelude
-import Language.Scheme.Core
-import Language.Scheme.Types
-import Language.Scheme.Variables
-import Language.Scheme.Parser
-import Data.Traversable
-import System.IO.Unsafe
-import Data.IORef
-import Data.Maybe
-import Data.Either
-import qualified Music.Score as Score
-import qualified Data.Map as Map
+
+import           Data.Either
+import           Data.IORef
+import qualified Data.Map                  as Map
+import           Data.Maybe
+import           Data.Traversable
+import           Language.Scheme.Core
+import           Language.Scheme.Parser
+import           Language.Scheme.Types
+import           Language.Scheme.Variables
+import           Music.Prelude
+import qualified Music.Score               as Score
+import           System.IO.Unsafe
 -- import qualified Data.List
 -- import System.Random
 
