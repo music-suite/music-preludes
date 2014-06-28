@@ -2,6 +2,7 @@
 {-# LANGUAGE DeriveDataTypeable         #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE TypeOperators              #-}
 
 ------------------------------------------------------------------------------------
 -- |
@@ -65,20 +66,23 @@ asVoice = id
 asTrack :: Track BasicNote -> Track BasicNote
 asTrack = id
 
-type BasicNote = (PartT BasicPart
-  (TextT
-    (TieT
-      (SlideT
-        (TremoloT
-          (HarmonicT
-            (ArticulationT (Sum Double, Sum Double)
-              (DynamicT (Sum Double)
-                [Behavior BasicPitch]))))))))
+type Co2 f g a       = f (g a)
+type Co3 f g h a     = f (Co2 g h a)
+type Co4 f g h i a   = f (Co3 g h i a)
+type Co5 f g h i j a = f (Co4 g h i j a)
+foo = undefined
+
+type BasicNote          = BasicNote' BasicPart (Sum Double, Sum Double) (Sum Double) [Behavior BasicPitch]
+type BasicNote' r a d p  = Co3 (PartT r) ExtraNote (SimpleNote a d) p
+
+newtype ExtraNote a      = ExtraNote { getExtraNote :: Co5 TextT TieT SlideT TremoloT HarmonicT a }
+newtype SimpleNote a d p = SimpleNote { getSimpleNote :: Co2 (ArticulationT a) (DynamicT d) p }
 
 type BasicPitch = Music.Pitch.Pitch
 
-open          = openLilypond . asScore
-play          = error "Not implemented: play"
-openAndPlay x = open x >> play x
+[open, play, openAndPlay] = undefined 
+-- open          = openLilypond . asScore
+-- play          = error "Not implemented: play"
+-- openAndPlay x = open x >> play x
 
 
