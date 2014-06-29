@@ -31,7 +31,7 @@ import qualified System.Posix.Env   as PE
 #endif
 import           System.Process
 
--- TODO Can not link due to haskell/cabal#1759
+-- TODO Can not link to Paths_ due to haskell/cabal#1759
 versionString :: String
 versionString = "1.7"
 -- versionString = showVersion version
