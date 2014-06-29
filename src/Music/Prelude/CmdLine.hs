@@ -1,4 +1,6 @@
 
+{-# LANGUAGE CPP #-}
+
 module Music.Prelude.CmdLine (
         converterMain,
         translateFileAndRunLilypond,
@@ -24,7 +26,9 @@ import           System.Exit
 import           System.FilePath
 import           System.IO
 import           System.IO.Temp
+#ifndef mingw32_HOST_OS
 import qualified System.Posix.Env   as PE
+#endif
 import           System.Process
 
 -- TODO Can not link due to haskell/cabal#1759
@@ -160,25 +164,38 @@ replace old new = intercalate new . splitOn old
 toCamel [] = []
 toCamel (x:xs) = toUpper x : xs
 
--- | Temporarily modfiy an environment variable (POSIX only).
---
--- @
--- withEnv MYVAR (\oldValue -> newValue) $ do
---    ...
--- @
---
-withEnv :: String -> (Maybe String -> String) -> IO a -> IO a
-withEnv n f k = do
-  x <- PE.getEnv n
-  PE.setEnv n (f x) True
-  res <- k
-  case x of
-    Nothing -> PE.unsetEnv n >> return res
-    Just x2 -> PE.setEnv n x2 True >> return res
 
+-- |
+-- Wrap IO actions that invoke 'ghc', 'ghci' or 'runhaskell' using this
+-- to assure that invocations will work when using a development version of
+-- the suite (i.e. the Music packages are in a sandbox).
+--
+-- Does nothing on Windows, as we can not reliably implement withEnv for that
+-- platform current HP release (needs base 4.7).
+--
 withMusicSuiteInScope :: IO a -> IO a
 withMusicSuiteInScope k = do
   r <- try $ readProcess "music-util" ["package-path"] ""
   case r of
     Left x            -> let _ = (x::SomeException) in withEnv "GHC_PACKAGE_PATH" (const "") k
     Right packagePath -> withEnv "GHC_PACKAGE_PATH" (const packagePath) k
+
+-- | Temporarily modfiy an environment variable (POSIX only).
+--
+-- @
+-- withEnv varName (\oldValueIfPresent -> newValue) $ do
+--    ...
+-- @
+--
+withEnv :: String -> (Maybe String -> String) -> IO a -> IO a
+#ifdef mingw32_HOST_OS
+withEnv _ _ = id
+#else
+withEnv n f k = do
+  x <- PE.getEnv n
+  PE.setEnv n (f x) True
+  res <- k
+  case x of
+    Nothing -> PE.unsetEnv n >> return res
+    Just x2 -> PE.setEnv n x2 True >> return res    
+#endif

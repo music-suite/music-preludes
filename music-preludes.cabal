@@ -30,7 +30,6 @@ library
                         aeson                   >= 0.7.0.6 && < 1,
                         lens				            >= 4.2 && < 4.3,
                         split,
-                        unix,
                         containers,
                         vector-space,
                         vector-space-points,
@@ -52,6 +51,8 @@ library
                         music-dynamics-literal  == 1.7,
                         -- For examples:
                         async
+    if !os(windows)
+      build-depends:    unix
     exposed-modules:    Music.Prelude
                         Music.Prelude.Basic
                         Music.Prelude.Standard
