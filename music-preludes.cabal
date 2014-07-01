@@ -56,8 +56,6 @@ library
     exposed-modules:    Music.Prelude
                         Music.Prelude.Basic
                         Music.Prelude.Standard
-                        -- Music.Prelude.Piano
-                        -- Music.Prelude.StringQuartet
                         Music.Prelude.CmdLine
                         Music.Prelude.Instances
     hs-source-dirs:     src
