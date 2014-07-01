@@ -18,7 +18,7 @@
 -- Stability   : experimental
 -- Portability : non-portable (TF,GNTD)
 --
--- A basic music representation.
+-- Provides orphan instances that does not fit into other packages.
 --
 -------------------------------------------------------------------------------------
 

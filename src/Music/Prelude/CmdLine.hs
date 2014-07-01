@@ -31,36 +31,58 @@ import qualified System.Posix.Env   as PE
 #endif
 import           System.Process
 
+import qualified Music.Prelude.Basic    as PreludeBasic
+import qualified Music.Prelude.Standard as PreludeStandard
+
 -- TODO Can not link to Paths_ due to haskell/cabal#1759
 versionString :: String
 versionString = "1.7"
 -- versionString = showVersion version
 
-data Options = Options {
+data ConverterOptions = ConverterOptions {
     prelude :: Maybe String,
     outFile :: Maybe FilePath,
     inFile  :: FilePath
   } deriving (Show)
 
-converterOptions :: Parser Options
-converterOptions = Options
-  <$> (optional $ strOption $ mconcat [long "prelude", metavar "<name>"])
-  <*> (optional $ strOption $ mconcat [short 'o', long "output", metavar "<file>"])
-  <*> (argument str $ metavar "<input>")
+converterOptions :: Parser ConverterOptions
+converterOptions = liftA3 ConverterOptions
+  (optional $ strOption $ mconcat [long "prelude", metavar "<name>"])
+  (optional $ strOption $ mconcat [short 'o', long "output", metavar "<file>"])
+  (argument str $ metavar "<input>")
 
-runConverter :: String -> String -> Options -> IO ()
-runConverter func ext (Options prelude outFile inFile) =
-  translateFile func ext prelude (Just inFile) outFile
-
+-- A converter program
+-- Used for music2ly, music2musicxml et al
 converterMain :: String -> String -> IO ()
-converterMain func ext = getProgName >>= converterMain' func ext
-
-converterMain' :: String -> String -> String -> IO ()
-converterMain' func ext pgmName = execParser opts >>= runConverter func ext
+converterMain func ext = do 
+  pgmName <- getProgName
+  options <- execParser (opts pgmName)
+  runConverter func ext options
   where 
-      opts = info 
-        (helper <*> converterOptions) 
-        (fullDesc <> header (pgmName ++ "-" ++ versionString))
+    opts pgmName = info 
+      (helper <*> converterOptions) 
+      (fullDesc <> header (pgmName ++ "-" ++ versionString))
+    runConverter func ext (ConverterOptions prelude outFile inFile) 
+      = translateFile func ext prelude (Just inFile) outFile
+
+
+
+{-
+
+data ConverterWithPostOptions = ConverterWithPostOptions {
+    cwo_prelude :: Maybe String,
+    cwo_outFile :: Maybe FilePath,
+    cwo_inFile  :: FilePath
+  } deriving (Show)
+
+-- converterWithPostMain :: 
+converterWithPostMain = do
+  [inFile] <- getArgs
+  translateFileAndRunLilypond format (Just "basic") (Just inFile)
+-}
+
+
+
 
 
 translateFileAndRunLilypond :: String -> Maybe String -> Maybe FilePath -> IO ()
@@ -127,6 +149,17 @@ translateFile translationFunction outSuffix preludeName' inFile' outFile' = do
 -- TODO hackish, preferably parse using haskell-src-exts or similar
 isNotExpression :: String -> Bool
 isNotExpression t = anyLineStartsWith "type" t || anyLineStartsWith "data" t || anyLineStartsWith "example =" t
+
+
+
+
+
+
+
+
+
+
+
 
 
 
