@@ -42,11 +42,11 @@ deriving instance Typeable Music.Parts.Part
 instance Transformable Music.Parts.Part where
   transform _ = id
 type instance Music.Score.Part Music.Parts.Part = Music.Parts.Part
-type instance SetPart a Music.Parts.Part = a
+-- type instance SetPart a Music.Parts.Part = a
 
-instance (Transformable a, a ~ Music.Score.Part a) => HasPart Music.Parts.Part a where
+instance (Transformable a, a ~ Music.Score.Part a) => HasPart Music.Parts.Part a Music.Parts.Part a where
   part = ($)
-instance (Transformable a, a ~ Music.Score.Part a) => HasParts Music.Parts.Part a where
+instance (Transformable a, a ~ Music.Score.Part a) => HasParts Music.Parts.Part a Music.Parts.Part a where
   parts = ($)
 
 
@@ -54,21 +54,21 @@ instance (Transformable a, a ~ Music.Score.Part a) => HasParts Music.Parts.Part 
 instance Transformable BasicPart where
   transform _ = id
 type instance Music.Score.Part BasicPart = BasicPart
-type instance SetPart a BasicPart = a
+-- type instance SetPart a BasicPart = a
 
-instance (Transformable a, a ~ Music.Score.Part a) => HasPart BasicPart a where
+instance (Transformable a, a ~ Music.Score.Part a) => HasPart BasicPart a BasicPart a where
   part = ($)
-instance (Transformable a, a ~ Music.Score.Part a) => HasParts BasicPart a where
+instance (Transformable a, a ~ Music.Score.Part a) => HasParts BasicPart a BasicPart a where
   parts = ($)
 
 instance Transformable Pitch where
   transform _ = id
 type instance Score.Pitch Pitch = Pitch
-type instance SetPitch a Pitch = a
+-- type instance SetPitch a Pitch = a
 
-instance (Transformable a, a ~ Score.Pitch a) => HasPitch Pitch a where
+instance (Transformable a, a ~ Score.Pitch a) => HasPitch Pitch a Pitch a where
   pitch = ($)
-instance (Transformable a, a ~ Score.Pitch a) => HasPitches Pitch a where
+instance (Transformable a, a ~ Score.Pitch a) => HasPitches Pitch a Pitch a where
   pitches = ($)
 
 instance Tiable Pitch where
@@ -92,12 +92,14 @@ instance HasBackendNote SuperCollider Pitch where
   exportChord b = exportChord b . fmap (fmap (\p -> semitones (p .-. c)))
 
 
+{-
 instance HasBackendNote MusicXml Pitch where
   exportNote  _ (XmlContext d Nothing)    = Xml.rest (realToFrac d)
   exportNote  _ (XmlContext d (Just x))   = (`Xml.note` realToFrac d) . snd3 Just . spellPitch 4 $ x
 
   exportChord _ (XmlContext d Nothing)    = Xml.rest (realToFrac d)
   exportChord _ (XmlContext d (Just xs))  = (`Xml.chord` (realToFrac d)) . fmap (snd3 Just . spellPitch 4) $ xs
+-}
 
 instance HasBackendNote Lilypond Pitch where
   exportNote  _ (LyContext d Nothing)    = (^*realToFrac (4*d)) Lilypond.rest
@@ -137,9 +139,11 @@ instance HasLilypondInstrument BasicPart where
 instance HasLilypondInstrument Music.Parts.Part where
     getLilypondClef = defaultClef
 
+{-
 instance HasMusicXmlInstrument BasicPart where
     getMusicXmlClef = 0
 
 instance HasMusicXmlInstrument Music.Parts.Part where
     getMusicXmlClef = defaultClef
+-}
 

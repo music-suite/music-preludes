@@ -51,7 +51,7 @@ class (
   a ~ Cynamic s,
   b ~ Cynamic t,
   IdC
-  ) => HasCynamics s t a b | s -> a, t -> b, s b -> t, t a -> s where
+  ) => HasCynamics s t a b | s -> a, s b -> t where
 
   -- | Access all cynamics.
   cynamics :: Traversal s t a b
@@ -59,7 +59,7 @@ class (
 -- |
 -- Class of types that provide a single cynamic.
 --
-class (HasCynamics s t a b) => HasCynamic s t a b | s -> a, t -> b, s b -> t, t a -> s where
+class (HasCynamics s t a b) => HasCynamic s t a b | s -> a, s b -> t where
 
   -- | Access a single cynamic.
   cynamic :: Lens s t a b
