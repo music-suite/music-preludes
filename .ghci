@@ -2,4 +2,9 @@
 -- :set -XNoMonomorphismRestriction
 -- :load src/Music/Prelude/Standard.hs
 
--- :m + Music.Score.Import.Sibelius
+:m + Music.Prelude
+:def! open  (\x -> return $ "open  $ asScore $ "++ x)
+:def! play  (\x -> return $ "play  $ asScore $ "++ x)
+:def! write (\x -> return $ "write $ asScore $ "++ x)
+putStrLn "Welcome to the Music Suite!"
+putStrLn "Try :open <music> or :play <music>"
