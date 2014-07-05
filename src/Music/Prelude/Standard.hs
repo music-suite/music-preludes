@@ -64,15 +64,15 @@ asTrack = id
 
 type StandardNote = 
   (PartT Part
-    (TieT
-      (ColorT 
-        (TextT
-          (TremoloT
-            (HarmonicT
-              (SlideT
-                (ArticulationT (Sum Double, Sum Double)
-                  (DynamicT (Sum Double)
-                    [Behavior StandardPitch])))))))))
+    (ColorT 
+      (TextT
+        (TremoloT
+          (HarmonicT
+            (SlideT
+              (ArticulationT (Sum Double, Sum Double)
+                (DynamicT (Sum Double)
+                  [TieT
+                    (Behavior StandardPitch)]))))))))
 
 type StandardPitch = Music.Pitch.Pitch
 -- data StandardPitch = StandardPitch Music.Pitch.Pitch
