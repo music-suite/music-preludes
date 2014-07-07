@@ -6,5 +6,8 @@
 :def! open  (\x -> return $ "open  $ asScore $ "++ x)
 :def! play  (\x -> return $ "play  $ asScore $ "++ x)
 :def! write (\x -> return $ "write $ asScore $ "++ x)
+:def! unload (\_ -> return ":m - Music.Prelude")
+putStrLn "==================================================="
 putStrLn "Welcome to the Music Suite!"
 putStrLn "Try :open <music> or :play <music>"
+putStrLn "==================================================="
