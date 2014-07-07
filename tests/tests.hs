@@ -45,9 +45,9 @@ mySystem str = do
   your changes permanent, please assure that you are in a clean working
   directory (except for your edits), and then run:
 
-      $ make generate
+      $ make -f tests/Makefile generate
   
-  You should commit all the resulting files along with your edits.
+  You should commit all the resulting files (in tests/golden) along with your edits.
 -}
 sanity = testGroup "Sanity checks" [
   testMusicFilesCheckSum,
