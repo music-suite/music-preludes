@@ -24,8 +24,19 @@ testMusicFileAs ext name =
     (name ++ "." ++ ext)
     ("tests/golden/" ++ name ++ "." ++ ext)
     ("tests/current/" ++ name ++ "." ++ ext)
-    ((system $ converter ext ++" -o tests/current/"++name++"."++ext++" tests/"++name++".music") 
+    (convertFile ext name)
+
+convertFile 
+  :: String     -- ^ Extension
+  -> FilePath   -- ^ Name
+  -> IO ()
+convertFile ext name =
+    ((mySystem $ converter ext ++" -o tests/current/"++name++"."++ext++" tests/"++name++".music") 
       >>= \e -> if e == ExitSuccess then return () else fail ("Could not convert "++name++".music"))
+
+mySystem str = do
+  (_,_,_,p) <- createProcess $ (shell str) { delegate_ctlc = False }
+  waitForProcess p   
 
 {-
   This test will always fail if the test files have been edited.
