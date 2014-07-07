@@ -18,3 +18,5 @@ diffs
 *.sc
 private
 foo
+*.ini
+
