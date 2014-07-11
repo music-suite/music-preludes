@@ -11,3 +11,4 @@ putStrLn "==================================================="
 putStrLn "Welcome to the Music Suite!"
 putStrLn "Try :open <music> or :play <music>"
 putStrLn "==================================================="
+default (Int, Float)
