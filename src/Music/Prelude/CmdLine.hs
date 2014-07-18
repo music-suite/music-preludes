@@ -3,8 +3,11 @@
 
 module Music.Prelude.CmdLine (
         converterMain,
-        translateFileAndRunLilypond,
+        lilypondConverterMain,
+                
         translateFile,
+        translateFileAndRunLilypond,
+
         versionString
 ) where
 
@@ -39,6 +42,10 @@ import qualified Music.Prelude.Standard as PreludeStandard
 versionString :: String
 versionString = showVersion version
 
+
+
+
+
 data ConverterOptions = ConverterOptions {
     prelude :: Maybe String,
     outFile :: Maybe FilePath,
@@ -67,26 +74,36 @@ converterMain func ext = do
 
 
 
-{-
-
-
-data ConverterWithPostOptions = ConverterWithPostOptions {
-    cwo_prelude :: Maybe String,
-    cwo_outFile :: Maybe FilePath,
-    cwo_inFile  :: FilePath
+data LilypondConverterOptions = LilypondConverterOptions {
+    _prelude :: Maybe String,
+    _inFile  :: FilePath
   } deriving (Show)
 
--- converterWithPostMain :: 
-converterWithPostMain = do
-  [inFile] <- getArgs
-  translateFileAndRunLilypond format (Just "basic") (Just inFile)
--}
+lilypondConverterOptions :: Parser LilypondConverterOptions
+lilypondConverterOptions = liftA2 LilypondConverterOptions
+  (optional $ strOption $ mconcat [long "prelude", metavar "<name>"])
+  (argument str $ metavar "<input>")
+
+-- A converter program
+-- Used for music2ly, music2musicxml et al
+lilypondConverterMain :: String -> IO ()
+lilypondConverterMain ext = do 
+  pgmName <- getProgName
+  options <- execParser (opts pgmName)
+  runLilypondConverter ext options
+  where 
+    opts pgmName = info 
+      (helper <*> lilypondConverterOptions) 
+      (fullDesc <> header (pgmName ++ "-" ++ versionString))
+    runLilypondConverter ext (LilypondConverterOptions prelude inFile) 
+      = translateFileAndRunLilypond ext prelude (Just inFile)
 
 
-
-
-
-translateFileAndRunLilypond :: String -> Maybe String -> Maybe FilePath -> IO ()
+translateFileAndRunLilypond 
+  :: String         -- ^ Output file suffix/format passed to Lilypond.
+  -> Maybe String   -- ^ Prelude to use.
+  -> Maybe FilePath -- ^ Input file. 
+  -> IO ()
 translateFileAndRunLilypond format preludeName' inFile' = do
   let inFile      = fromMaybe "test.music" inFile'
   let preludeName = fromMaybe "basic" preludeName'
