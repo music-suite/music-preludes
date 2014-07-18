@@ -43,9 +43,6 @@ versionString :: String
 versionString = showVersion version
 
 
-
-
-
 data ConverterOptions = ConverterOptions {
     prelude :: Maybe String,
     outFile :: Maybe FilePath,
@@ -58,7 +55,7 @@ converterOptions = liftA3 ConverterOptions
   (optional $ strOption $ mconcat [short 'o', long "output", metavar "<file>"])
   (argument str $ metavar "<input>")
 
--- A converter program
+-- A basic converter program
 -- Used for music2ly, music2musicxml et al
 converterMain :: String -> String -> IO ()
 converterMain func ext = do 
@@ -74,6 +71,8 @@ converterMain func ext = do
 
 
 
+-- A converter program that invokes Lilypond
+-- Used for music2pdf, music2svg et al
 data LilypondConverterOptions = LilypondConverterOptions {
     _prelude :: Maybe String,
     _inFile  :: FilePath
@@ -97,6 +96,8 @@ lilypondConverterMain ext = do
       (fullDesc <> header (pgmName ++ "-" ++ versionString))
     runLilypondConverter ext (LilypondConverterOptions prelude inFile) 
       = translateFileAndRunLilypond ext prelude (Just inFile)
+
+
 
 
 translateFileAndRunLilypond 
