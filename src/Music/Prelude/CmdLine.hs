@@ -8,6 +8,7 @@ module Music.Prelude.CmdLine (
         translateFile,
         translateFileAndRunLilypond,
 
+        version,
         versionString
 ) where
 
@@ -116,7 +117,7 @@ translateFileAndRunLilypond format preludeName' inFile' = do
   return ()
 
 translateFile 
-  :: String         -- ^ Translate function (of type FilePath -> music -> IO ()).
+  :: String         -- ^ Translate function (of type @'FilePath' -> music -> 'IO' ()@).
   -> String         -- ^ Output file suffix.
   -> Maybe String   -- ^ Prelude to use.
   -> Maybe FilePath -- ^ Input file.
