@@ -151,7 +151,7 @@ instance Arbitrary a => Arbitrary (Voice a) where
 -- instance Arbitrary a => Arbitrary (Chord a) where
   -- arbitrary = fmap (view chord) arbitrary  
 instance Arbitrary a => Arbitrary (Score a) where
-  arbitrary = fmap (view score . take 10) arbitrary  
+  arbitrary = fmap (view score) arbitrary  
 
 
 instance Arbitrary a => Arbitrary (Sum a) where
@@ -177,7 +177,12 @@ main = defaultMain $ testGroup "Instances" $ [
   I_TEST(_Monoid, Sum Int),
   I_TEST(_Monoid, [Int]),
   I_TEST(_Monoid, Span),
-  I_TEST(_Monoid, BadMonoid),
+  -- I_TEST(_Monoid, Note ()),
+  -- I_TEST(_Monoid, Stretched ()),
+  -- I_TEST(_Monoid, Delayed ()),
+  I_TEST(_Monoid, Voice Int),
+  -- I_TEST(_Monoid, Chord Int),
+  I_TEST(_Monoid, Score Int),
 
   I_TEST(_Transformable, Time),
   I_TEST(_Transformable, Duration),
@@ -195,6 +200,10 @@ main = defaultMain $ testGroup "Instances" $ [
   -- I_TEST(_Transformable, Chord Integer),
   I_TEST(_Transformable, Score Integer),
 
+  I_TEST(_Transformable, [Voice Integer]),
+  -- I_TEST(_Transformable, [Chord] Integer),
+  I_TEST(_Transformable, [Score Integer]),
+
   I_TEST(_HasPosition, Time),
   -- I_TEST(_HasPosition, Duration),
   I_TEST(_HasPosition, Span),
@@ -209,6 +218,8 @@ main = defaultMain $ testGroup "Instances" $ [
 
   -- I_TEST(_HasPosition, Chord Integer),
   I_TEST(_HasPosition, Score Integer),
+  -- I_TEST(_HasPosition, [Chord Integer]),
+  I_TEST(_HasPosition, [Score Integer]),
  
   I_TEST(_Transformable, Stretched [Note Int])
 
