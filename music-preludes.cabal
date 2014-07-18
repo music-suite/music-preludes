@@ -58,6 +58,7 @@ library
                         Music.Prelude.Standard
                         Music.Prelude.CmdLine
                         Music.Prelude.Instances
+    other-modules:      Paths_music_preludes
     hs-source-dirs:     src
     default-language:   Haskell2010
 

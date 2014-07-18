@@ -12,7 +12,7 @@ import           Control.Exception
 import           Data.Version          (showVersion)
 import           Data.Monoid
 import           Options.Applicative
--- import           Paths_music_preludes  (version)
+import           Paths_music_preludes  (version)
 import           Data.Char
 import           Data.List          (intercalate, isPrefixOf)
 import           Data.List.Split
@@ -34,10 +34,10 @@ import           System.Process
 import qualified Music.Prelude.Basic    as PreludeBasic
 import qualified Music.Prelude.Standard as PreludeStandard
 
--- TODO Can not link to Paths_ due to haskell/cabal#1759
+-- Note that Paths_music_preludes must be in other-modules for executables
+-- See haskell/cabal#1759
 versionString :: String
-versionString = "1.7"
--- versionString = showVersion version
+versionString = showVersion version
 
 data ConverterOptions = ConverterOptions {
     prelude :: Maybe String,
