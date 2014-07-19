@@ -1,7 +1,9 @@
 
 run:
-	ghc -threaded -o te tests/tests.hs
-	time ./te -j 4 +RTS -N4 -RTS
+	ghc -threaded -o golden-tests tests/tests.hs
+	time ./golden-tests -j 4 +RTS -N4 -RTS
+
+	GHC_PACKAGE_PATH=`music-util package-path` runhaskell tests/instances.hs
 
 clean:	
 	rm -f tests/golden/*.mid
