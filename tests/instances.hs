@@ -5,9 +5,12 @@
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 import Prelude hiding ((**))
 
+import Data.Average
 import Data.Ord (comparing)
 import Music.Prelude hiding (elements, unit, (**), Note)
 -- import Data.VectorSpace hiding (Sum)
@@ -18,6 +21,7 @@ import Test.Tasty.QuickCheck
 import Test.QuickCheck
 
 import Data.Typeable
+import Data.Maybe
 import Data.Semigroup
 import Control.Monad
 import Control.Applicative
@@ -153,9 +157,12 @@ instance Arbitrary a => Arbitrary (Voice a) where
 instance Arbitrary a => Arbitrary (Score a) where
   arbitrary = fmap (view score) arbitrary  
 
-
 instance Arbitrary a => Arbitrary (Sum a) where
   arbitrary = fmap Sum arbitrary
+instance Arbitrary a => Arbitrary (Product a) where
+  arbitrary = fmap Product arbitrary
+instance Arbitrary a => Arbitrary (Average a) where
+  arbitrary = fmap Average arbitrary
 
 
 -- TODO move
@@ -177,6 +184,8 @@ main = defaultMain $ testGroup "Instances" $ [
   I_TEST(_Monoid, Sum Int),
   I_TEST(_Monoid, [Int]),
   I_TEST(_Monoid, Span),
+  -- I_TEST(_Monoid, Average Rational), -- slow
+  I_TEST(_Monoid, Average Double),
   -- I_TEST(_Monoid, Note ()),
   -- I_TEST(_Monoid, Stretched ()),
   -- I_TEST(_Monoid, Delayed ()),

@@ -70,7 +70,7 @@ type StandardNote =
           (HarmonicT
             (SlideT
               (ArticulationT (Sum Double, Sum Double)
-                (DynamicT (Sum Double)
+                (DynamicT (Average Double)
                   [TieT
                     (Behavior StandardPitch)]))))))))
 
