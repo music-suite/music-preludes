@@ -21,3 +21,4 @@ foo
 *.ini
 
 te
+*-tests
