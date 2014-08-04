@@ -69,7 +69,7 @@ type StandardNote =
         (TremoloT
           (HarmonicT
             (SlideT
-              (ArticulationT (Sum Double, Sum Double)
+              (ArticulationT (Average Double, Average Double)
                 (DynamicT (Average Double)
                   [TieT
                     (Behavior StandardPitch)]))))))))

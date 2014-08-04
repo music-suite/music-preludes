@@ -71,8 +71,8 @@ type BasicNote = (PartT BasicPart
       (SlideT
         (TremoloT
           (HarmonicT
-            (ArticulationT (Sum Double, Sum Double)
-              (DynamicT (Sum Double)
+            (ArticulationT (Average Double, Average Double)
+              (DynamicT (Average Double)
                 [Behavior BasicPitch]))))))))
 
 type BasicPitch = Music.Pitch.Pitch
