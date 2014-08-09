@@ -1,8 +1,11 @@
 
-run:
+run: golden instances
+
+golden:
 	ghc -threaded -o golden-tests tests/tests.hs
 	time ./golden-tests -j 4 +RTS -N4 -RTS
 
+instances:
 	GHC_PACKAGE_PATH=`music-util package-path` runhaskell tests/instances.hs
 
 clean:	
