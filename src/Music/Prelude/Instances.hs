@@ -71,6 +71,16 @@ instance (Transformable a, a ~ Score.Pitch a) => HasPitch Pitch a where
 instance (Transformable a, a ~ Score.Pitch a) => HasPitches Pitch a where
   pitches = ($)
 
+instance Transformable Hertz where
+  transform _ = id
+type instance Score.Pitch Hertz = Hertz
+type instance SetPitch a Hertz = a
+
+instance (Transformable a, a ~ Score.Pitch a) => HasPitch Hertz a where
+  pitch = ($)
+instance (Transformable a, a ~ Score.Pitch a) => HasPitches Hertz a where
+  pitches = ($)
+
 instance Tiable Pitch where
     beginTie = id
     endTie = id
