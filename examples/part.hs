@@ -13,13 +13,14 @@ import System.Process (system)
     Inspired by the Abjad transcription
 -}
 
+
 main :: IO ()
 main = open music
 
 ensemble :: [Part]
 ensemble = [solo tubularBells] <> (divide 2 (tutti violin)) <> [tutti viola] <> [tutti cello] <> [tutti doubleBass]
 
-music :: Score Note
+music :: Score StandardNote
 music = meta $ stretch (3/2) $ {-before 60-} (mempty <> bell <> delay 6 strings)
     where
         meta = id
@@ -44,19 +45,19 @@ tintin tonic = pitches . mapped %~ relative tonic tintin'
 tintin' :: Interval -> Interval
 tintin' melInterval 
     | isNegative melInterval = error "tintin: Negative interval"
-    | otherwise = last $ takeWhile (< melInterval) $ tintinNotes
+    | otherwise = last $ takeWhile (< melInterval) $ tintinStandardNotes
     where
-        tintinNotes = concat $ iterate (fmap (+ _P8)) minorTriad
+        tintinStandardNotes = concat $ iterate (fmap (+ _P8)) minorTriad
         minorTriad = [_P1,m3,_P5]
 
 
-bell :: Score Note
+bell :: Score StandardNote
 bell = let
-    cue :: Score (Maybe Note)
+    cue :: Score (Maybe StandardNote)
     cue = stretchTo 1 (rest |> a) 
     in parts' .~ (ensemble !! 0) $ text "l.v." $ mcatMaybes $ times 40 $ scat [times 3 $ scat [cue,rest], rest^*2]
 
-strings :: Score Note
+strings :: Score StandardNote
 strings = strings_vln1 <> strings_vln2 <> strings_vla <> strings_vc <> strings_db
 
 strings_vln1 = clef GClef $ parts' .~ (ensemble !! 1) $ up (_P8^*1)   $ strings_cue
@@ -66,13 +67,13 @@ strings_vc   = clef FClef $ parts' .~ (ensemble !! 4) $ down (_P8^*2) $ stretch 
 strings_db   = clef FClef $ parts' .~ (ensemble !! 5) $ down (_P8^*3) $ stretch 16 strings_cue
 strings_cue = delay (1/2) $ withTintin (down (_P8^*4) $ asPitch a) $ mainSubject
 
-fallingScale :: [Score Note]
+fallingScale :: [Score StandardNote]
 fallingScale = [a',g'..a_]
 
-fallingScaleSect :: Int -> [Score Note]
+fallingScaleSect :: Int -> [Score StandardNote]
 fallingScaleSect n = {-fmap (annotate (show n)) $-} take n $ fallingScale
 
-mainSubject :: Score Note
+mainSubject :: Score StandardNote
 mainSubject = stretch (1/6) $ asScore $ scat $ mapEvensOdds (accent . (^*2)) id $ concatMap fallingScaleSect [1..30]
 
 
@@ -99,19 +100,19 @@ mapEvensOdds f g xs = let
     in take (length xs) $ map f evens `merge` map g odds
 
 
-openAudacity :: Score Note -> IO ()    
+openAudacity :: Score StandardNote -> IO ()    
 openAudacity x = do
     void $ writeMidi "test.mid" $ x
     void $ system "timidity -Ow test.mid"
     void $ system "open -a Audacity test.wav"
 
-openAudio :: Score Note -> IO ()    
+openAudio :: Score StandardNote -> IO ()    
 openAudio x = do
     -- void $ writeMidi "test.mid" $ x
     void $ system "timidity -Ow test.mid"
     void $ system "open -a Audacity test.wav"
 
-fixClefs :: Score Note -> Score Note
+fixClefs :: Score StandardNote -> Score StandardNote
 fixClefs = id
 -- fixClefs = pcat . fmap (uncurry g) . extractParts'
 --     where
@@ -123,7 +124,7 @@ concurrently_ = concurrentlyWith (\x y -> ())
 concurrentlyWith :: (a -> b -> c) -> IO a -> IO b -> IO c
 concurrentlyWith f x y = uncurry f <$> x `concurrently` y
 
-play, open, openAndPlay :: Score Note -> IO ()   
+play, open, openAndPlay :: Score StandardNote -> IO ()   
 tempo_ = 120
 play x = openAudio $ stretch ((60*4)/tempo_) $ fixClefs $ x
 open x = openLilypond' LyScoreFormat $ fixClefs $ x
