@@ -17,9 +17,12 @@ markPerfect   = text "Perfect consonances"   . markIf isPerfectConsonance
 markImperfect = text "Imperfect consonances" . markIf isImperfectConsonance
 markDiss      = text "Dissonances"           . markIf isDissonance
 
+-- Try different subjects
+subject = [c..c']
+-- subject = [c,d,cs,gs,f,fs,g_,gs_,fs,f,e,ds',c]
 
 main = openLilypond $ asScore $ rcat [
-    markPerfect   $ scat [c..c'],
-    markImperfect $ scat [c..c'],
-    markDiss      $ scat [c..c']    
+    markPerfect   $ scat subject,
+    markImperfect $ scat subject,
+    markDiss      $ scat subject    
   ]
