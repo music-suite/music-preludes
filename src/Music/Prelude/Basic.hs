@@ -40,8 +40,7 @@ import           Data.Typeable
 
 import           Music.Dynamics
 import           Music.Parts             hiding (Part)
-import           Music.Pitch             hiding (Fifths, Note, Part,
-                                          pitch)
+import           Music.Pitch             hiding (Fifths, Note, Part)
 -- Need to export Pitch.Pitch for transf for now
 
 import qualified Music.Pitch
