@@ -18,10 +18,11 @@
 -------------------------------------------------------------------------------------
 
 module Music.Prelude.Standard (
-        module Music.Score,
         module Music.Pitch,
         module Music.Dynamics,
+        module Music.Articulation,
         module Music.Parts,
+        module Music.Score,
         StandardNote,
         asScore,
         asVoice,
@@ -35,9 +36,10 @@ module Music.Prelude.Standard (
 import           Data.Default
 import           Data.Typeable
 
-import           Music.Dynamics
-import           Music.Parts
 import           Music.Pitch
+import           Music.Dynamics
+import           Music.Articulation
+import           Music.Parts
 import           Music.Score             hiding (Fifths, Interval, Note, Part, Pitch)
 
 import           Music.Prelude.Instances ()
@@ -71,11 +73,7 @@ type StandardNote =
               (ArticulationT (Average Double, Average Double)
                 (DynamicT (Average Double)
                   [TieT
-                    (Behavior StandardPitch)]))))))))
-
-type StandardPitch = Music.Pitch.Pitch
--- data StandardPitch = StandardPitch Music.Pitch.Pitch
-    -- deriving (HasMidi, HasLilypond, HasMusicXml, HasPitch)
+                    (Behavior Pitch)]))))))))
 
 
 open          = openLilypond . asScore

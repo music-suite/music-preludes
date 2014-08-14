@@ -18,10 +18,11 @@
 -------------------------------------------------------------------------------------
 
 module Music.Prelude.Basic (
-        module Music.Score,
         module Music.Pitch,
         module Music.Dynamics,
+        module Music.Articulation,
         module Music.Parts,
+        module Music.Score,
         module Control.Monad.Plus,
         module Control.Lens.Operators,
         BasicNote,
@@ -38,17 +39,15 @@ module Music.Prelude.Basic (
 import           Data.Default
 import           Data.Typeable
 
-import           Music.Dynamics
-import           Music.Parts             hiding (Part)
 import           Music.Pitch             hiding (Fifths, Note, Part)
--- Need to export Pitch.Pitch for transf for now
-
 import qualified Music.Pitch
+import           Music.Dynamics
+import           Music.Articulation
+import           Music.Parts             hiding (Part)
 import           Music.Score             hiding (Pitch, Interval)
 
 import           Control.Lens.Operators  hiding ((<.>), (<|), (|>))
 import           Control.Monad.Plus
-import Data.Semigroup (Product)
 
 import           Music.Prelude.Instances ()
 

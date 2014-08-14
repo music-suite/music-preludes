@@ -46,6 +46,7 @@ library
                         music-score             == 1.7.1,
                         music-pitch             == 1.7.1,
                         music-dynamics          == 1.7.1,
+                        music-articulation      == 1.7.1,
                         music-parts             == 1.7.1,
                         music-pitch-literal     == 1.7.1,
                         music-dynamics-literal  == 1.7.1,
