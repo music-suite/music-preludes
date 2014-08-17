@@ -4,11 +4,12 @@ run: golden instances
 golden:
 	GHC_PACKAGE_PATH=`music-util package-path` ghc -threaded -o golden-tests tests/tests.hs
 	time ./golden-tests -j 4 +RTS -N4 -RTS
+	rm golden-tests
 
-	# GHC_PACKAGE_PATH=`music-util package-path` runhaskell tests/instances.hs
 instances:
-	GHC_PACKAGE_PATH=`music-util package-path` ghc -threaded -o golden-tests tests/instances.hs
-	time ./golden-tests -j 4 +RTS -N4 -RTS
+	GHC_PACKAGE_PATH=`music-util package-path` ghc -threaded -o instance-tests tests/instances.hs
+	time ./instance-tests -j 4 +RTS -N4 -RTS
+	rm instance-tests
 
 clean:	
 	rm -f tests/golden/*.mid
