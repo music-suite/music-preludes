@@ -40,7 +40,7 @@ import           Music.Pitch
 import           Music.Dynamics
 import           Music.Articulation
 import           Music.Parts
-import           Music.Score             hiding (Fifths, Interval, Note, Part, Pitch)
+import           Music.Score             hiding (Fifths, Interval, Note, Part, Pitch, Dynamics, Articulation)
 
 import           Music.Prelude.Instances ()
 
@@ -70,8 +70,8 @@ type StandardNote =
         (TremoloT
           (HarmonicT
             (SlideT
-              (ArticulationT (Average Double, Average Double)
-                (DynamicT (Average Double)
+              (ArticulationT Articulation
+                (DynamicT Dynamics
                   [TieT
                     (Behavior Pitch)]))))))))
 

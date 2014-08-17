@@ -26,7 +26,7 @@ module Music.Prelude.Basic (
         module Control.Monad.Plus,
         module Control.Lens.Operators,
         BasicNote,
-        BasicPitch,
+        -- BasicPitch,
         asScore,
         asVoice,
         asTrack,
@@ -39,12 +39,12 @@ module Music.Prelude.Basic (
 import           Data.Default
 import           Data.Typeable
 
-import           Music.Pitch             hiding (Fifths, Note, Part)
+import           Music.Pitch             hiding (Fifths, Note)
 import qualified Music.Pitch
 import           Music.Dynamics
 import           Music.Articulation
 import           Music.Parts             hiding (Part)
-import           Music.Score             hiding (Pitch, Interval)
+import           Music.Score             hiding (Pitch, Dynamics, Articulation, Interval)
 
 import           Control.Lens.Operators  hiding ((<.>), (<|), (|>))
 import           Control.Monad.Plus
@@ -69,11 +69,13 @@ type BasicNote = (PartT BasicPart
       (SlideT
         (TremoloT
           (HarmonicT
-            (ArticulationT (Average Double, Average Double)
-              (DynamicT (Average Double)
-                [Behavior BasicPitch]))))))))
+            (ArticulationT Articulation
+              (DynamicT Dynamics
+                [Behavior Pitch]))))))))
 
-type BasicPitch = Music.Pitch.Pitch
+-- type BasicDynamics     = Music.Dynamics.Dynamics
+-- type BasicArticulation = Music.Articulation.Articulation
+-- type BasicPitch        = Music.Pitch.Pitch
 
 open          = openLilypond . asScore
 play          = error "Not implemented: play"
