@@ -10,7 +10,7 @@
 
 import Prelude hiding ((**))
 
-import Data.Average
+import Data.Monoid.Average
 import Data.Ord (comparing)
 import Music.Prelude hiding (elements, unit, (**), Note)
 -- import Data.VectorSpace hiding (Sum)
