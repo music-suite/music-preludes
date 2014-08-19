@@ -22,3 +22,5 @@ foo
 
 te
 *-tests
+*.dyn_hi
+*.dyn_o
