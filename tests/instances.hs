@@ -33,17 +33,17 @@ import qualified Data.List
 type Checkable  a     = (Eq a, Show a, Arbitrary a)
 
 
-prop_semigroup :: (Checkable a, Semigroup a) => a -> Property
-prop_semigroup typ = property assoc
+_Semigroup :: (Checkable a, Semigroup a) => a -> Property
+_Semigroup t = property assoc
   where
-    assoc a b c = (a <> b) <> c === a <> (b <> c .: typ)
+    assoc a b c = (a <> b) <> c === a <> (b <> c .: t)
 
 _Monoid :: (Checkable a, Semigroup a, Monoid a) => a -> Property
-_Monoid typ = idL .&&. idR .&&. assoc    
+_Monoid t = idL .&&. idR .&&. assoc    
   where
-    idL   m     = m <> mempty   === m .: typ
-    idR   m     = mempty <> m   === m .: typ
-    assoc a b c = (a <> b) <> c === a <> (b <> c .: typ)
+    idL   m     = m <> mempty   === m .: t
+    idR   m     = mempty <> m   === m .: t
+    assoc a b c = (a <> b) <> c === a <> (b <> c .: t)
 
 {-
 prop_functor :: (Functor f, Eq (f ()), Arbitrary (f ()), Show (f ()), Eq (f c), Arbitrary (f a), Show (f a)) => f () -> (b -> c) -> (a -> b) -> Property
@@ -87,26 +87,33 @@ unass = \((a, b), c) -> (a, (b, c))
   transform (s <> negateV s) = id
 -}
 _Transformable :: (Checkable a, Transformable a) => a -> Property
-_Transformable typ = te .&&. tc .&&. tn
+_Transformable t = te .&&. tc .&&. tn
   where
-    te x     = True                               ==> transform mempty x === x .: typ
-    tc s t x = isForwardSpan s && isForwardSpan t ==> transform (s <> t) x === transform s (transform t $ x .: typ)
-    tn s x   = isForwardSpan s                    ==> transform (s <> negateV s) x === x .: typ
+    te x     = True                               ==> transform mempty x === x .: t
+    tc s t x = isForwardSpan s && isForwardSpan t ==> transform (s <> t) x === transform s (transform t $ x .: t)
+    tn s x   = isForwardSpan s                    ==> transform (s <> negateV s) x === x .: t
 
 {-
-  _duration x = (offset x .-. onset x)
-  onset (delay n a)       = n ^+. onset a
-  offset (delay n a)      = n ^+. offset a
-  duration (stretch n a)  = n * duration a
+  Duration vs. onset and offset
+    _duration x = (offset x .-. onset x)
+  
+  Transform vs. onset and offset
+    _onset (delay n a)       = n ^+. _onset a
+    _offset (delay n a)      = n ^+. _offset a
+    _duration (stretch n a)  = n ^*  _duration a
+
+  More generally?
+    (s `transform` a) `_position` p = s `transform` (a `_position` p)
 -}
 _HasPosition :: (Checkable a, Transformable a, HasPosition a) => a -> Property
-_HasPosition typ = eqd .&&. ond .&&. ofd .&&. sd .&&. cd
+_HasPosition t = eqd .&&. ond .&&. ofd .&&. sd .&&. cd .&&. ass
   where
-    eqd a   = True   ==> _duration a                       === _offset a .-. _onset (a .: typ)
-    ond n a = n /= 0 ==> _onset (delay n $ a .: typ)       === _onset a  .+^ n
-    ofd n a = n /= 0 ==> _offset (delay n $ a .: typ)      === _offset a .+^ n
-    sd n a  = n /= 0 ==> _duration (stretch n $ a .: typ)  === n * _duration a
-    cd n a  = n /= 0 ==> _duration (stretch (1/n) $ a .: typ) === (1/n) * _duration a
+    eqd a   = True   ==> _duration a                        === _offset a .-. _onset (a .: t)
+    ond n a = n /= 0 ==> _onset (delay n $ a .: t)          === _onset a  .+^ n
+    ofd n a = n /= 0 ==> _offset (delay n $ a .: t)         === _offset a .+^ n
+    sd n a  = n /= 0 ==> _duration (stretch n $ a .: t)     === n * _duration a
+    cd n a  = n /= 0 ==> _duration (stretch (1/n) $ a .: t) === (1/n) * _duration a
+    ass s a p = True ==> (s `transform` (a .: t)) `_position` p === s `transform` (a `_position` p)
     -- TODO more general
 
 
@@ -117,15 +124,15 @@ _HasPosition typ = eqd .&&. ond .&&. ofd .&&. sd .&&. cd
     iff t >= 0
 -}
 _Splittable :: (Checkable a, Transformable a, Splittable a, HasDuration a) => a -> Property
-_Splittable typ = sameDur .&&. minBegin
+_Splittable t = sameDur .&&. minBegin
   where
-    sameDur t a  = True   ==> _duration (beginning t a) ^+^ _duration (ending t a) === _duration (a .: typ)
+    sameDur t a  = True   ==> _duration (beginning t a) ^+^ _duration (ending t a) === _duration (a .: t)
     minBegin     = True   ==> 1 === 1
     
-    -- ond n a = n /= 0 ==> _onset (delay n $ a .: typ)       === _onset a  .+^ n
-    -- ofd n a = n /= 0 ==> _offset (delay n $ a .: typ)      === _offset a .+^ n
-    -- sd n a  = n /= 0 ==> _duration (stretch n $ a .: typ)  === n * _duration a
-    -- cd n a  = n /= 0 ==> _duration (stretch (1/n) $ a .: typ) === (1/n) * _duration a
+    -- ond n a = n /= 0 ==> _onset (delay n $ a .: t)       === _onset a  .+^ n
+    -- ofd n a = n /= 0 ==> _offset (delay n $ a .: t)      === _offset a .+^ n
+    -- sd n a  = n /= 0 ==> _duration (stretch n $ a .: t)  === n * _duration a
+    -- cd n a  = n /= 0 ==> _duration (stretch (1/n) $ a .: t) === (1/n) * _duration a
     -- TODO more general
 
 
@@ -158,7 +165,7 @@ sameType :: a -> a -> a
 sameType _ x = x
 
 infixl 9 .:
-x .: typ = sameType typ x
+x .: t = x `asTypeOf` t
 
 sameType1 :: f a -> f b -> f b
 sameType1 _ x = x
@@ -207,11 +214,9 @@ instance Arbitrary a => Arbitrary (Average a) where
 
 -- TODO move
 instance Ord a => Ord (Note a) where
-  x < y = x^.from note < y^.from note
+  x `compare` y = (x^.from note) `compare` (y^.from note)
 instance Eq a => Eq (Score a) where
   x == y = Data.List.sortBy (comparing (^.era)) (x^.notes) == Data.List.sortBy (comparing (^.era)) (y^.notes)
-instance Show (Score a) where
-  show _ = "{{Score}}"
 instance Splittable Integer where
   split _ x = (x,x)
 instance Splittable Int where
