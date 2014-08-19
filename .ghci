@@ -9,6 +9,7 @@
 :def! unload (\_ -> return ":m - Music.Prelude")
 :set -XNoMonomorphismRestriction
 :set -XOverloadedStrings
+:set prompt ">>> "
 
 default (Int, Float)
 
