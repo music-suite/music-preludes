@@ -31,7 +31,9 @@ import           Control.Exception
 import           Data.Version          (showVersion)
 import           Data.Monoid
 import           Options.Applicative
+#ifndef GHCI
 import qualified Paths_music_preludes as Paths
+#endif
 import           Data.Char
 import           Data.List          (intercalate, isPrefixOf)
 import           Data.List.Split
@@ -53,7 +55,11 @@ import qualified Music.Prelude.Basic    as PreludeBasic
 import qualified Music.Prelude.Standard as PreludeStandard
 
 -- | Current Music Suite version.
+#ifndef GHCI
 version = Paths.version
+#else
+version = undefined
+#endif
 
 -- | Current Music Suite version as a string.
 versionString :: String
@@ -154,17 +160,6 @@ translateFile
   -> Maybe FilePath -- ^ Output file.
   -> IO ()
 translateFile translationFunction outSuffix preludeName' inFile' outFile' = do
-  let inFile      = fromMaybe "test.music" inFile'
-  let preludeName = fromMaybe "basic" preludeName'
-  let outFile     = fromMaybe (
-                    takeDirectory inFile ++ "/" 
-                    ++ takeBaseName inFile 
-                    ++ "." ++ outSuffix) 
-                    outFile'
-
-  let prelude   = "Music.Prelude." ++ toCamel preludeName
-  let scoreType = "Score " ++ toCamel preludeName ++ "Note"
-  let main      = translationFunction
   code          <- readFile inFile
   newScore      <- return $ if isNotExpression code 
     then expand declTempl (Map.fromList [
@@ -193,8 +188,20 @@ translateFile translationFunction outSuffix preludeName' inFile' outFile' = do
 
   return ()
   where
-    exprTempl = "module Main where { import $(prelude); main = $(main) \"$(outFile)\" ( $(score) :: $(scoreType) ) }"
-    declTempl = "module Main where \nimport $(prelude) \n$(code) \nmain = $(main) \"$(outFile)\" ( example  :: $(scoreType) )"
+    inFile      = fromMaybe "test.music" inFile'
+    preludeName = fromMaybe "basic" preludeName'
+    outFile     = fromMaybe (
+                      takeDirectory inFile ++ "/" 
+                      ++ takeBaseName inFile 
+                      ++ "." ++ outSuffix) 
+                      outFile'
+
+    prelude   = "Music.Prelude." ++ toCamel preludeName
+    scoreType = "Score " ++ toCamel preludeName ++ "Note"
+    main      = translationFunction
+
+    exprTempl = "module Main where { import $(prelude); {-# LINE 1 \"" ++ inFile ++ "\" #-}\nmain = $(main) \"$(outFile)\" ( $(score) :: $(scoreType) ) }"
+    declTempl = "module Main where \nimport $(prelude) {-# LINE 1 \"" ++ inFile ++ "\" #-}\n$(code) \nmain = $(main) \"$(outFile)\" ( example  :: $(scoreType) )"
 
 -- TODO hackish, preferably parse using haskell-src-exts or similar
 isNotExpression :: String -> Bool
