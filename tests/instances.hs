@@ -105,14 +105,18 @@ _Transformable t = te .&&. tc .&&. tn
   More generally?
     (s `transform` a) `_position` p = s `transform` (a `_position` p)
 -}
+_HasDuration :: (Checkable a, Transformable a, HasDuration a) => a -> Property
+_HasDuration t = property cd
+  where
+    cd n a  = n /= 0 ==> _duration (stretch (n) (a .: t)) === (n) * _duration a
+    
 _HasPosition :: (Checkable a, Transformable a, HasPosition a) => a -> Property
-_HasPosition t = eqd .&&. ond .&&. ofd .&&. sd .&&. cd .&&. ass
+_HasPosition t = eqd .&&. ond .&&. ofd .&&. sd .&&. ass
   where
     eqd a   = True   ==> _duration a                        === _offset a .-. _onset (a .: t)
     ond n a = n /= 0 ==> _onset (delay n $ a .: t)          === _onset a  .+^ n
     ofd n a = n /= 0 ==> _offset (delay n $ a .: t)         === _offset a .+^ n
     sd n a  = n /= 0 ==> _duration (stretch n $ a .: t)     === n * _duration a
-    cd n a  = n /= 0 ==> _duration (stretch (1/n) $ a .: t) === (1/n) * _duration a
     ass s a p = True ==> (s `transform` (a .: t)) `_position` p === s `transform` (a `_position` p)
     -- TODO more general
 
@@ -127,7 +131,7 @@ _Splittable :: (Checkable a, Transformable a, Splittable a, HasDuration a) => a 
 _Splittable t = sameDur .&&. minBegin
   where
     sameDur t a  = True   ==> _duration (beginning t a) ^+^ _duration (ending t a) === _duration (a .: t)
-    minBegin     = True   ==> 1 === 1
+    minBegin     = True   ==> 1 === (1::Int)
     
     -- ond n a = n /= 0 ==> _onset (delay n $ a .: t)       === _onset a  .+^ n
     -- ofd n a = n /= 0 ==> _offset (delay n $ a .: t)      === _offset a .+^ n
@@ -185,6 +189,8 @@ instance Arbitrary a => Arbitrary (Stretched a) where
   arbitrary = fmap (view stretched) arbitrary
 instance Arbitrary a => Arbitrary (Note a) where
   arbitrary = fmap (view note) arbitrary
+instance Arbitrary a => Arbitrary (AddMeta a) where
+  arbitrary = fmap pure arbitrary
 
 instance (Ord a, Arbitrary a) => Arbitrary (Set.Set a) where
   arbitrary = fmap Set.fromList arbitrary
@@ -194,8 +200,8 @@ instance (Ord k, Arbitrary k, Ord a, Arbitrary a) => Arbitrary (Map.Map k a) whe
 
 instance Arbitrary a => Arbitrary (Voice a) where
   arbitrary = fmap (view voice) arbitrary  
--- instance Arbitrary a => Arbitrary (Chord a) where
-  -- arbitrary = fmap (view chord) arbitrary  
+instance Arbitrary a => Arbitrary (Chord a) where
+  arbitrary = fmap (view chord) arbitrary  
 instance Arbitrary a => Arbitrary (Score a) where
   arbitrary = fmap (view score) arbitrary  
 instance Arbitrary a => Arbitrary (Track a) where
@@ -213,6 +219,23 @@ instance Arbitrary a => Arbitrary (Average a) where
 
 
 -- TODO move
+instance Semigroup a => Semigroup (Delayed a) where
+  (<>) = liftA2 (<>)
+instance Monoid a => Monoid (Delayed a) where
+  mempty = pure mempty
+  mappend = liftA2 mappend
+instance Semigroup a => Semigroup (Stretched a) where
+  (<>) = liftA2 (<>)
+instance Monoid a => Monoid (Stretched a) where
+  mempty = pure mempty
+  mappend = liftA2 mappend
+instance Semigroup a => Semigroup (Note a) where
+  (<>) = liftA2 (<>)
+instance Monoid a => Monoid (Note a) where
+  mempty = pure mempty
+  mappend = liftA2 mappend
+
+
 instance Ord a => Ord (Note a) where
   x `compare` y = (x^.from note) `compare` (y^.from note)
 instance Eq a => Eq (Score a) where
@@ -239,15 +262,23 @@ main = defaultMain $ testGroup "Instances" $ [
   I_TEST(_Monoid, ()),
   I_TEST(_Monoid, Sum Int),
   I_TEST(_Monoid, [Int]),
-  I_TEST(_Monoid, Span),
-  -- I_TEST(_Monoid, Average Rational), -- slow
+
+  -- SLOW I_TEST(_Monoid, Average Rational)
   I_TEST(_Monoid, Average Double),
-  -- I_TEST(_Monoid, Note ()),
-  -- I_TEST(_Monoid, Stretched ()),
-  -- I_TEST(_Monoid, Delayed ()),
+
+  I_TEST(_Monoid, Time),
+  I_TEST(_Monoid, Duration),
+  I_TEST(_Monoid, Span),
+
+  I_TEST(_Monoid, Note ()),
+  I_TEST(_Monoid, Delayed ()),
+  I_TEST(_Monoid, Stretched ()),
+
   I_TEST(_Monoid, Voice Int),
-  -- I_TEST(_Monoid, Chord Int),
+  I_TEST(_Monoid, Chord Int),
   I_TEST(_Monoid, Score Int),
+
+
 
   I_TEST(_Transformable, Time),
   I_TEST(_Transformable, Duration),
@@ -257,9 +288,9 @@ main = defaultMain $ testGroup "Instances" $ [
   I_TEST(_Transformable, [Duration]),
   I_TEST(_Transformable, [Span]),
 
-  -- I_TEST(_Transformable, Set.Set Time),
-  -- I_TEST(_Transformable, Set.Set Duration),
-  -- I_TEST(_Transformable, Set.Set Span),
+  I_TEST(_Transformable, Set.Set Time),
+  I_TEST(_Transformable, Set.Set Duration),
+  I_TEST(_Transformable, Set.Set Span),
 
   I_TEST(_Transformable, Map.Map Int Time),
   I_TEST(_Transformable, Map.Map Int Duration),
@@ -273,17 +304,30 @@ main = defaultMain $ testGroup "Instances" $ [
   I_TEST(_Transformable, Stretched Double),
   I_TEST(_Transformable, Delayed Int),
   I_TEST(_Transformable, Delayed Double),
+  I_TEST(_Transformable, AddMeta (Delayed Double)),
 
   -- TODO how to test "pointwise" for Segment and Behavior
   -- I_TEST(_Transformable, Reactive Int),
 
-  I_TEST(_Transformable, Voice Integer),
-  -- I_TEST(_Transformable, Chord Integer),
-  I_TEST(_Transformable, Score Integer),
+  I_TEST(_Transformable, Voice Int),
+  I_TEST(_Transformable, Chord Int),
+  I_TEST(_Transformable, Score Int),
+  -- SLOW I_TEST(_Transformable, [Voice Int]),
+  -- SLOW I_TEST(_Transformable, [Chord Int]),
+  -- SLOW I_TEST(_Transformable, [Score Int]),
 
-  -- SLOW I_TEST(_Transformable, [Voice Integer]),
-  -- I_TEST(_Transformable, [Chord] Integer),
-  -- SLOW I_TEST(_Transformable, [Score Integer]),
+  I_TEST(_HasDuration, Time),
+  I_TEST(_HasDuration, Span),
+  I_TEST(_HasDuration, Note Int),
+  I_TEST(_HasDuration, Note Double),
+  I_TEST(_HasDuration, Delayed Int),
+  I_TEST(_HasDuration, Delayed Double),
+
+  I_TEST(_HasDuration, Score Int),
+  I_TEST(_HasDuration, Chord Int),
+  -- TODO remove instance I_TEST(_HasDuration, [Score Int]),
+  -- TODO remove instance I_TEST(_HasDuration, [Chord Int]),
+
 
   I_TEST(_HasPosition, Time),
   I_TEST(_HasPosition, Span),
@@ -291,36 +335,37 @@ main = defaultMain $ testGroup "Instances" $ [
   I_TEST(_HasPosition, Note Double),
   I_TEST(_HasPosition, Delayed Int),
   I_TEST(_HasPosition, Delayed Double),
+  I_TEST(_HasPosition, Score Int),
+  I_TEST(_HasPosition, Note (Note Int)),
+  I_TEST(_HasPosition, Note (Score Int)),
+  I_TEST(_HasPosition, Score (Delayed Int)),
 
-  -- I_TEST(_HasPosition, Chord Integer),
-  I_TEST(_HasPosition, Score Integer),
-  I_TEST(_HasPosition, Track Integer),
-  -- I_TEST(_HasPosition, [Chord Integer]),
-  I_TEST(_HasPosition, [Score Integer]),
-  I_TEST(_HasPosition, [Track Integer]),
-
-
-
-
+  I_TEST(_HasPosition, AddMeta (Delayed Duration)),
+  -- I_TEST(_HasPosition, Chord Int),
+  -- TODO remove instance I_TEST(_HasPosition, [Score Int]),
+  -- TODO remove instance I_TEST(_HasPosition, [Chord Int]),
 
 
 
 
 
 
-  -- I_TEST(_Splittable, Time),
+
+
+
+
+  -- Test meaningless... I_TEST(_Splittable, ()),
   I_TEST(_Splittable, Duration),
   I_TEST(_Splittable, Span),
+  -- TODO arbitrary I_TEST(_Splittable, Meta),
+  -- TODO arbitrary I_TEST(_Splittable, Attribute),
+  I_TEST(_Splittable, AddMeta Duration),
 
-  -- I_TEST(_Splittable, [Time]),
-  -- I_TEST(_Splittable, [Duration]),
-  I_TEST(_Splittable, [Span]),
+  -- TODO remove instance I_TEST(_Splittable, [Duration]),
+  -- TODO remove instance I_TEST(_Splittable, [Span]),
 
-  -- I_TEST(_Splittable, Set.Set Time),
   -- I_TEST(_Splittable, Set.Set Duration),
   -- I_TEST(_Splittable, Set.Set Span),
-
-  -- I_TEST(_Splittable, Map.Map Int Time),
   -- I_TEST(_Splittable, Map.Map Int Duration),
   -- I_TEST(_Splittable, Map.Map Int Span),
 
@@ -333,22 +378,41 @@ main = defaultMain $ testGroup "Instances" $ [
   I_TEST(_Splittable, Delayed Int),
   I_TEST(_Splittable, Delayed Double),
 
+
+
   -- TODO how to test "pointwise" for Segment and Behavior
   -- I_TEST(_Splittable, Reactive Int),
 
-  I_TEST(_Splittable, Voice Integer),
-  -- I_TEST(_Splittable, Chord Integer),
-  I_TEST(_Splittable, Score Integer),
-
-  -- SLOW I_TEST(_Splittable, [Voice Integer]),
-  -- I_TEST(_Splittable, [Chord] Integer),
-  -- SLOW I_TEST(_Splittable, [Score Integer]),
-
-
-
+  I_TEST(_Splittable, Voice Int),
+  I_TEST(_Splittable, Track Int),
+  I_TEST(_Splittable, Chord Int),
+  I_TEST(_Splittable, Score Int),
+  I_TEST(_Splittable, Note (Note Int)),
 
 
  
   I_TEST(_Transformable, Stretched [Note Int])
 
   ]
+
+
+
+{-
+FAIL
+
+>>> let t = -8.127617881083488
+>>> let s = [((5032080227011183/1125899906842624) <-> (3258010814518333/140737488355328),3)^.note,((4567817857326597/562949953421312) <-> (-372699739887573/8796093022208),-4)^.note,((6664901794497075/562949953421312) <-> (-9025068628947/1099511627776),-5)^.note,((300602057893123/8796093022208) <-> (2046761023586943/1125899906842624),-3)^.note]^.score
+>>> stretch t (_duration s)
+(-24057681795560885390114262061183/158456325028528675187087900672)
+>>> _duration (stretch t s)
+(96270418646142908887001729741/154742504910672534362390528)>>> 
+
+>>> let t = -8
+>>> let s = [(5 <-> 23,3)^.note,(3 <-> (-3),-4)^.note]^.score
+>>> stretch t (_duration s)
+>>> _duration (stretch t s)
+
+Caused by negative notes, should help to normalize spans before returning position/duration!
+
+-}
+
