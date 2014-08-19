@@ -1,6 +1,21 @@
 
 {-# LANGUAGE CPP #-}
 
+------------------------------------------------------------------------------------
+-- |
+-- Copyright   : (c) Hans Hoglund 2012
+--
+-- License     : BSD-style
+--
+-- Maintainer  : hans@hanshoglund.se
+-- Stability   : experimental
+-- Portability : non-portable (TF,GNTD)
+--
+-- Provides framework for building simple command-line converter programs such as
+-- @music2midi@, @music2pdf@ etc.
+--
+-------------------------------------------------------------------------------------
+
 module Music.Prelude.CmdLine (
         converterMain,
         lilypondConverterMain,
@@ -16,7 +31,7 @@ import           Control.Exception
 import           Data.Version          (showVersion)
 import           Data.Monoid
 import           Options.Applicative
-import           Paths_music_preludes  (version)
+import qualified Paths_music_preludes as Paths
 import           Data.Char
 import           Data.List          (intercalate, isPrefixOf)
 import           Data.List.Split
@@ -24,7 +39,6 @@ import           Data.Map           (Map)
 import qualified Data.Map           as Map
 import           Data.Maybe
 import           Prelude            hiding (readFile, writeFile)
--- import           System.Console.GetOpt
 import           System.Environment
 import           System.Exit
 import           System.FilePath
@@ -38,10 +52,14 @@ import           System.Process
 import qualified Music.Prelude.Basic    as PreludeBasic
 import qualified Music.Prelude.Standard as PreludeStandard
 
--- Note that Paths_music_preludes must be in other-modules for executables
--- See haskell/cabal#1759
+-- | Current Music Suite version.
+version = Paths.version
+
+-- | Current Music Suite version as a string.
 versionString :: String
 versionString = showVersion version
+-- Note that Paths_music_preludes must be in other-modules for executables
+-- See haskell/cabal#1759
 
 
 data ConverterOptions = ConverterOptions {
@@ -56,9 +74,13 @@ converterOptions = liftA3 ConverterOptions
   (optional $ strOption $ mconcat [short 'o', long "output", metavar "<file>"])
   (argument str $ metavar "<input>")
 
--- A basic converter program
--- Used for music2ly, music2musicxml et al
-converterMain :: String -> String -> IO ()
+-- | 
+-- Generates a basic converter program such as @music2ly@, @music2musicxml@ etc.
+--
+converterMain
+  :: String   -- ^ Name of converter function.
+  -> String   -- ^ Extension of generated file.
+  -> IO ()
 converterMain func ext = do 
   pgmName <- getProgName
   options <- execParser (opts pgmName)
@@ -84,9 +106,13 @@ lilypondConverterOptions = liftA2 LilypondConverterOptions
   (optional $ strOption $ mconcat [long "prelude", metavar "<name>"])
   (argument str $ metavar "<input>")
 
--- A converter program
--- Used for music2ly, music2musicxml et al
-lilypondConverterMain :: String -> IO ()
+-- | 
+-- Generates a basic converter program that invokes @lilypond@ to generate
+-- music notation. Used for @music2pdf@ etc.
+--
+lilypondConverterMain
+  :: String -- ^ A file extension (supported by Lilypond).
+  -> IO ()
 lilypondConverterMain ext = do 
   pgmName <- getProgName
   options <- execParser (opts pgmName)
@@ -99,8 +125,9 @@ lilypondConverterMain ext = do
       = translateFileAndRunLilypond ext prelude (Just inFile)
 
 
-
-
+-- |
+-- Translate an input file and invoke Lilypond on the resulting output file.
+--
 translateFileAndRunLilypond 
   :: String         -- ^ Output file suffix/format passed to Lilypond.
   -> Maybe String   -- ^ Prelude to use.
@@ -116,6 +143,9 @@ translateFileAndRunLilypond format preludeName' inFile' = do
   runCommand $ "rm -f " ++ takeBaseName inFile ++ "-*.tex " ++ takeBaseName inFile ++ "-*.texi " ++ takeBaseName inFile ++ "-*.count " ++ takeBaseName inFile ++ "-*.eps " ++ takeBaseName inFile ++ "-*.pdf " ++ takeBaseName inFile ++ ".eps"
   return ()
 
+-- |
+-- Translate an input file using the given paramters.
+--
 translateFile 
   :: String         -- ^ Translate function (of type @'FilePath' -> music -> 'IO' ()@).
   -> String         -- ^ Output file suffix.
