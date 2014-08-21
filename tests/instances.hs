@@ -108,7 +108,8 @@ _Transformable t = te .&&. tc .&&. tn
 _HasDuration :: (Checkable a, Transformable a, HasDuration a) => a -> Property
 _HasDuration t = property cd
   where
-    cd n a  = n /= 0 ==> _duration (stretch (n) (a .: t)) === (n) * _duration a
+    -- cd n a  = n /= 0 ==> _duration (stretch (n) (a .: t)) === (n) * _duration a
+    cd n a  = n >= 0 ==> _duration (stretch (n) (a .: t)) === (n) * _duration a
     
 _HasPosition :: (Checkable a, Transformable a, HasPosition a) => a -> Property
 _HasPosition t = eqd .&&. ond .&&. ofd .&&. sd .&&. ass
