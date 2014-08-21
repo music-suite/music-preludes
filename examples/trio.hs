@@ -18,7 +18,7 @@ import System.Process (system)
 vla         = tutti viola
 vc          = tutti cello
 
-music :: Score Note
+music :: Score StandardNote
 music = mainCanon2
 
 tremCanon = compress 4 $
@@ -30,12 +30,12 @@ tremCanon = compress 4 $
         <>
     (delay 0 $ set parts' vc  $ subjs^*2)
     where
-        subjs = scat $ map (\n -> palindrome $ rev2 $ subj n) [1..40]
+        subjs = scat $ map (\n -> palindrome $ rev2 $ subj n) [1..40::Int]
         subj n 
             | n < 8     = a_^*2  |> e^*1   |> a^*1
             | n < 16    = a_^*2  |> e^*1   |> a^*1   |> e^*1   |> a^*1
             | n < 24    = a_^*2  |> e^*0.5 |> a^*0.5 |> e^*0.5 |> a^*0.5
-            | otherwise = e^*0.5 |> a^*0.5
+            | otherwise = e^*0.5 |> a^*0.5    
 
 mainCanon2 = palindrome mainCanon <> celloEntry
 
@@ -55,7 +55,7 @@ mainCanon = timeSignature (time 6 8) $ asScore $
 
         <> 
     set parts' vc a'^*(25*5/8)
-
+                                     
 
 
 
@@ -94,20 +94,20 @@ mapEvensOdds f g xs = let
     in take (length xs) $ map f evens `merge` map g odds
 
 
-openAudacity :: Score Note -> IO ()    
+openAudacity :: Score StandardNote -> IO ()    
 openAudacity x = do
     void $ writeMidi "test.mid" $ x
     void $ system "timidity -Ow test.mid"
     void $ system "open -a Audacity test.wav"
 
-openAudio :: Score Note -> IO ()    
+openAudio :: Score StandardNote -> IO ()    
 openAudio x = do
     void $ writeMidi "test.mid" $ x
     void $ system "timidity -Ow test.mid"
     void $ system "open -a Audacity test.wav"
 
-fixClefs :: Score Note -> Score Note
-fixClefs = pcat . fmap (uncurry g) . extractParts'
+fixClefs :: Score StandardNote -> Score StandardNote
+fixClefs = pcat . fmap (uncurry g) . extractPartsWithInfo
     where
         g p x = clef (case defaultClef p of { 0 -> GClef; 1 -> CClef; 2 -> FClef } ) x
 
@@ -127,7 +127,7 @@ rev2 = id
 main :: IO ()
 main = open music
 
-play, open, openAndPlay :: Score Note -> IO ()   
+play, open, openAndPlay :: Score StandardNote -> IO ()   
 tempo_ = 130
 play x = openAudio $ stretch ((60*(8/3))/tempo_) $ fixClefs $ x
 open x = openLilypond' LyScoreFormat $ fixClefs $ x

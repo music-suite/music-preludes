@@ -7,12 +7,12 @@ import Control.Concurrent.Async
 import Control.Applicative
 import System.Process (system)
 
-kStrum = 0.03
+-- kStrum = 0.005
+kStrum = 0
 
 main   = do
-  -- openLilypond (music^/4)
+  openLilypond music
   -- openMidi music
-  openAudacity music
 
 guitar = (tutti $ StdInstrument 26)
 alto   = (tutti $ StdInstrument 65)
@@ -20,8 +20,38 @@ rh     = (tutti $ StdInstrument 113)
 
 
 -- Strum a chord
-strum :: [Score a] -> Score a
-strum = pcat . zipWith (\t x -> delay t . stretchTo (x^.duration ^-^ t) $ x) [0,kStrum..]
+-- TODO port this to Chord module
+strumUp :: [Score a] -> Score a
+strumUp = pcat . zipWith (\t x -> delay t . stretchTo (x^.duration ^-^ t) $ x) [0,kStrum..]
+
+strumDown = strumUp . reverse
+
+data StrumDirection = Up | Down deriving (Eq, Ord, Show, Enum)
+nextDirection Up = Down
+nextDirection Down = Up
+
+-- 21212
+
+strumRhythm
+  :: StrumDirection -- ^ Initial direction
+  -> [Duration]     -- ^ Duration pattern (repeated if necessary)
+  -> [[Score a]]    -- ^ Sequence of chords to strum
+  -> Score a
+strumRhythm startDirection durations' values = scat chords
+  where
+    directions = iterate nextDirection startDirection
+    durations = cycle durations'
+    chords = zipWith3 (\dir dur chord -> case dir of
+      Up   -> strumUp (stretch dur chord)
+      Down -> strumDown (stretch dur chord)
+      ) directions durations values
+    
+    
+strum x = strumRhythm Up (map (/8) [2,1,2,1,2])
+  [x,dropLast 1 x,level _p $ drop 1 x,level _p $ dropLast 1 x, level _p $ drop 1 x]
+  where
+    dropLast n = reverse . drop n . reverse
+
 
 counterRh = set parts' rh $ (mcatMaybes $ times 4 $ octavesUp 1 $ scat [rest^*2,g,g,g^*2,g^*2, rest^*2, scat [g,g,g]^*2])^/8
 
@@ -37,12 +67,19 @@ melody = octavesDown 1 $ set parts' (tutti horn) $ 
   (scat [c',a'^*2,e',d',c'^*2,b,c'^*2,d'^*2,eb',d',c']^/4)
   
 
-music = asScore  $ 
-  (<> melody) $
-  (<> level _p strings) $
-  (<> level ff counterRh) $
-  
-  set parts' (solo clarinet) $ level mf $ 
+music = scat [music1, music2]
+music1 = asScore $ mempty
+  -- <> (level mf $ set parts' guitar $ melody)
+  -- <> level _p strings
+  <> level mp counterRh
+  <> gtr
+music2 = asScore $ mempty
+  <> (level mf $ melody)
+  <> level _p strings
+  <> level _p counterRh
+  <> gtr
+
+gtr = set parts' guitar $
   (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [c_,e_,g_,c,e,g])
   |>
   (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [c_,fs_,a_,c,fs,a])
@@ -51,9 +88,3 @@ music = asScore  $
   |>
   (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [g_,a_,c,f,a,c'])
   
-
-openAudacity :: Score Note -> IO ()    
-openAudacity x = do
-    void $ writeMidi "test.mid" $ x
-    void $ system "timidity -Ow test.mid"
-    void $ system "open -a Audacity test.wav"

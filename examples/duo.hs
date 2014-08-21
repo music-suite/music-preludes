@@ -18,7 +18,7 @@ main = do
     -- playMidiIO "Graphic MIDI" $ music^/10
 
 toLydian :: Score BasicNote -> Score BasicNote
-toLydian = pitches' %~ (\p -> if ((p::Behavior BasicPitch) ! 0) == ((c::Behavior BasicPitch) ! 0) then cs else p)
+toLydian = pitches' %~ (\p -> if ((p::Behavior Pitch) ! 0) == ((c::Behavior Pitch) ! 0) then cs else p)
 -- TODO cleanup
 
 subj1 = (^/2) $

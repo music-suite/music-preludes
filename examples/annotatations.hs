@@ -14,13 +14,13 @@ main = openLilypond . showAnnotations' ""
      . intervalAnnotations subjectDiff
      . scat $ map (fromPitch'.pure) subject
 
-subject :: [BasicPitch]
+subject :: [Pitch]
 subject = [c, d, f, e, f, g, a, g, e, d, c]
 
 subjectDiff :: [Interval]
 subjectDiff = zipWith (.-.) (tail subject) subject
 
--- reify :: BasicPitch -> Score BasicNote
+-- reify :: Pitch -> Score BasicNote
 -- reify = (`up` c) . pure . (.-. c)
 
 intervalAnnotations :: [Interval] -> (Score BasicNote -> Score BasicNote)
