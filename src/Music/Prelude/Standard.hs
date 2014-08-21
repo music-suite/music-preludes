@@ -13,7 +13,7 @@
 -- Stability   : experimental
 -- Portability : non-portable (TF,GNTD)
 --
--- A basic music representation.
+-- Standard music representation.
 --
 -------------------------------------------------------------------------------------
 

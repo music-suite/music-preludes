@@ -18,7 +18,7 @@
 -- Stability   : experimental
 -- Portability : non-portable (TF,GNTD)
 --
--- Provides orphan instances that does not fit into other packages.
+-- Provides miscellaneous instances.
 --
 -------------------------------------------------------------------------------------
 
