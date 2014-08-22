@@ -1,10 +1,10 @@
 
 import Music.Prelude
 
-si :: RealFrac a => a -> Interval
-si t = (spell usingSharps $ (round t :: Semitones))
-
-sp :: RealFrac a => a -> Pitch
-sp x = c .+^ si x
-
-main = open $ set pitches' (fmap sp (stretch 10 $ sine*10)) $ times 20 c
+toPitch :: Double -> Pitch
+toPitch x = c .+^ si x
+  where
+    si t = spell usingSharps $ (floor t :: Semitones)
+    
+main = open music
+music = set pitches' (stretch 12 $ fmap toPitch $ sine * 7) $ times 24 c
