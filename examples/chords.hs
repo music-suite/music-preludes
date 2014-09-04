@@ -27,7 +27,9 @@ strumUp = pcat . zipWith (\t x -> delay t . stretchTo (x^.duration ^-^ t) $ x) [
 strumDown = strumUp . reverse
 
 data StrumDirection = Up | Down deriving (Eq, Ord, Show, Enum)
-nextDirection Up = Down
+
+nextDirection :: StrumDirection -> StrumDirection
+nextDirection Up   = Down
 nextDirection Down = Up
 
 -- 21212
