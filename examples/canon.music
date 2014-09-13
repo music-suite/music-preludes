@@ -9,7 +9,7 @@ let
   frere2 = delay 2 frere </> frere
   frere4 = delay 4 frere2 </> frere2
 
-  info = {-title "Frere Jaques" . -}composer "Trad." . tempo (metronome (1/4) 120)
+  info = title "Frere Jaques" . composer "Trad." . tempo (metronome (1/4) 120)
 
 in info $ asScore $ frere4
 
