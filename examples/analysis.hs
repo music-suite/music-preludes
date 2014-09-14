@@ -21,7 +21,7 @@ markDiss      = text "Dissonances"           . markIf isDissonance
 subject = [c..c']
 -- subject = [c,d,cs,gs,f,fs,g_,gs_,fs,f,e,ds',c]
 
-main = openLilypond $ asScore $ rcat [
+main = openLilypond $ asScore $ rcat [
     markPerfect   $ scat subject,
     markImperfect $ scat subject,
     markDiss      $ scat subject    

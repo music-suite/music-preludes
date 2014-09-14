@@ -57,13 +57,13 @@ strum x = strumRhythm Up (map (/8) [2,1,2,1,2])
 
 counterRh = set parts' rh $ (mcatMaybes $ times 4 $ octavesUp 1 $ scat [rest^*2,g,g,g^*2,g^*2, rest^*2, scat [g,g,g]^*2])^/8
 
-strings = set parts' (tutti violin) $ octavesAbove 1 $ 
+strings = set parts' (tutti violin) $ octavesAbove 1 $ 
      (c_<>e_<>g_)^*4 
   |> (c_<>fs_<>a_)^*4
   |> (g__<>c_<>e_)^*4 
   |> (c_<>f_<>g_)^*4
 
-melody = octavesDown 1 $ set parts' (tutti horn) $ 
+melody = octavesDown 1 $ set parts' (tutti horn) $ 
   (scat [c',g'^*2,e',d',c'^*2,b,c'^*2,d'^*2,e',d',c'^*2]^/4)
   |>
   (scat [c',a'^*2,e',d',c'^*2,b,c'^*2,d'^*2,eb',d',c']^/4)
@@ -82,11 +82,11 @@ music2 = asScore $ mempty
   <> gtr
 
 gtr = set parts' guitar $
-  (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [c_,e_,g_,c,e,g])
+  (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [c_,e_,g_,c,e,g])
   |>
-  (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [c_,fs_,a_,c,fs,a])
+  (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [c_,fs_,a_,c,fs,a])
   |>
-  (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [c_,e_,g_,c,e,g])
+  (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [c_,e_,g_,c,e,g])
   |>
-  (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [g_,a_,c,f,a,c'])
+  (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [g_,a_,c,f,a,c'])
   
