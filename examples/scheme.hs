@@ -8,7 +8,7 @@
 {-
   Basic Scheme bindings
 
-  For examples, see test1.scm (TODO write more)
+  See Scheme files in example directory
 
   Requires husk-scheme to be in your path
     http://hackage.haskell.org/package/husk-scheme
@@ -20,13 +20,15 @@ import           Data.IORef
 import qualified Data.Map                  as Map
 import           Data.Maybe
 import           Data.Traversable
+import           Data.Colour (Colour(..))
 import           Language.Scheme.Core
 import           Language.Scheme.Parser
 import           Language.Scheme.Types
 import           Language.Scheme.Variables
 import           Music.Prelude
 import qualified Music.Score               as Score
-import           System.IO.Unsafe
+import qualified System.Environment
+import qualified System.IO.Unsafe
 -- import qualified Data.List
 -- import System.Random
 
@@ -45,13 +47,13 @@ musicSuiteApi = [
   ("a", toLisp (a :: LispScore)),
   ("b", toLisp (b :: LispScore)),
 
-  ("c#", toLisp (cs :: LispScore)),
-  ("d#", toLisp (ds :: LispScore)),
-  ("e#", toLisp (es :: LispScore)),
-  ("f#", toLisp (fs :: LispScore)),
-  ("g#", toLisp (gs :: LispScore)),
-  ("a#", toLisp (as :: LispScore)),
-  ("b#", toLisp (bs :: LispScore)),
+  ("cs", toLisp (cs :: LispScore)),
+  ("ds", toLisp (ds :: LispScore)),
+  ("es", toLisp (es :: LispScore)),
+  ("fs", toLisp (fs :: LispScore)),
+  ("gs", toLisp (gs :: LispScore)),
+  ("as", toLisp (as :: LispScore)),
+  ("bs", toLisp (bs :: LispScore)),
 
   ("cb", toLisp (cb :: LispScore)),
   ("db", toLisp (db :: LispScore)),
@@ -61,9 +63,20 @@ musicSuiteApi = [
   ("ab", toLisp (ab :: LispScore)),
   ("bb", toLisp (bb :: LispScore)),
 
+  -- TODO does not work well with Integer
+  -- ("red",   toLisp ("red" :: String)),
+  -- ("blue",  toLisp ("blue" :: String)),
+  -- ("black", toLisp ("black" :: String)),
+  -- ("color", CustFunc $ lift2 ((\x -> case x of { "red" -> colorRed ; "black" -> colorBlack }) :: String -> LispScore -> LispScore)),
+
+  -- TODO does not work well with Integer
+  -- ("accent", CustFunc $ lift1 (accent :: LispScore -> LispScore)),
+
+
   ("m3", toLisp (m3 :: Integer)),
   ("M3", toLisp (_M3 :: Integer)),
   ("up",       CustFunc $ lift2 (up   :: Integer -> LispScore -> LispScore)),
+  ("down",     CustFunc $ lift2 (up   :: Integer -> LispScore -> LispScore)),
 
   -- ("ff", toLisp (fff :: Sum Double)),
   -- ("level",    CustFunc $ lift2 (up   :: Sum Double -> LispScore -> LispScore)),
@@ -88,18 +101,29 @@ musicSuiteApi = [
 
 
 
-main = do
+main = do 
+  args <- System.Environment.getArgs
+  files <- case args of
+    [] -> do
+      putStrLn "Usage: runhaskell scheme.hs file..."
+      fail mempty
+    xs -> return args
   stdEnv <- r5rsEnv
   env <- extendEnv stdEnv (map (over _1 (varNamespace,)) $ musicSuiteApi)
-  code <- readFile "examples/test1.scm"
-  res <- evalLisp' env $ fromRight $ readExpr code
+  code <- readFile (head files)
+  -- TODO handle error here
+  res <- evalLisp' env $ readExprErrorFail $ readExpr code
   let sc = (\x -> x :: LispScore) $ fromJust $ fromRight $ fmap fromLisp $ res
   -- printScore sc
   openLilypond $ fmap (\x -> PartT(mempty::Part,TieT(mempty,ArticulationT(mempty::Articulation,DynamicT(mempty::Sum Double,[x]))))) $ sc
   return ()
 
 printScore = mapM_ print . view notes
+readExprErrorFail (Right x) = x
+readExprErrorFail _         = error "Could not read scheme expression"
+
 fromRight (Right x) = x  
+fromRight _         = error "Unknown error"
 
 
 class HasLisp a where
@@ -114,6 +138,11 @@ fromLisp = preview _unlisp
 instance HasLisp Bool where
   _unlisp = prism' Bool $ \x -> case x of
     Bool x -> Just x
+    _      -> Nothing
+
+instance HasLisp Char where
+  _unlisp = prism' (Char) $ \x -> case x of
+    Char x -> Just x
     _      -> Nothing
 
 instance HasLisp Int where
@@ -209,7 +238,7 @@ extendEnv2 k v p = Environment (Just p) (retR $ toMap ("_" ++ k) (retR v)) (retR
     toMap k v = Map.insert k v mempty
       
     retR :: a -> IORef a
-    retR = unsafePerformIO . newIORef
+    retR = System.IO.Unsafe.unsafePerformIO . newIORef
 -}
 
 

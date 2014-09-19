@@ -1,3 +1,6 @@
+
+; Usage:
+;   runhaskell examples/scheme.hs examples/test1.scm
 (let ((first-note-duration  5/3) 
       (second-note-duration 2)
       (foo (lambda (x) x)))
