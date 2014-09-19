@@ -36,7 +36,7 @@ instance AffineSpace Integer where
   (.-.) = (-)
   (.+^) = (+)
 
-lispApi = [
+musicSuiteApi = [
   ("c", toLisp (c :: LispScore)),
   ("d", toLisp (d :: LispScore)),
   ("e", toLisp (e :: LispScore)),
@@ -90,12 +90,12 @@ lispApi = [
 
 main = do
   stdEnv <- r5rsEnv
-  env <- extendEnv stdEnv (map (over _1 (varNamespace,)) $ lispApi)
+  env <- extendEnv stdEnv (map (over _1 (varNamespace,)) $ musicSuiteApi)
   code <- readFile "examples/test1.scm"
   res <- evalLisp' env $ fromRight $ readExpr code
   let sc = (\x -> x :: LispScore) $ fromJust $ fromRight $ fmap fromLisp $ res
   -- printScore sc
-  openLilypond $ fmap (\x -> PartT(mempty::Part,TieT(mempty,ArticulationT(mempty::(Sum Double,Sum Double),DynamicT(mempty::Sum Double,[x]))))) $ sc
+  openLilypond $ fmap (\x -> PartT(mempty::Part,TieT(mempty,ArticulationT(mempty::Articulation,DynamicT(mempty::Sum Double,[x]))))) $ sc
   return ()
 
 printScore = mapM_ print . view notes
