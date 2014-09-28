@@ -32,7 +32,48 @@ import qualified System.IO.Unsafe
 -- import qualified Data.List
 -- import System.Random
 
-type LispScore = Score Integer
+type LispScore = Score StandardNote
+type LispInterval = Behavior Interval
+type LispPitch = Behavior Pitch
+
+instance HasLisp a => HasLisp (PartT r a) where
+  _unlisp = prism' undefined undefined
+instance HasLisp a => HasLisp (ColorT a) where
+  _unlisp = prism' undefined undefined
+instance HasLisp a => HasLisp (TextT a) where
+  _unlisp = prism' undefined undefined
+instance HasLisp a => HasLisp (TremoloT a) where
+  _unlisp = prism' undefined undefined
+instance HasLisp a => HasLisp (HarmonicT a) where
+  _unlisp = prism' undefined undefined
+instance HasLisp a => HasLisp (SlideT a) where
+  _unlisp = prism' undefined undefined
+instance HasLisp a => HasLisp (ArticulationT r a) where
+  _unlisp = prism' undefined undefined
+instance HasLisp a => HasLisp (DynamicT r a) where
+  _unlisp = prism' undefined undefined
+instance HasLisp a => HasLisp (TieT a) where
+  _unlisp = prism' undefined undefined
+instance HasLisp a => HasLisp (Behavior a) where
+  _unlisp = prism' undefined undefined
+instance HasLisp Pitch where
+  _unlisp = prism' undefined undefined
+instance HasLisp Interval where
+  _unlisp = prism' undefined undefined
+
+interval :: Iso' Interval (Quality, Number)
+interval = iso (\x -> (quality x, number x)) (uncurry mkInterval)
+
+-- Less clear...
+pitch :: Iso' Pitch (Octaves, Name, Accidental)
+pitch = iso _pitch (uncurry3 _mkPitch)
+
+_mkPitch o n a = o^*2 + mkPitch n a
+
+_pitch x  = (_octave x, name x, accidental x)
+_octave p = octaves (p .-. c)
+
+
 instance AffineSpace Integer where
   type Diff Integer = Integer
   (.-.) = (-)
@@ -75,8 +116,8 @@ musicSuiteApi = [
 
   ("m3", toLisp (m3 :: Integer)),
   ("M3", toLisp (_M3 :: Integer)),
-  ("up",       CustFunc $ lift2 (up   :: Integer -> LispScore -> LispScore)),
-  ("down",     CustFunc $ lift2 (up   :: Integer -> LispScore -> LispScore)),
+  ("up",       CustFunc $ lift2 (up   :: LispInterval -> LispScore -> LispScore)),
+  ("down",     CustFunc $ lift2 (up   :: LispInterval -> LispScore -> LispScore)),
 
   -- ("ff", toLisp (fff :: Sum Double)),
   -- ("level",    CustFunc $ lift2 (up   :: Sum Double -> LispScore -> LispScore)),
@@ -101,6 +142,7 @@ musicSuiteApi = [
 
 
 
+main :: IO ()
 main = do 
   args <- System.Environment.getArgs
   files <- case args of
@@ -108,14 +150,18 @@ main = do
       putStrLn "Usage: runhaskell scheme.hs file..."
       fail mempty
     xs -> return args
+  let input = head files
+  runFile input
+
+runFile :: FilePath -> IO ()
+runFile input = do
   stdEnv <- r5rsEnv
-  env <- extendEnv stdEnv (map (over _1 (varNamespace,)) $ musicSuiteApi)
-  code <- readFile (head files)
-  -- TODO handle error here
-  res <- evalLisp' env $ readExprErrorFail $ readExpr code
+  env  <- extendEnv stdEnv (map (over _1 (varNamespace,)) $ musicSuiteApi)
+  code <- readFile input
+  res  <- evalLisp' env $ readExprErrorFail $ readExpr code
   let sc = (\x -> x :: LispScore) $ fromJust $ fromRight $ fmap fromLisp $ res
   -- printScore sc
-  openLilypond $ fmap (\x -> PartT(mempty::Part,TieT(mempty,ArticulationT(mempty::Articulation,DynamicT(mempty::Sum Double,[x]))))) $ sc
+  openLilypond $ asScore sc
   return ()
 
 printScore = mapM_ print . view notes
@@ -252,3 +298,5 @@ doubleFrac = iso fromDouble toDouble
 
 rationalFrac = iso fromRational toRational
 integInteg   = iso fromInteger toInteger
+
+uncurry3 f (x,y,z) = f x y z
