@@ -180,8 +180,14 @@ sameType1 _ x = x
 
 instance Arbitrary Time where
   arbitrary = fmap toTime (arbitrary::Gen Double)
+    where
+      toTime :: Real a => a -> Time
+      toTime = realToFrac
 instance Arbitrary Duration where
   arbitrary = fmap toDuration (arbitrary::Gen Double)
+    where
+      toDuration :: Real a => a -> Duration
+      toDuration = realToFrac
 instance Arbitrary Span where
   arbitrary = liftA2 (<->) arbitrary arbitrary
 instance Arbitrary a => Arbitrary (Delayed a) where
