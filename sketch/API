@@ -1,3089 +1,693 @@
-(!) ::
-  Data.Functor.Rep.Representable f =>
-  f a -> Data.Functor.Rep.Rep f -> a
-(#) :: AReview s t a b -> b -> t
-(#%%=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  ALens s s a b -> (a -> (r, b)) -> m r
-(#%%~) :: Functor f => ALens s t a b -> (a -> f b) -> s -> f t
-(#%=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  ALens s s a b -> (a -> b) -> m ()
-(#%~) :: ALens s t a b -> (a -> b) -> s -> t
-(#=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  ALens s s a b -> b -> m ()
-(#~) :: ALens s t a b -> b -> s -> t
-(%%=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  Over p ((,) r) s s a b -> p a (r, b) -> m r
-(%%@=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  IndexedLensLike i ((,) r) s s a b -> (i -> a -> (r, b)) -> m r
-(%%@~) ::
-  IndexedLensLike i f s t a b -> (i -> a -> f b) -> s -> f t
-(%%~) :: Optical p q f s t a b -> p a (f b) -> q s (f t)
-(%=) ::
-  (Profunctor p, Control.Monad.State.Class.MonadState s m) =>
-  Setting p s s a b -> p a b -> m ()
-(%@=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  AnIndexedSetter i s s a b -> (i -> a -> b) -> m ()
-(%@~) :: AnIndexedSetter i s t a b -> (i -> a -> b) -> s -> t
-(%~) :: Profunctor p => Setting p s t a b -> p a b -> s -> t
-(&) :: a -> (a -> b) -> b
-(&&=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  ASetter' s Bool -> Bool -> m ()
-(&&~) :: ASetter s t Bool Bool -> Bool -> s -> t
-(&~) :: s -> Control.Monad.Trans.State.Lazy.State s a -> s
-(**=) ::
-  (Control.Monad.State.Class.MonadState s m, Floating a) =>
-  ASetter' s a -> a -> m ()
-(**~) :: Floating a => ASetter s t a a -> a -> s -> t
-(*.) :: VectorSpace v => Scalar v -> Point v -> Point v
-(*=) ::
-  (Control.Monad.State.Class.MonadState s m, Num a) =>
-  ASetter' s a -> a -> m ()
-(*~) :: Num a => ASetter s t a a -> a -> s -> t
-(+=) ::
-  (Control.Monad.State.Class.MonadState s m, Num a) =>
-  ASetter' s a -> a -> m ()
-(+~) :: Num a => ASetter s t a a -> a -> s -> t
-(-=) ::
-  (Control.Monad.State.Class.MonadState s m, Num a) =>
-  ASetter' s a -> a -> m ()
-(-~) :: Num a => ASetter s t a a -> a -> s -> t
-(.-^) :: AffineSpace p => p -> Diff p -> p
-(...) ::
-  (Applicative f, Plated c) =>
-  LensLike f s t c c -> Over p f c c a b -> Over p f s t a b
-(.=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  ASetter s s a b -> b -> m ()
-(.>) :: (st -> r) -> (kab -> st) -> kab -> r
-(.~) :: ASetter s t a b -> b -> s -> t
-(//=) ::
-  (Control.Monad.State.Class.MonadState s m, Fractional a) =>
-  ASetter' s a -> a -> m ()
-(//~) :: Fractional a => ASetter s t a a -> a -> s -> t
-(/:=) :: HasSemitones a => a -> a -> Bool
-(<#%=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  ALens s s a b -> (a -> b) -> m b
-(<#%~) :: ALens s t a b -> (a -> b) -> s -> (b, t)
-(<#=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  ALens s s a b -> b -> m b
-(<#~) :: ALens s t a b -> b -> s -> (b, t)
-(<$>) :: Functor f => (a -> b) -> f a -> f b
-(<%=) ::
-  (Profunctor p, Control.Monad.State.Class.MonadState s m) =>
-  Over p ((,) b) s s a b -> p a b -> m b
-(<%@=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  IndexedLensLike i ((,) b) s s a b -> (i -> a -> b) -> m b
-(<%@~) ::
-  Optical (Indexed i) q ((,) b) s t a b
-  -> (i -> a -> b) -> q s (b, t)
-(<%~) ::
-  Profunctor p => Optical p q ((,) b) s t a b -> p a b -> q s (b, t)
-(<&&=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  LensLike' ((,) Bool) s Bool -> Bool -> m Bool
-(<&&~) ::
-  Optical (->) q ((,) Bool) s t Bool Bool -> Bool -> q s (Bool, t)
-(<&>) :: Functor f => f a -> (a -> b) -> f b
-(<**=) ::
-  (Control.Monad.State.Class.MonadState s m, Floating a) =>
-  LensLike' ((,) a) s a -> a -> m a
-(<**>) :: Applicative f => f a -> f (a -> b) -> f b
-(<**~) ::
-  Floating a => Optical (->) q ((,) a) s t a a -> a -> q s (a, t)
-(<*=) ::
-  (Control.Monad.State.Class.MonadState s m, Num a) =>
-  LensLike' ((,) a) s a -> a -> m a
-(<*~) :: Num a => Optical (->) q ((,) a) s t a a -> a -> q s (a, t)
-(<+=) ::
-  (Control.Monad.State.Class.MonadState s m, Num a) =>
-  LensLike' ((,) a) s a -> a -> m a
-(<+~) :: Num a => Optical (->) q ((,) a) s t a a -> a -> q s (a, t)
-(<-<) :: Duration -> Time -> Span
-(<-=) ::
-  (Control.Monad.State.Class.MonadState s m, Num a) =>
-  LensLike' ((,) a) s a -> a -> m a
-(<->) :: Time -> Time -> Span
-(<-~) :: Num a => Optical (->) q ((,) a) s t a a -> a -> q s (a, t)
-(<.) ::
-  Indexable i p =>
-  (Indexed i s t -> r) -> ((a -> b) -> s -> t) -> p a b -> r
-(<.=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  ASetter s s a b -> b -> m b
-(<.~) :: ASetter s t a b -> b -> s -> (b, t)
-(<//=) ::
-  (Control.Monad.State.Class.MonadState s m, Fractional a) =>
-  LensLike' ((,) a) s a -> a -> m a
-(<//~) ::
-  Fractional a => Optical (->) q ((,) a) s t a a -> a -> q s (a, t)
-(</>) ::
-  (HasParts' a, Enum (Music.Score.Part.Part a)) =>
-  Score a -> Score a -> Score a
-(<<%=) ::
-  (Data.Profunctor.Strong p,
-   Control.Monad.State.Class.MonadState s m) =>
-  Over p ((,) a) s s a b -> p a b -> m a
-(<<%@=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  IndexedLensLike i ((,) a) s s a b -> (i -> a -> b) -> m a
-(<<%@~) ::
-  Optical (Indexed i) q ((,) a) s t a b
-  -> (i -> a -> b) -> q s (a, t)
-(<<%~) ::
-  Data.Profunctor.Strong p =>
-  Optical p q ((,) a) s t a b -> p a b -> q s (a, t)
-(<<&&=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  LensLike' ((,) Bool) s Bool -> Bool -> m Bool
-(<<&&~) ::
-  Optical' (->) q ((,) Bool) s Bool -> Bool -> q s (Bool, s)
-(<<**=) ::
-  (Control.Monad.State.Class.MonadState s m, Floating a) =>
-  LensLike' ((,) a) s a -> a -> m a
-(<<**~) ::
-  Floating a => Optical' (->) q ((,) a) s a -> a -> q s (a, s)
-(<<*=) ::
-  (Control.Monad.State.Class.MonadState s m, Num a) =>
-  LensLike' ((,) a) s a -> a -> m a
-(<<*~) :: Num a => Optical' (->) q ((,) a) s a -> a -> q s (a, s)
-(<<+=) ::
-  (Control.Monad.State.Class.MonadState s m, Num a) =>
-  LensLike' ((,) a) s a -> a -> m a
-(<<+~) :: Num a => Optical' (->) q ((,) a) s a -> a -> q s (a, s)
-(<<-=) ::
-  (Control.Monad.State.Class.MonadState s m, Num a) =>
-  LensLike' ((,) a) s a -> a -> m a
-(<<-~) :: Num a => Optical' (->) q ((,) a) s a -> a -> q s (a, s)
-(<<.=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  LensLike ((,) a) s s a b -> b -> m a
-(<<.~) :: Optical (->) q ((,) a) s t a b -> b -> q s (a, t)
-(<<//=) ::
-  (Control.Monad.State.Class.MonadState s m, Fractional a) =>
-  LensLike' ((,) a) s a -> a -> m a
-(<<//~) ::
-  Fractional a => Optical' (->) q ((,) a) s a -> a -> q s (a, s)
-(<<<>=) ::
-  (Control.Monad.State.Class.MonadState s m, Monoid r) =>
-  LensLike' ((,) r) s r -> r -> m r
-(<<<>~) ::
-  Monoid r => Optical' (->) q ((,) r) s r -> r -> q s (r, s)
-(<<>=) ::
-  (Control.Monad.State.Class.MonadState s m, Monoid r) =>
-  LensLike' ((,) r) s r -> r -> m r
-(<<>~) ::
-  Monoid m => Optical (->) q ((,) m) s t m m -> m -> q s (m, t)
-(<<^=) ::
-  (Control.Monad.State.Class.MonadState s m, Num a, Integral e) =>
-  LensLike' ((,) a) s a -> e -> m a
-(<<^^=) ::
-  (Control.Monad.State.Class.MonadState s m, Fractional a,
-   Integral e) =>
-  LensLike' ((,) a) s a -> e -> m a
-(<<^^~) ::
-  (Fractional a, Integral e) =>
-  Optical' (->) q ((,) a) s a -> e -> q s (a, s)
-(<<^~) ::
-  (Num a, Integral e) =>
-  Optical' (->) q ((,) a) s a -> e -> q s (a, s)
-(<<||=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  LensLike' ((,) Bool) s Bool -> Bool -> m Bool
-(<<||~) ::
-  Optical' (->) q ((,) Bool) s Bool -> Bool -> q s (Bool, s)
-(<<~) ::
-  Control.Monad.State.Class.MonadState s m =>
-  ALens s s a b -> m b -> m b
-(<=<) :: Monad m => (b -> m c) -> (a -> m b) -> a -> m c
-(<>=) ::
-  (Control.Monad.State.Class.MonadState s m, Monoid a) =>
-  ASetter' s a -> a -> m ()
-(<>~) :: Monoid a => ASetter s t a a -> a -> s -> t
-(<?=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  ASetter s s a (Maybe b) -> b -> m b
-(<?~) :: ASetter s t a (Maybe b) -> b -> s -> (b, t)
-(<^=) ::
-  (Control.Monad.State.Class.MonadState s m, Num a, Integral e) =>
-  LensLike' ((,) a) s a -> e -> m a
-(<^^=) ::
-  (Control.Monad.State.Class.MonadState s m, Fractional a,
-   Integral e) =>
-  LensLike' ((,) a) s a -> e -> m a
-(<^^~) ::
-  (Fractional a, Integral e) =>
-  Optical (->) q ((,) a) s t a a -> e -> q s (a, t)
-(<^~) ::
-  (Num a, Integral e) =>
-  Optical (->) q ((,) a) s t a a -> e -> q s (a, t)
-(<|) ::
-  (Semigroup a, HasPosition a, Transformable a) => a -> a -> a
-(<||=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  LensLike' ((,) Bool) s Bool -> Bool -> m Bool
-(<||~) ::
-  Optical (->) q ((,) Bool) s t Bool Bool -> Bool -> q s (Bool, t)
-(<~) ::
-  Control.Monad.State.Class.MonadState s m =>
-  ASetter s s a b -> m b -> m ()
-(=:=) :: HasSemitones a => a -> a -> Bool
-(=<<) :: Monad m => (a -> m b) -> m a -> m b
-(>->) :: Time -> Duration -> Span
-(>=>) :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c
-(?=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  ASetter s s a (Maybe b) -> b -> m ()
-(??) :: Functor f => f (a -> b) -> a -> f b
-(?~) :: ASetter s t a (Maybe b) -> b -> s -> t
-type ALens s t a b =
-  LensLike (Control.Lens.Internal.Context.Pretext (->) a b) s t a b
-type ALens' s a = ALens s s a a
-type APrism s t a b =
-  Control.Lens.Internal.Prism.Market a b a (Identity b)
-  -> Control.Lens.Internal.Prism.Market a b s (Identity t)
-type APrism' s a = APrism s s a a
-type AReview s t a b =
-  Optic (Data.Tagged.Tagged *) Identity s t a b
-type AReview' t b = AReview t t b b
-type ASetter s t a b = (a -> Identity b) -> s -> Identity t
-type ASetter' s a = ASetter s s a a
-type ATraversal s t a b = LensLike (Bazaar (->) a b) s t a b
-type ATraversal' s a = ATraversal s s a a
-type ATraversal1 s t a b = LensLike (Bazaar1 (->) a b) s t a b
-type ATraversal1' s a = ATraversal1 s s a a
-type family Accentuation a :: *
-type Accessing p m s a = p a (Const m a) -> s -> Const m s
-newtype Accidental
-  = Music.Pitch.Common.Pitch.Accidental {Music.Pitch.Common.Pitch.getAccidental :: Integer}
-type Acting m r s a =
-  LensLike (Control.Lens.Internal.Action.Effect m r) s s a a
-type Action m s a = Effective m r f => (a -> f a) -> s -> f s
-newtype AddMeta a
-  = Music.Time.Meta.AddMeta {Music.Time.Meta.getAddMeta :: Data.Functor.Couple.Twain
-                                                             Meta a}
-class AdditiveGroup v where
-  zeroV :: v
-  (^+^) :: v -> v -> v
-  negateV :: v -> v
-class AdditiveGroup (Diff p) => AffineSpace p where
-  type family Diff p1 :: *
-  (.-.) :: p -> p -> Diff p
-  (.+^) :: p -> Diff p -> p
-newtype All = All {getAll :: Bool}
-class Alterable a where
-  sharpen :: a -> a
-  flatten :: a -> a
-class Applicative f => Alternative f where
-  empty :: f a
-  (<|>) :: f a -> f a -> f a
-  some :: f a -> f [a]
-  many :: f a -> f [a]
-newtype Amplitude = Amplitude {getAmplitude :: Double}
-type AnEquality s t a b =
-  Identical a (Identity b) a (Identity b)
-  -> Identical a (Identity b) s (Identity t)
-type AnEquality' s a = AnEquality s s a a
-type AnIndexedLens i s t a b =
-  Optical
-    (Indexed i)
-    (->)
-    (Control.Lens.Internal.Context.Pretext (Indexed i) a b)
-    s
-    t
-    a
-    b
-type AnIndexedLens' i s a = AnIndexedLens i s s a a
-type AnIndexedSetter i s t a b =
-  Indexed i a (Identity b) -> s -> Identity t
-type AnIndexedSetter' i s a = AnIndexedSetter i s s a a
-type AnIndexedTraversal i s t a b =
-  Over (Indexed i) (Bazaar (Indexed i) a b) s t a b
-type AnIndexedTraversal' i s a = AnIndexedTraversal i s s a a
-type AnIndexedTraversal1 i s t a b =
-  Over (Indexed i) (Bazaar1 (Indexed i) a b) s t a b
-type AnIndexedTraversal1' i s a = AnIndexedTraversal1 i s s a a
-type AnIso s t a b =
-  Control.Lens.Internal.Iso.Exchange a b a (Identity b)
-  -> Control.Lens.Internal.Iso.Exchange a b s (Identity t)
-type AnIso' s a = AnIso s s a a
-newtype Annotation
-  = Music.Score.Meta.Annotations.Annotation {Music.Score.Meta.Annotations.getAnnotation_ :: [String]}
-newtype Any = Any {getAny :: Bool}
-class Functor f => Applicative f where
-  pure :: a -> f a
-  (<*>) :: f (a -> b) -> f a -> f b
-  (*>) :: f a -> f b -> f b
-  (<*) :: f a -> f b -> f a
-class (Fractional (Accentuation a), Fractional (Separation a),
-       AffineSpace (Accentuation a),
-       AffineSpace (Separation a)) => Articulated a where
-  accentuation ::
-    Functor f => (Accentuation a -> f (Accentuation a)) -> a -> f a
-  separation ::
-    Functor f => (Separation a -> f (Separation a)) -> a -> f a
-type family Articulation s :: *
-newtype ArticulationT n a
-  = ArticulationT {getArticulationT :: (n, a)}
-type As a = p a (f a) -> p a (f a)
-class AsEmpty a where
-  _Empty :: (Choice p, Applicative f) => p () (f ()) -> p a (f a)
-class Ixed m => At m where
-  at :: Index m -> Lens' m (Maybe (IxValue m))
-type Attenuable a =
-  (HasDynamics a a,
-   VectorSpace (Level a),
-   AffineSpace (Dynamic a),
-   IsDynamics (Dynamic a))
-data Attribute where
-  Music.Time.Meta.Attribute :: (IsAttribute a) => a -> Attribute
-  Music.Time.Meta.TAttribute :: (IsTAttribute a) => a -> Attribute
-newtype Attribution
-  = Music.Score.Meta.Attribution.Attribution (containers-0.5.0.0:Data.Map.Base.Map
-                                                String (Option (Last String)))
-class Augmentable a where
-  augment :: a -> a
-  diminish :: a -> a
-data Barline = Music.Score.Meta.Barline.Barline BarlineType
-data BarlineType = StandardBarline | DoubleBarline | FinalBarline
-newtype BasicPart
-  = Music.Parts.BasicPart {Music.Parts.getBasicPart :: Option
-                                                         (First Integer)}
-newtype Bazaar p a b t
-  = Bazaar {runBazaar :: forall (f :: * -> *).
-                         Applicative f =>
-                         p a (f b) -> f t}
-type Bazaar' p a = Bazaar p a a
-newtype Bazaar1 p a b t
-  = Bazaar1 {runBazaar1 :: forall (f :: * -> *).
-                           Data.Functor.Bind.Apply f =>
-                           p a (f b) -> f t}
-type Bazaar1' p a = Bazaar1 p a a
-newtype Behavior a
-  = Music.Time.Behavior.Behavior {Music.Time.Behavior.getBehavior :: Time
-                                                                     -> a}
-newtype Bel
-  = Music.Dynamics.Absolute.Bel {Music.Dynamics.Absolute.getBel :: Amplitude}
-class Bifunctor p where
-  bimap :: (a -> b) -> (c -> d) -> p a c -> p b d
-  Data.Bifunctor.first :: (a -> b) -> p a c -> p b c
-  Data.Bifunctor.second :: (b -> c) -> p a b -> p a c
-newtype Bound a
-  = Music.Time.Bound.Bound {Music.Time.Bound.getBound :: (Span, a)}
-type Bpm = Duration
-newtype Cents
-  = Music.Pitch.Absolute.Cents {Music.Pitch.Absolute.getCents :: Hertz}
-class Profunctor p => Choice p where
-  left' :: p a b -> p (Either a c) (Either b c)
-  right' :: p a b -> p (Either c a) (Either c b)
-newtype Chord a
-  = Music.Time.Chord.Chord {Music.Time.Chord.getChord :: Music.Time.Chord.ChordList
-                                                           (Music.Time.Chord.ChordEv a)}
-data Clef = GClef | CClef | FClef
-newtype ColorT a
-  = ColorT {getColorT :: Data.Functor.Couple.Couple
-                           (Option (Last (colour-2.3.3:Data.Colour.Internal.Colour Double)))
-                           a}
-class (Choice p, Data.Profunctor.Rep.Corepresentable p,
-       Control.Comonad.Comonad (Data.Profunctor.Rep.Corep p),
-       Traversable (Data.Profunctor.Rep.Corep p),
-       Data.Profunctor.Strong p, Data.Profunctor.Rep.Representable p,
-       Monad (Data.Profunctor.Rep.Rep p),
-       Control.Monad.Fix.MonadFix (Data.Profunctor.Rep.Rep p),
-       Data.Distributive.Distributive (Data.Profunctor.Rep.Rep p),
-       Control.Arrow.ArrowLoop p, Control.Arrow.ArrowApply p,
-       Control.Arrow.ArrowChoice p) => Conjoined p where
-  distrib :: Functor f => p a b -> p (f a) (f b)
-  conjoined ::
-    (p ~ (->) => q (a -> b) r) -> q (p a b) r -> q (p a b) r
-class Cons s t a b | s -> a, t -> b, s b -> t, t a -> s where
-  _Cons ::
-    (Choice p, Applicative f) => p (a, s) (f (b, t)) -> p s (f t)
-newtype Const a b = Const {getConst :: a}
-class Contains m where
-  contains :: Index m -> Lens' m Bool
-data Context a b t = Context (b -> t) a
-type Context' a = Context a a
-class Contravariant f where
-  contramap :: (a -> b) -> f b -> f a
-  (>$) :: b -> f b -> f a
-type Ctxt a = (Maybe a, a, Maybe a)
-newtype Decibel
-  = Music.Dynamics.Absolute.Decibel {Music.Dynamics.Absolute.getDecibel :: Amplitude}
-newtype Delayed a
-  = Music.Time.Delayed.Delayed {Music.Time.Delayed._delayedValue :: (Time,
-                                                                     a)}
-newtype Division = Music.Parts.Division {getDivision :: (Int, Int)}
-newtype Dual a = Dual {getDual :: a}
-newtype Duration
-  = Music.Time.Types.Duration {Music.Time.Types.getDuration :: Music.Time.Types.TimeBase}
-type family Dynamic s :: *
-type DynamicLensLaws s t =
-  DynamicLensLaws' s t (Dynamic s) (Dynamic t)
-type DynamicLensLaws' s t a b =
-  (Dynamic (SetDynamic a s) ~ a,
-   SetDynamic (Dynamic t) s ~ t,
-   SetDynamic a (SetDynamic b s) ~ SetDynamic a s)
-newtype DynamicT n a = DynamicT {getDynamicT :: (n, a)}
-newtype DynamicsL
-  = DynamicsL {getDynamicsL :: (Maybe Double, Maybe Double)}
-class Each s t a b | s -> a, t -> b, s b -> t, t a -> s where
-  each :: Applicative f => (a -> f b) -> s -> f t
-class (Monad m, Functor f,
-       Contravariant f) => Effective m r f | f -> m r where
-  Control.Lens.Internal.Action.effective :: m r -> f a
-  Control.Lens.Internal.Action.ineffective :: f a -> m r
-newtype Endo a = Endo {appEndo :: a -> a}
-type Equality s t a b = p a (f b) -> p s (f t)
-type Equality' s a = p a (f a) -> p s (f s)
-data Fermata = Music.Score.Meta.Fermata.Fermata FermataType
-data FermataType = StandardFermata | LongFermata | VeryLongFermata
-class Field1 s t a b | s -> a, t -> b, s b -> t, t a -> s where
-  _1 :: Functor f => (a -> f b) -> s -> f t
-class Field2 s t a b | s -> a, t -> b, s b -> t, t a -> s where
-  _2 :: Functor f => (a -> f b) -> s -> f t
-class Field3 s t a b | s -> a, t -> b, s b -> t, t a -> s where
-  _3 :: Functor f => (a -> f b) -> s -> f t
-class Field4 s t a b | s -> a, t -> b, s b -> t, t a -> s where
-  _4 :: Functor f => (a -> f b) -> s -> f t
-class Field5 s t a b | s -> a, t -> b, s b -> t, t a -> s where
-  _5 :: Functor f => (a -> f b) -> s -> f t
-class Field6 s t a b | s -> a, t -> b, s b -> t, t a -> s where
-  _6 :: Functor f => (a -> f b) -> s -> f t
-class Field7 s t a b | s -> a, t -> b, s b -> t, t a -> s where
-  _7 :: Functor f => (a -> f b) -> s -> f t
-class Field8 s t a b | s -> a, t -> b, s b -> t, t a -> s where
-  _8 :: Functor f => (a -> f b) -> s -> f t
-class Field9 s t a b | s -> a, t -> b, s b -> t, t a -> s where
-  _9 :: Functor f => (a -> f b) -> s -> f t
-data FieldRules
-  = FieldRules {Control.Lens.TH._getPrefix :: [String]
-                                              -> String -> Maybe String,
-                Control.Lens.TH._rawLensNaming :: String -> String,
-                Control.Lens.TH._niceLensNaming :: String -> Maybe String,
-                Control.Lens.TH._classNaming :: String -> Maybe String}
-newtype Fifths
-  = Music.Pitch.Absolute.Fifths {Music.Pitch.Absolute.getFifths :: Hertz}
-newtype First a = First {getFirst :: a}
-type Fold s a =
-  (Contravariant f, Applicative f) => (a -> f a) -> s -> f s
-type Fold1 s a =
-  (Contravariant f, Data.Functor.Bind.Apply f) =>
-  (a -> f a) -> s -> f s
-class Data.Foldable.Foldable
-        f => FoldableWithIndex i f | f -> i where
-  ifoldMap :: Monoid m => (i -> a -> m) -> f a -> m
-  ifolded ::
-    (Indexable i p, Contravariant f, Applicative f) =>
-    p a (f a) -> f a -> f (f a)
-  ifoldr :: (i -> a -> b -> b) -> b -> f a -> b
-  ifoldl :: (i -> b -> a -> b) -> b -> f a -> b
-  ifoldr' :: (i -> a -> b -> b) -> b -> f a -> b
-  ifoldl' :: (i -> b -> a -> b) -> b -> f a -> b
-class Functor f where
-  fmap :: (a -> b) -> f a -> f b
-  (<$) :: a -> f b -> f a
-class Functor f => FunctorWithIndex i f | f -> i where
-  imap :: (i -> a -> b) -> f a -> f b
-  imapped ::
-    (Indexable i p, Settable f) => p a (f b) -> f a -> f (f b)
-class (Contravariant f, Functor f) => Gettable f
-type Getter s a =
-  (Contravariant f, Functor f) => (a -> f a) -> s -> f s
-type Getting r s a = (a -> Const r a) -> s -> Const r s
-newtype HarmonicT a
-  = HarmonicT {getHarmonicT :: Data.Functor.Couple.Couple
-                                 (Any, Sum Int) a}
-class HasAmplitude a where
-  amplitude :: a -> Amplitude
-class HasArticulations s t => HasArticulation s t where
-  articulation ::
-    Functor f => (Articulation s -> f (Articulation t)) -> s -> f t
-type HasArticulation' a = HasArticulation a a
-class (Transformable (Articulation s),
-       Transformable (Articulation t),
-       Music.Score.Articulation.ArticulationLensLaws
-         s t) => HasArticulations s t where
-  articulations ::
-    Applicative f => (Articulation s -> f (Articulation t)) -> s -> f t
-type HasArticulations' a = HasArticulations a a
-class Functor (BackendScore b) => HasBackend b where
-  type family BackendMusic b1 :: *
-  type family BackendNote b1 :: *
-  type family BackendScore b1 :: * -> *
-  type family BackendContext b1 :: * -> *
-  finalizeExport ::
-    b -> BackendScore b (BackendNote b) -> BackendMusic b
-class HasBackend b => HasBackendNote b a where
-  exportNote :: b -> BackendContext b a -> BackendNote b
-  exportChord :: b -> BackendContext b [a] -> BackendNote b
-class HasBackend b => HasBackendScore b s where
-  type family BackendScoreEvent b1 s1 :: *
-  exportScore ::
-    b -> s -> BackendScore b (BackendContext b (BackendScoreEvent b s))
-class HasColor a where
-  setColor ::
-    colour-2.3.3:Data.Colour.Internal.Colour Double -> a -> a
-class HasDuration a where
-  _duration :: a -> Duration
-class HasDynamics s t => HasDynamic s t where
-  dynamic :: Functor f => (Dynamic s -> f (Dynamic t)) -> s -> f t
-type HasDynamic' a = HasDynamic a a
-type HasDynamic3 a a' a'' =
-  (HasDynamic' a,
-   HasDynamic' a'',
-   HasDynamic a a',
-   HasDynamic a' a'',
-   HasDynamic a a'')
-type HasDynamicNotation a b c =
-  (HasDynamic3 a b c,
-   Dynamic b ~ Ctxt (Dynamic a),
-   Dynamic c ~ Music.Score.Export.DynamicNotation.DynamicNotation,
-   Real (Dynamic a),
-   Music.Score.Part.Part (SetDynamic (Dynamic a) a)
-   ~ Music.Score.Part.Part
-       (SetDynamic Music.Score.Export.DynamicNotation.DynamicNotation b))
-class (Transformable (Dynamic s), Transformable (Dynamic t),
-       DynamicLensLaws s t) => HasDynamics s t where
-  dynamics ::
-    Applicative f => (Dynamic s -> f (Dynamic t)) -> s -> f t
-type HasDynamics' a = HasDynamics a a
-class HasFrequency a where
-  frequency :: a -> Hertz
-class HasHarmonic a where
-  setNatural :: Bool -> a -> a
-  setHarmonic :: Int -> a -> a
-type HasLilypond a =
-  (HasBackendNote Lilypond (BackendScoreEvent Lilypond a),
-   HasBackendScore Lilypond a)
-class HasLilypondInstrument a where
-  getLilypondClef :: a -> Int
-class HasMeta a where
-  meta :: Functor f => (Meta -> f Meta) -> a -> f a
-type HasMidi a =
-  (HasBackendNote Midi (BackendScoreEvent Midi a),
-   HasBackendScore Midi a)
-class HasMidiProgram a where
-  getMidiChannel :: a -> Codec.Midi.Channel
-  getMidiProgram :: a -> Codec.Midi.Preset
-type HasMusicXml a =
-  (HasBackendNote MusicXml (BackendScoreEvent MusicXml a),
-   HasBackendScore MusicXml a)
-class HasMusicXmlInstrument a where
-  getMusicXmlClef :: a -> Int
-class HasNumber a where
-  number :: a -> Number
-type HasOrdPart a = (HasPart' a, Ord (Music.Score.Part.Part a))
-class HasParts s t => HasPart s t where
-  part ::
-    Functor f =>
-    (Music.Score.Part.Part s -> f (Music.Score.Part.Part t))
-    -> s -> f t
-type HasPart' a = HasPart a a
-class (Transformable (Music.Score.Part.Part s),
-       Transformable (Music.Score.Part.Part t)) => HasParts s t where
-  parts ::
-    Applicative f =>
-    (Music.Score.Part.Part s -> f (Music.Score.Part.Part t))
-    -> s -> f t
-type HasParts' a = HasParts a a
-class HasPhrases s t a b | s -> a, t -> b, s b -> t, t a -> s where
-  mvoices :: Applicative f => (MVoice a -> f (MVoice b)) -> s -> f t
-type HasPhrases' s a = HasPhrases s s a a
-class HasPitches s t => HasPitch s t where
-  Music.Score.Pitch.pitch ::
-    Functor f =>
-    (Music.Score.Pitch.Pitch s -> f (Music.Score.Pitch.Pitch t))
-    -> s -> f t
-type HasPitch' a = HasPitch a a
-class (Transformable (Music.Score.Pitch.Pitch s),
-       Transformable (Music.Score.Pitch.Pitch t),
-       SetPitch (Music.Score.Pitch.Pitch t) s ~ t) => HasPitches s t where
-  pitches ::
-    Applicative f =>
-    (Music.Score.Pitch.Pitch s -> f (Music.Score.Pitch.Pitch t))
-    -> s -> f t
-type HasPitches' a = HasPitches a a
-class HasDuration a => HasPosition a where
-  _position :: a -> Duration -> Time
-  _onset :: a -> Time
-  _offset :: a -> Time
-class HasQuality a where
-  quality :: a -> Quality
-class HasSemitones a where
-  semitones :: a -> Semitones
-class HasSlide a where
-  setBeginGliss :: Bool -> a -> a
-  setBeginSlide :: Bool -> a -> a
-  setEndGliss :: Bool -> a -> a
-  setEndSlide :: Bool -> a -> a
-type HasSuperCollider a =
-  (HasBackendNote SuperCollider (BackendScoreEvent SuperCollider a),
-   HasBackendScore SuperCollider a)
-class HasText a where
-  addText :: String -> a -> a
-class HasTremolo a where
-  setTrem :: Int -> a -> a
-newtype Hertz = Hertz {getHertz :: Double}
-data Identical a b s t where
-  Identical :: Identical a1 b1 a1 b1
-newtype Identity a = Identity {runIdentity :: a}
-type family Index s :: *
-type IndexPreservingAction m s a =
-  (Conjoined p, Effective m r f) => p a (f a) -> p s (f s)
-type IndexPreservingFold s a =
-  (Conjoined p, Contravariant f, Applicative f) =>
-  p a (f a) -> p s (f s)
-type IndexPreservingFold1 s a =
-  (Conjoined p, Contravariant f, Data.Functor.Bind.Apply f) =>
-  p a (f a) -> p s (f s)
-type IndexPreservingGetter s a =
-  (Conjoined p, Contravariant f, Functor f) => p a (f a) -> p s (f s)
-type IndexPreservingLens s t a b =
-  (Conjoined p, Functor f) => p a (f b) -> p s (f t)
-type IndexPreservingLens' s a =
-  (Conjoined p, Functor f) => p a (f a) -> p s (f s)
-type IndexPreservingMonadicFold m s a =
-  (Conjoined p, Effective m r f, Applicative f) =>
-  p a (f a) -> p s (f s)
-type IndexPreservingRelevantMonadicFold m s a =
-  (Conjoined p, Effective m r f, Data.Functor.Bind.Apply f) =>
-  p a (f a) -> p s (f s)
-type IndexPreservingSetter s t a b =
-  (Conjoined p, Settable f) => p a (f b) -> p s (f t)
-type IndexPreservingSetter' s a =
-  (Conjoined p, Settable f) => p a (f a) -> p s (f s)
-type IndexPreservingTraversal s t a b =
-  (Conjoined p, Applicative f) => p a (f b) -> p s (f t)
-type IndexPreservingTraversal' s a =
-  (Conjoined p, Applicative f) => p a (f a) -> p s (f s)
-type IndexPreservingTraversal1 s t a b =
-  (Conjoined p, Data.Functor.Bind.Apply f) => p a (f b) -> p s (f t)
-type IndexPreservingTraversal1' s a =
-  (Conjoined p, Data.Functor.Bind.Apply f) => p a (f a) -> p s (f s)
-class Conjoined p => Indexable i p where
-  indexed :: p a b -> i -> a -> b
-newtype Indexed i a b = Indexed {runIndexed :: i -> a -> b}
-type IndexedActing i m r s a =
-  Over (Indexed i) (Control.Lens.Internal.Action.Effect m r) s s a a
-type IndexedAction i m s a =
-  (Indexable i p, Effective m r f) => p a (f a) -> s -> f s
-type IndexedFold i s a =
-  (Indexable i p, Contravariant f, Applicative f) =>
-  p a (f a) -> s -> f s
-type IndexedFold1 i s a =
-  (Indexable i p, Contravariant f, Data.Functor.Bind.Apply f) =>
-  p a (f a) -> s -> f s
-type IndexedGetter i s a =
-  (Indexable i p, Contravariant f, Functor f) =>
-  p a (f a) -> s -> f s
-type IndexedGetting i m s a =
-  Indexed i a (Const m a) -> s -> Const m s
-type IndexedLens i s t a b =
-  (Indexable i p, Functor f) => p a (f b) -> s -> f t
-type IndexedLens' i s a =
-  (Indexable i p, Functor f) => p a (f a) -> s -> f s
-type IndexedLensLike i f s t a b =
-  Indexable i p => p a (f b) -> s -> f t
-type IndexedLensLike' i f s a =
-  Indexable i p => p a (f a) -> s -> f s
-type IndexedMonadicFold i m s a =
-  (Indexable i p, Effective m r f, Applicative f) =>
-  p a (f a) -> s -> f s
-type IndexedRelevantMonadicFold i m s a =
-  (Indexable i p, Effective m r f, Data.Functor.Bind.Apply f) =>
-  p a (f a) -> s -> f s
-type IndexedSetter i s t a b =
-  (Indexable i p, Settable f) => p a (f b) -> s -> f t
-type IndexedSetter' i s a =
-  (Indexable i p, Settable f) => p a (f a) -> s -> f s
-type IndexedTraversal i s t a b =
-  (Indexable i p, Applicative f) => p a (f b) -> s -> f t
-type IndexedTraversal' i s a =
-  (Indexable i p, Applicative f) => p a (f a) -> s -> f s
-type IndexedTraversal1 i s t a b =
-  (Indexable i p, Data.Functor.Bind.Apply f) => p a (f b) -> s -> f t
-type IndexedTraversal1' i s a =
-  (Indexable i p, Data.Functor.Bind.Apply f) => p a (f a) -> s -> f s
-class (VectorSpace v,
-       AdditiveGroup (Scalar v)) => InnerSpace v where
-  (<.>) :: v -> v -> Scalar v
-data Instrument = StdInstrument Int | OtherInstrument String
-newtype Interval
-  = Music.Pitch.Common.Interval.Interval {Music.Pitch.Common.Interval.getInterval :: (Int,
-                                                                                      Int,
-                                                                                      Int)}
-newtype IntervalL = IntervalL (Integer, Integer, Integer)
-type IsAttribute a =
-  (Data.Typeable.Internal.Typeable a, Monoid a, Semigroup a)
-class IsDynamics a where
-  fromDynamics :: DynamicsL -> a
-class IsInterval a where
-  fromInterval :: IntervalL -> a
-type IsMidi a =
-  (IsPitch a,
-   HasPart' a,
-   Ord (Music.Score.Part.Part a),
-   Enum (Music.Score.Part.Part a),
-   Num (Music.Score.Pitch.Pitch a),
-   HasTremolo a,
-   HasArticulation a a,
-   Tiable a)
-class IsPitch a where
-  fromPitch :: PitchL -> a
-type IsTAttribute a = (Transformable a, IsAttribute a)
-type Iso s t a b =
-  (Profunctor p, Functor f) => p a (f b) -> p s (f t)
-type Iso' s a = (Profunctor p, Functor f) => p a (f a) -> p s (f s)
-type family IxValue m :: *
-class Ixed m where
-  ix :: Index m -> Traversal' m (IxValue m)
-newtype KeySignature
-  = Music.Score.Meta.Key.KeySignature (Music.Score.Meta.Key.Fifths,
-                                       Bool)
-newtype Last a = Last {getLast :: a}
-data Leftmost a
-  = Control.Lens.Internal.Fold.LPure
-  | Control.Lens.Internal.Fold.LLeaf a
-  | Control.Lens.Internal.Fold.LStep (Leftmost a)
-type Lens s t a b = Functor f => (a -> f b) -> s -> f t
-type Lens' s a = Functor f => (a -> f a) -> s -> f s
-data LensFlag
-  = SimpleLenses
-  | PartialLenses
-  | BuildTraversals
-  | SingletonAndField
-  | SingletonIso
-  | BackwardIso
-  | HandleSingletons
-  | SingletonRequired
-  | CreateClass
-  | CreateInstance
-  | ClassRequired
-  | GenerateSignatures
-type LensLike f s t a b = (a -> f b) -> s -> f t
-type LensLike' f s a = LensLike f s s a a
-data LensRules
-  = LensRules {Control.Lens.TH._lensIso :: String -> Maybe String,
-               Control.Lens.TH._lensField :: String -> Maybe String,
-               Control.Lens.TH._lensClass :: String -> Maybe (String, String),
-               Control.Lens.TH._lensFlags :: containers-0.5.0.0:Data.Set.Base.Set
-                                               LensFlag}
-type Level a = Diff (Dynamic a)
-data Lilypond
-data LilypondOptions = LyInlineFormat | LyScoreFormat
-type Loupe s t a b =
-  LensLike (Control.Lens.Internal.Context.Pretext (->) a b) s t a b
-data LyContext a = LyContext Duration (Maybe a)
-type MVoice a = Voice (Maybe a)
-data Magma i t b a where
-  Control.Lens.Internal.Magma.MagmaAp :: (Magma
-                                            i (x -> y) b a) -> (Magma i x b a) -> Magma i y b a
-  Control.Lens.Internal.Magma.MagmaPure :: x -> Magma i x b a
-  Control.Lens.Internal.Magma.MagmaFmap :: (x -> y) -> (Magma
-                                                          i x b a) -> Magma i y b a
-  Control.Lens.Internal.Magma.Magma :: i -> a -> Magma i b b a
-class (Control.Lens.Internal.Zoom.Magnified m
-       ~ Control.Lens.Internal.Zoom.Magnified n,
-       Control.Monad.Reader.Class.MonadReader b m,
-       Control.Monad.Reader.Class.MonadReader
-         a n) => Magnify m n b a | m -> b, n -> a, m a -> n, n b -> m where
-  magnify ::
-    LensLike' (Control.Lens.Internal.Zoom.Magnified m c) a b
-    -> m c -> n c
-newtype Max a = Max {getMax :: a}
-newtype Meta
-  = Music.Time.Meta.Meta (containers-0.5.0.0:Data.Map.Base.Map
-                            String Attribute)
-data Midi
-newtype Min a = Min {getMin :: a}
-class Monad m where
-  (>>=) :: m a -> (a -> m b) -> m b
-  (>>) :: m a -> m b -> m b
-  return :: a -> m a
-  fail :: String -> m a
-class Monad m => MonadPlus m where
-  mzero :: m a
-  mplus :: m a -> m a -> m a
-type MonadicFold m s a =
-  (Effective m r f, Applicative f) => (a -> f a) -> s -> f s
-class Monoid a where
-  mempty :: a
-  mappend :: a -> a -> a
-  mconcat :: [a] -> a
-data MusicXml
-data Name = C | D | E | F | G | A | B
-newtype NoReverse a = NoReverse {getNoReverse :: a}
-data NoteList
-type NoteValue = Duration
-newtype Number
-  = Music.Pitch.Common.Interval.Number {Music.Pitch.Common.Interval.getNumber :: Integer}
-newtype Octaves
-  = Music.Pitch.Common.Semitones.Octaves {Music.Pitch.Common.Semitones.getOctaves :: Integer}
-type Optic p f s t a b = p a (f b) -> p s (f t)
-type Optic' p f s a = Optic p f s s a a
-type Optical p q f s t a b = p a (f b) -> q s (f t)
-type Optical' p q f s a = Optical p q f s s a a
-newtype Option a = Option {getOption :: Maybe a}
-type Over p f s t a b = p a (f b) -> s -> f t
-type Over' p f s a = Over p f s s a a
-type PVoice a = [Either Duration (Phrase a)]
-data Part = Part Solo Instrument Subpart
-newtype PartT n a = PartT {getPartT :: (n, a)}
-newtype Partial a b = Partial {getPartial :: a -> Maybe b}
-newtype Past a = Past {getPast :: (a, Time)}
-type Phrase a = Voice a
-newtype Pitch
-  = Music.Pitch.Common.Pitch.Pitch {Music.Pitch.Common.Pitch.getPitch :: Interval}
-newtype PitchL = PitchL {getPitchL :: (Int, Maybe Double, Int)}
-class Plated a where
-  plate :: Applicative f => (a -> f a) -> a -> f a
-newtype Point v = P v
-type Prism s t a b =
-  (Choice p, Applicative f) => p a (f b) -> p s (f t)
-type Prism' s a =
-  (Choice p, Applicative f) => p a (f a) -> p s (f s)
-newtype Product a = Product {getProduct :: a}
-class Profunctor p where
-  dimap :: (a -> b) -> (c -> d) -> p b c -> p a d
-  lmap :: (a -> b) -> p b c -> p a c
-  rmap :: (b -> c) -> p a b -> p a c
-  (Data.Profunctor.Unsafe.#.) :: (b -> c) -> p a b -> p a c
-  (Data.Profunctor.Unsafe..#) :: p b c -> (a -> b) -> p a c
-data Quality
-  = Major | Minor | Perfect | Augmented Integer | Diminished Integer
-newtype Reactive a
-  = Music.Time.Reactive.Reactive {Music.Time.Reactive.getReactive :: ([Time],
-                                                                      Behavior a)}
-data RehearsalMark
-  = Music.Score.Meta.RehearsalMark.RehearsalMark (Maybe String) Int
-newtype ReifiedFold s a = Fold {runFold :: Fold s a}
-newtype ReifiedGetter s a = Getter {runGetter :: Getter s a}
-newtype ReifiedIndexedFold i s a
-  = IndexedFold {runIndexedFold :: IndexedFold i s a}
-newtype ReifiedIndexedGetter i s a
-  = IndexedGetter {runIndexedGetter :: IndexedGetter i s a}
-newtype ReifiedIndexedLens i s t a b
-  = IndexedLens {runIndexedLens :: IndexedLens i s t a b}
-type ReifiedIndexedLens' i s a = ReifiedIndexedLens i s s a a
-newtype ReifiedIndexedSetter i s t a b
-  = IndexedSetter {runIndexedSetter :: IndexedSetter i s t a b}
-type ReifiedIndexedSetter' i s a = ReifiedIndexedSetter i s s a a
-newtype ReifiedIndexedTraversal i s t a b
-  = IndexedTraversal {runIndexedTraversal :: IndexedTraversal
-                                               i s t a b}
-type ReifiedIndexedTraversal' i s a =
-  ReifiedIndexedTraversal i s s a a
-newtype ReifiedIso s t a b = Iso {runIso :: Iso s t a b}
-type ReifiedIso' s a = ReifiedIso s s a a
-newtype ReifiedLens s t a b = Lens {runLens :: Lens s t a b}
-type ReifiedLens' s a = ReifiedLens s s a a
-newtype ReifiedMonadicFold m s a
-  = MonadicFold {runMonadicFold :: MonadicFold m s a}
-newtype ReifiedPrism s t a b = Prism {runPrism :: Prism s t a b}
-type ReifiedPrism' s a = ReifiedPrism s s a a
-newtype ReifiedSetter s t a b
-  = Setter {runSetter :: Setter s t a b}
-type ReifiedSetter' s a = ReifiedSetter s s a a
-newtype ReifiedTraversal s t a b
-  = Traversal {runTraversal :: Traversal s t a b}
-type ReifiedTraversal' s a = ReifiedTraversal s s a a
-type RelevantMonadicFold m s a =
-  (Effective m r f, Data.Functor.Bind.Apply f) =>
-  (a -> f a) -> s -> f s
-class Transformable a => Reversible a where
-  rev :: a -> a
-class Reversing t where
-  reversing :: t -> t
-type Review s t a b =
-  (Profunctor p, Bifunctor p, Settable f) => Optic p f s t a b
-type Review' t b =
-  (Profunctor p, Bifunctor p, Settable f) => Optic p f t t b b
-class (Profunctor p, Bifunctor p) => Reviewable p
-class Wrapped s => Rewrapped s t
-class (Rewrapped s t, Rewrapped t s) => Rewrapping s t
-data Rightmost a
-  = Control.Lens.Internal.Fold.RPure
-  | Control.Lens.Internal.Fold.RLeaf a
-  | Control.Lens.Internal.Fold.RStep (Rightmost a)
-newtype Score a
-  = Music.Time.Score.Score {Music.Time.Score.getScore' :: (Meta,
-                                                           Music.Time.Score.NScore a)}
-newtype Segment a
-  = Music.Time.Segment.Segment {Music.Time.Segment.getSegment :: Data.Clipped.Clipped
-                                                                   Duration
-                                                                 -> a}
-class Semigroup a where
-  (<>) :: a -> a -> a
-  sconcat :: Data.List.NonEmpty.NonEmpty a -> a
-  times1p :: Numeric.Natural.Internal.Whole n => n -> a -> a
-newtype Semitones
-  = Music.Pitch.Common.Semitones.Semitones {Music.Pitch.Common.Semitones.getSemitones :: Integer}
-type family Separation a :: *
-newtype Sequenced a m
-  = Control.Lens.Internal.Fold.Sequenced {Control.Lens.Internal.Fold.getSequenced :: m a}
-type family SetArticulation b s :: *
-type family SetDynamic b s :: *
-type family SetPart b s :: *
-type family SetPitch b s :: *
-class (Applicative f, Data.Distributive.Distributive f,
-       Traversable f) => Settable f where
-  Control.Lens.Internal.Setter.untainted :: f a -> a
-  Control.Lens.Internal.Setter.untaintedDot ::
-    Profunctor p => p a (f b) -> p a b
-  Control.Lens.Internal.Setter.taintedDot ::
-    Profunctor p => p a b -> p a (f b)
-type Setter s t a b = Settable f => (a -> f b) -> s -> f t
-type Setter' s a = Settable f => (a -> f a) -> s -> f s
-type Setting p s t a b = p a (Identity b) -> s -> Identity t
-type Setting' p s a = Setting p s s a a
-type Simple f s a = f s s a a
-type SimpleLoupe s a = Loupe s s a a
-newtype SlideT a
-  = SlideT {getSlideT :: Data.Functor.Couple.Couple
-                           ((Any, Any), (Any, Any)) a}
-class Snoc s t a b | s -> a, t -> b, s b -> t, t a -> s where
-  _Snoc ::
-    (Choice p, Applicative f) => p (s, a) (f (t, b)) -> p s (f t)
-data Solo = Solo | Tutti
-newtype Span
-  = Music.Time.Types.Delta {Music.Time.Types._delta :: (Time,
-                                                        Duration)}
-type Spelling = Semitones -> Number
-class Splittable a where
-  split :: Duration -> a -> (a, a)
-  beginning :: Duration -> a -> a
-  ending :: Duration -> a -> a
-type StandardNote =
-  PartT
-    Part
-    (ColorT
-       (TextT
-          (TremoloT
-             (HarmonicT
-                (SlideT
-                   (ArticulationT
-                      (Sum Double, Sum Double)
-                      (DynamicT
-                         (Sum Double)
-                         [TieT (Behavior Music.Prelude.Standard.StandardPitch)])))))))
-newtype Steps
-  = Music.Pitch.Common.Semitones.Steps {Music.Pitch.Common.Semitones.getSteps :: Integer}
-newtype Stretched a
-  = Music.Time.Stretched.Stretched {Music.Time.Stretched._stretchedValue :: Data.Functor.Couple.Couple
-                                                                              Duration a}
-class Strict lazy strict | lazy -> strict, strict -> lazy where
-  strict ::
-    (Profunctor p, Functor f) => p strict (f strict) -> p lazy (f lazy)
-newtype Subpart = Music.Parts.Subpart [Division]
-newtype Sum a = Sum {getSum :: a}
-data SuperCollider
-class Bifunctor p => Swapped p where
-  swapped ::
-    (Profunctor p, Functor f) =>
-    p (p b a) (f (p d c)) -> p (p a b) (f (p c d))
-data Tempo
-  = Music.Score.Meta.Tempo.Tempo (Maybe String)
-                                 (Maybe Duration)
-                                 Duration
-newtype TextT a
-  = TextT {getTextT :: Data.Functor.Couple.Couple [String] a}
-class Tiable a where
-  beginTie :: a -> a
-  endTie :: a -> a
-  toTied :: a -> (a, a)
-newtype TieT a = TieT {getTieT :: ((Any, Any), a)}
-newtype Time
-  = Music.Time.Types.Time {Music.Time.Types.getTime :: Music.Time.Types.TimeBase}
-newtype TimeSignature
-  = Music.Score.Meta.Time.TimeSignature ([Integer], Integer)
-newtype Title
-  = Music.Score.Meta.Title.Title (Int -> Option (Last String))
-newtype Track a
-  = Music.Time.Track.Track {Music.Time.Track.getTrack :: Music.Time.Track.TrackList
-                                                           (Music.Time.Track.TrackEv a)}
-class Transformable a where
-  transform :: Span -> a -> a
-type Transposable a =
-  (HasPitches a a,
-   VectorSpace (Music.Score.Pitch.Interval a),
-   AffineSpace (Music.Score.Pitch.Pitch a),
-   IsInterval (Music.Score.Pitch.Interval a),
-   IsPitch (Music.Score.Pitch.Pitch a),
-   Num (Scalar (Music.Score.Pitch.Interval a)))
-class (Functor t, Data.Foldable.Foldable t) => Traversable t where
-  traverse :: Applicative f => (a -> f b) -> t a -> f (t b)
-  Data.Traversable.sequenceA :: Applicative f => t (f a) -> f (t a)
-  Data.Traversable.mapM :: Monad m => (a -> m b) -> t a -> m (t b)
-  Data.Traversable.sequence :: Monad m => t (m a) -> m (t a)
-class (Data.Semigroup.Foldable.Foldable1 t,
-       Traversable t) => Traversable1 t where
-  traverse1 ::
-    Data.Functor.Bind.Apply f => (a -> f b) -> t a -> f (t b)
-  Data.Semigroup.Traversable.sequence1 ::
-    Data.Functor.Bind.Apply f => t (f b) -> f (t b)
-class (FunctorWithIndex i t, FoldableWithIndex i t,
-       Traversable t) => TraversableWithIndex i t | t -> i where
-  itraverse :: Applicative f => (i -> a -> f b) -> t a -> f (t b)
-  itraversed ::
-    (Indexable i p, Applicative f) => p a (f b) -> t a -> f (t b)
-type Traversal s t a b = Applicative f => (a -> f b) -> s -> f t
-type Traversal' s a = Applicative f => (a -> f a) -> s -> f s
-type Traversal1 s t a b =
-  Data.Functor.Bind.Apply f => (a -> f b) -> s -> f t
-type Traversal1' s a =
-  Data.Functor.Bind.Apply f => (a -> f a) -> s -> f s
-class Ord k => TraverseMax k m | m -> k where
-  traverseMax ::
-    (Indexable k p, Applicative f) => p v (f v) -> m v -> f (m v)
-class Ord k => TraverseMin k m | m -> k where
-  traverseMin ::
-    (Indexable k p, Applicative f) => p v (f v) -> m v -> f (m v)
-newtype Traversed a f
-  = Control.Lens.Internal.Fold.Traversed {Control.Lens.Internal.Fold.getTraversed :: f a}
-type Traversing p f s t a b =
-  Over p (Control.Lens.Internal.Bazaar.BazaarT p f a b) s t a b
-type Traversing' p f s a = Traversing p f s s a a
-type Traversing1 p f s t a b =
-  Over p (Control.Lens.Internal.Bazaar.BazaarT1 p f a b) s t a b
-type Traversing1' p f s a = Traversing1 p f s s a a
-newtype TremoloT a
-  = TremoloT {getTremoloT :: Data.Functor.Couple.Couple
-                               (Max GHC.Types.Word) a}
-class AdditiveGroup v => VectorSpace v where
-  type family Scalar v1 :: *
-  (*^) :: Scalar v -> v -> v
-newtype Voice a
-  = Music.Time.Voice.Voice {Music.Time.Voice.getVoice :: Music.Time.Voice.VoiceList
-                                                           (Music.Time.Voice.VoiceEv a)}
-class Wrapped s where
-  type family Unwrapped s1 :: *
-  _Wrapped' ::
-    (Profunctor p, Functor f) =>
-    p (Unwrapped s) (f (Unwrapped s)) -> p s (f s)
-newtype WrappedArrow a b c = WrapArrow {unwrapArrow :: a b c}
-newtype WrappedMonad m a = WrapMonad {unwrapMonad :: m a}
-newtype WrappedMonoid m = WrapMonoid {unwrapMonoid :: m}
-data XmlContext a = XmlContext Duration (Maybe a)
-newtype ZipList a = ZipList {getZipList :: [a]}
-class (Control.Lens.Internal.Zoom.Zoomed m
-       ~ Control.Lens.Internal.Zoom.Zoomed n,
-       Control.Monad.State.Class.MonadState s m,
-       Control.Monad.State.Class.MonadState
-         t n) => Zoom m n s t | m -> s, n -> t, m t -> n, n s -> m where
-  zoom ::
-    LensLike' (Control.Lens.Internal.Zoom.Zoomed m c) t s -> m c -> n c
-(^!) :: Monad m => s -> Acting m a s a -> m a
-(^!!) :: Monad m => s -> Acting m [a] s a -> m [a]
-(^!?) :: Monad m => s -> Acting m (Leftmost a) s a -> m (Maybe a)
-(^#) :: s -> ALens s t a b -> a
-(^*) :: (VectorSpace v, s ~ Scalar v) => v -> s -> v
-(^-^) :: AdditiveGroup v => v -> v -> v
-(^.) :: s -> Getting a s a -> a
-(^..) :: s -> Getting (Endo [a]) s a -> [a]
-(^/) :: (VectorSpace v, s ~ Scalar v, Fractional s) => v -> s -> v
-(^=) ::
-  (Control.Monad.State.Class.MonadState s m, Num a, Integral e) =>
-  ASetter' s a -> e -> m ()
-(^?) :: s -> Getting (Data.Monoid.First a) s a -> Maybe a
-(^?!) :: s -> Getting (Endo a) s a -> a
-(^@!) :: Monad m => s -> IndexedActing i m (i, a) s a -> m (i, a)
-(^@!!) ::
-  Monad m => s -> IndexedActing i m [(i, a)] s a -> m [(i, a)]
-(^@!?) ::
-  Monad m =>
-  s -> IndexedActing i m (Leftmost (i, a)) s a -> m (Maybe (i, a))
-(^@.) :: s -> IndexedGetting i (i, a) s a -> (i, a)
-(^@..) :: s -> IndexedGetting i (Endo [(i, a)]) s a -> [(i, a)]
-(^@?) ::
-  s -> IndexedGetting i (Endo (Maybe (i, a))) s a -> Maybe (i, a)
-(^@?!) :: s -> IndexedGetting i (Endo (i, a)) s a -> (i, a)
-(^^=) ::
-  (Control.Monad.State.Class.MonadState s m, Fractional a,
-   Integral e) =>
-  ASetter' s a -> e -> m ()
-(^^~) ::
-  (Fractional a, Integral e) => ASetter s t a a -> e -> s -> t
-(^~) :: (Num a, Integral e) => ASetter s t a a -> e -> s -> t
-_15va :: (Transposable a) => a -> a
-_15vb :: (Transposable a) => a -> a
-_8va :: (Transposable a) => a -> a
-_8vb :: (Transposable a) => a -> a
-_A1 :: IsInterval a => a
-_A10 :: IsInterval a => a
-_A11 :: IsInterval a => a
-_A12 :: IsInterval a => a
-_A13 :: IsInterval a => a
-_A14 :: IsInterval a => a
-_A15 :: IsInterval a => a
-_A2 :: IsInterval a => a
-_A3 :: IsInterval a => a
-_A4 :: IsInterval a => a
-_A5 :: IsInterval a => a
-_A6 :: IsInterval a => a
-_A7 :: IsInterval a => a
-_A8 :: IsInterval a => a
-_A9 :: IsInterval a => a
-_Just ::
-  (Choice p, Applicative f) => p a (f b) -> p (Maybe a) (f (Maybe b))
-_Left ::
-  (Choice p, Applicative f) =>
-  p a (f b) -> p (Either a c) (f (Either b c))
-_M10 :: IsInterval a => a
-_M13 :: IsInterval a => a
-_M14 :: IsInterval a => a
-_M2 :: IsInterval a => a
-_M3 :: IsInterval a => a
-_M6 :: IsInterval a => a
-_M7 :: IsInterval a => a
-_M9 :: IsInterval a => a
-_Nothing ::
-  (Choice p, Applicative f) =>
-  p () (f ()) -> p (Maybe a) (f (Maybe a))
-_P1 :: IsInterval a => a
-_P11 :: IsInterval a => a
-_P12 :: IsInterval a => a
-_P15 :: IsInterval a => a
-_P4 :: IsInterval a => a
-_P5 :: IsInterval a => a
-_P8 :: IsInterval a => a
-_Right ::
-  (Choice p, Applicative f) =>
-  p a (f b) -> p (Either c a) (f (Either c b))
-_Show :: (Read a, Show a) => Prism' String a
-_Unwrapped :: Rewrapping s t => Iso (Unwrapped t) (Unwrapped s) t s
-_Unwrapped' :: Wrapped s => Iso' (Unwrapped s) s
-_Unwrapping ::
-  Rewrapping s t =>
-  (Unwrapped s -> s) -> Iso (Unwrapped t) (Unwrapped s) t s
-_Unwrapping' ::
-  Wrapped s => (Unwrapped s -> s) -> Iso' (Unwrapped s) s
-_Void ::
-  (Choice p, Applicative f) => p a (f Data.Void.Void) -> p s (f s)
-_Wrapped :: Rewrapping s t => Iso s t (Unwrapped s) (Unwrapped t)
-_Wrapping ::
-  Rewrapping s t =>
-  (Unwrapped s -> s) -> Iso s t (Unwrapped s) (Unwrapped t)
-_Wrapping' ::
-  Wrapped s => (Unwrapped s -> s) -> Iso' s (Unwrapped s)
-_f :: IsDynamics a => a
-_getEra :: HasPosition a => a -> Span
-_head :: Cons s s a a => Traversal' s a
-_init :: Snoc s s a a => Traversal' s s
-_last :: Snoc s s a a => Traversal' s a
-_p :: IsDynamics a => a
-_setEra :: (HasPosition a, Transformable a) => Span -> a -> a
-_tail :: Cons s s a a => Traversal' s s
-a :: IsPitch a => a
-a' :: IsPitch a => a
-a'' :: IsPitch a => a
+data Music.Parts.Part = Part Solo Instrument Subpart
 aClarinet :: Instrument
-a_ :: IsPitch a => a
-a__ :: IsPitch a => a
-ab :: IsPitch a => a
-ab' :: IsPitch a => a
-ab'' :: IsPitch a => a
-ab_ :: IsPitch a => a
-ab__ :: IsPitch a => a
-above ::
-  (Semigroup a, Transposable a) =>
-  Music.Score.Pitch.Interval a -> a -> a
-accent ::
-  (HasPhrases' s b, HasArticulations' b, Articulation b ~ a,
-   Articulated a) =>
-  s -> s
-accentAll ::
-  (HasArticulations' s, Articulation s ~ a, Articulated a) => s -> s
-accentLast ::
-  (HasPhrases' s b, HasArticulations' b, Articulation b ~ a,
-   Articulated a) =>
-  s -> s
-accidental :: Pitch -> Accidental
 accordion :: Instrument
-act :: Monad m => (s -> m a) -> IndexPreservingAction m s a
-acts ::
-  (Conjoined p, Effective m r f) => p a (f a) -> p (m a) (f (m a))
-addDynCon ::
-  (HasPhrases s t a b, HasDynamic a a, HasDynamic a b, Dynamic a ~ d,
-   Dynamic b ~ Ctxt d) =>
-  s -> t
-addGlobalMetaNote ::
-  (IsAttribute a, HasMeta b) => Music.Time.Note.Note a -> b -> b
-addMetaNote ::
-  (IsAttribute a, HasMeta b) => Music.Time.Note.Note a -> b -> b
-affineCombo ::
-  (AffineSpace p, v ~ Diff p, VectorSpace v) =>
-  p -> [(p, Scalar v)] -> p
-after ::
-  (Semigroup a, Transformable a, HasPosition a) => a -> a -> a
-ala ::
-  Rewrapping s t =>
-  (Unwrapped s -> s)
-  -> ((Unwrapped t -> t) -> e -> s) -> e -> Unwrapped s
-alaf ::
-  (Profunctor p, Rewrapping s t) =>
-  (Unwrapped s -> s)
-  -> (p r t -> e -> s) -> p r (Unwrapped t) -> e -> Unwrapped s
-alerp ::
-  (AffineSpace p, VectorSpace (Diff p)) =>
-  p -> p -> Scalar (Diff p) -> p
-allOf ::
-  Profunctor p => Accessing p All s a -> p a Bool -> s -> Bool
-allParts ::
-  (Ord (Music.Score.Part.Part a), HasParts' a) =>
-  a -> [Music.Score.Part.Part a]
-alongside ::
-  LensLike (Control.Lens.Internal.Getter.AlongsideLeft f b') s t a b
-  -> LensLike
-       (Control.Lens.Internal.Getter.AlongsideRight f t) s' t' a' b'
-  -> LensLike f (s, s') (t, t') (a, a') (b, b')
 altoFlute :: Instrument
 altoSax :: Instrument
 altoTrombone :: Instrument
-always :: (a -> b) -> a -> Maybe b
-andOf :: Getting All s Bool -> s -> Bool
-annotate :: String -> Score a -> Score a
-annotateSpan :: Span -> String -> Score a -> Score a
-annotated ::
-  (Profunctor p, Functor f) =>
-  p (AddMeta a) (f (AddMeta a)) -> p a (f a)
-anon :: a -> (a -> Bool) -> Iso' (Maybe a) a
-anyOf ::
-  Profunctor p => Accessing p Any s a -> p a Bool -> s -> Bool
-ap :: Monad m => m (a -> b) -> m a -> m b
-apSegments :: Voice (Segment a) -> Stretched (Segment a)
-apSegments' ::
-  Stretched (Segment a)
-  -> Stretched (Segment a) -> Stretched (Segment a)
-applyMeta :: HasMeta a => Meta -> a -> a
-argument :: Profunctor p => Setter (p b r) (p a r) a b
-arranger :: (HasMeta a, HasPosition a) => String -> a -> a
-arrangerDuring :: HasMeta a => Span -> String -> a -> a
-articulation' ::
-  (HasArticulation s t, s ~ t) => Lens' s (Articulation s)
-articulations' ::
-  (HasArticulations s t, s ~ t) => Traversal' s (Articulation s)
-artificial :: HasHarmonic a => a -> a
-as :: IsPitch a => a
-as' :: IsPitch a => a
-as'' :: IsPitch a => a
-asIndex ::
-  (Indexable i p, Contravariant f, Functor f) =>
-  Optical' p (Indexed i) f s i
-asInterval :: Interval -> Interval
-asNote :: StandardNote -> StandardNote
-asPitch :: Pitch -> Pitch
-asScore :: Score StandardNote -> Score StandardNote
-asTrack :: Track StandardNote -> Track StandardNote
-asVoice :: Voice StandardNote -> Voice StandardNote
-as_ :: IsPitch a => a
-as__ :: IsPitch a => a
-aside :: APrism s t a b -> Prism (e, s) (e, t) (e, a) (e, b)
-assign ::
-  Control.Monad.State.Class.MonadState s m =>
-  ASetter s s a b -> b -> m ()
-assignA ::
-  Control.Arrow.Arrow p => ASetter s t a b -> p s b -> p s t
-asumOf :: Alternative f => Getting (Endo (f a)) s (f a) -> s -> f a
-atTime :: Reactive a -> Time -> a
-attribute :: (HasMeta a, HasPosition a) => Attribution -> a -> a
-attributeDuring :: HasMeta a => Span -> Attribution -> a -> a
-attribution :: String -> String -> Attribution
-attributions :: [(String, String)] -> Attribution
-au :: AnIso s t a b -> ((s -> a) -> e -> b) -> e -> t
-auf ::
-  Profunctor p =>
-  AnIso s t a b -> (p r a -> e -> b) -> p r s -> e -> t
-augmentIntervals ::
-  (HasPhrases' s a, Transposable a) =>
-  Music.Score.Pitch.Interval a -> s -> s
-augmented :: Number -> Interval
-b :: IsPitch a => a
-b' :: IsPitch a => a
-b'' :: IsPitch a => a
-b_ :: IsPitch a => a
-b__ :: IsPitch a => a
-backwardIso ::
-  Functor f => (Bool -> f Bool) -> LensRules -> f LensRules
-backwards ::
-  (Profunctor p, Profunctor q) =>
-  Optical p q (Control.Applicative.Backwards.Backwards f) s t a b
-  -> Optical p q f s t a b
 baritoneSax :: Instrument
-barline :: (HasMeta a, HasPosition a) => Barline -> a -> a
-barlineDuring :: HasMeta a => Span -> Barline -> a -> a
 bassClarinet :: Instrument
 bassFlute :: Instrument
 bassTrombone :: Instrument
 bassTrumpet :: Instrument
 bassoon :: Instrument
-bassoons :: Part
-bb :: IsPitch a => a
-bb' :: IsPitch a => a
-bb'' :: IsPitch a => a
-bb_ :: IsPitch a => a
-bb__ :: IsPitch a => a
-before ::
-  (Semigroup a, Transformable a, HasPosition a) => a -> a -> a
-behavior ::
-  (Profunctor p, Functor f) =>
-  p (Behavior a) (f (Behavior b)) -> p (Time -> a) (f (Time -> b))
-bel :: HasAmplitude a => a -> Bel
-below ::
-  (Semigroup a, Transposable a) =>
-  Music.Score.Pitch.Interval a -> a -> a
-beside ::
-  (Data.Profunctor.Rep.Representable q,
-   Applicative (Data.Profunctor.Rep.Rep q), Applicative f,
-   Data.Bitraversable.Bitraversable r) =>
-  Optical p q f s t a b
-  -> Optical p q f s' t' a b -> Optical p q f (r s s') (r t t') a b
-bimapping ::
-  (Bifunctor f, Bifunctor g) =>
-  AnIso s t a b
-  -> AnIso s' t' a' b' -> Iso (f s s') (g t t') (f a a') (g b b')
-both ::
-  Data.Bitraversable.Bitraversable r => Traversal (r a a) (r b b) a b
-bounded ::
-  (Profunctor p, Functor f) =>
-  p (Bound (Behavior a)) (f (Bound (Behavior b)))
-  -> p (Music.Time.Note.Note (Segment a)) (f (Music.Time.Note.Note
-                                                (Segment b)))
-bounded' ::
-  (Profunctor p, Functor f) =>
-  p (Bound (Behavior a)) (f (Bound (Behavior a)))
-  -> p (Music.Time.Note.Note (Segment a)) (f (Music.Time.Note.Note
-                                                (Segment a)))
-bounding :: Span -> a -> Bound a
-bounds :: Time -> Time -> a -> Bound a
-bs :: IsPitch a => a
-bs' :: IsPitch a => a
-bs'' :: IsPitch a => a
-bs_ :: IsPitch a => a
-bs__ :: IsPitch a => a
-buildTraversals ::
-  Functor f => (Bool -> f Bool) -> LensRules -> f LensRules
-c :: IsPitch a => a
-c' :: IsPitch a => a
-c'' :: IsPitch a => a
-c_ :: IsPitch a => a
-c__ :: IsPitch a => a
-camelCaseFields :: FieldRules
-cb :: IsPitch a => a
-cb' :: IsPitch a => a
-cb'' :: IsPitch a => a
-cb_ :: IsPitch a => a
-cb__ :: IsPitch a => a
+bassoons :: Music.Parts.Part
 celesta :: Instrument
 cello :: Instrument
-cellos :: Part
-censoring ::
-  Control.Monad.Writer.Class.MonadWriter w m =>
-  Setter w w u v -> (u -> v) -> m a -> m a
-cents :: HasFrequency a => a -> Cents
-children :: Plated a => a -> [a]
-choosing ::
-  Functor f =>
-  LensLike f s t a b
-  -> LensLike f s' t' a b
-  -> LensLike f (Either s s') (Either t t') a b
-chord ::
-  Functor f =>
-  ([Delayed a] -> f [Delayed b]) -> Chord a -> f (Chord b)
-chosen ::
-  (Conjoined p, Functor f) =>
-  p a (f b) -> p (Either a a) (f (Either b b))
-chunks :: (Splittable a, HasDuration a) => Duration -> a -> [a]
+cellos :: Music.Parts.Part
 clarinet :: Instrument
-clarinets :: Part
-clarinets1 :: Part
-clarinets2 :: Part
-classRequired ::
-  Functor f => (Bool -> f Bool) -> LensRules -> f LensRules
-classyRules :: LensRules
-classyRules_ :: LensRules
-clef :: (HasMeta a, HasPosition a) => Clef -> a -> a
-clefDuring :: HasMeta a => Span -> Clef -> a -> a
-cloneIndexPreservingLens ::
-  ALens s t a b -> IndexPreservingLens s t a b
-cloneIndexPreservingSetter ::
-  ASetter s t a b -> IndexPreservingSetter s t a b
-cloneIndexPreservingTraversal ::
-  ATraversal s t a b -> IndexPreservingTraversal s t a b
-cloneIndexPreservingTraversal1 ::
-  ATraversal1 s t a b -> IndexPreservingTraversal1 s t a b
-cloneIndexedLens ::
-  AnIndexedLens i s t a b -> IndexedLens i s t a b
-cloneIndexedSetter ::
-  AnIndexedSetter i s t a b -> IndexedSetter i s t a b
-cloneIndexedTraversal ::
-  AnIndexedTraversal i s t a b -> IndexedTraversal i s t a b
-cloneIndexedTraversal1 ::
-  AnIndexedTraversal1 i s t a b -> IndexedTraversal1 i s t a b
-cloneIso :: AnIso s t a b -> Iso s t a b
-cloneLens :: ALens s t a b -> Lens s t a b
-clonePrism :: APrism s t a b -> Prism s t a b
-cloneSetter :: ASetter s t a b -> Setter s t a b
-cloneTraversal :: ATraversal s t a b -> Traversal s t a b
-cloneTraversal1 :: ATraversal1 s t a b -> Traversal1 s t a b
-codelta ::
-  (Profunctor p, Functor f) =>
-  p (Duration, Time) (f (Duration, Time)) -> p Span (f Span)
-coerce :: (Contravariant f, Functor f) => f a -> f b
-coerced ::
-  (Functor f, Contravariant f) =>
-  LensLike f s t a b -> LensLike' f s a
-color ::
-  HasColor a =>
-  colour-2.3.3:Data.Colour.Internal.Colour Double -> a -> a
-colorBlue :: HasColor a => a -> a
-colorRed :: HasColor a => a -> a
-composOpFold ::
-  Plated a => b -> (b -> b -> b) -> (a -> b) -> a -> b
-composer :: (HasMeta a, HasPosition a) => String -> a -> a
-composerDuring :: HasMeta a => Span -> String -> a -> a
-compoundTime :: [Integer] -> Integer -> TimeSignature
-compress :: Transformable a => Duration -> a -> a
-compressing :: Duration -> Span
-compressor ::
-  (Attenuable a) => Dynamic a -> Scalar (Level a) -> a -> a
-concatB :: Monoid a => Score (Behavior a) -> Behavior a
-concatMapOf ::
-  Profunctor p => Accessing p [r] s a -> p a [r] -> s -> [r]
-concatOf :: Getting [r] s [r] -> s -> [r]
-cons :: Cons s s a a => a -> s -> s
-containsPart :: Part -> Part -> Bool
-containsSubpart :: Subpart -> Subpart -> Bool
-contexts :: Plated a => a -> [Context a a a]
-contextsOf :: ATraversal' a a -> a -> [Context a a a]
-contextsOn ::
-  Plated a => ATraversal s t a a -> s -> [Context a a t]
-contextsOnOf ::
-  ATraversal s t a a -> ATraversal' a a -> s -> [Context a a t]
-continous :: Reactive (Segment a) -> Behavior a
-continousWith :: Segment (a -> b) -> Reactive a -> Behavior b
+clarinets :: Music.Parts.Part
+clarinets1 :: Music.Parts.Part
+clarinets2 :: Music.Parts.Part
+containsPart ::
+  Music.Parts.Part -> Music.Parts.Part -> GHC.Types.Bool
 contraBassoon :: Instrument
-contramapped :: Contravariant f => Setter (f b) (f a) a b
-contramapping ::
-  Contravariant f => AnIso s t a b -> Iso (f a) (f b) (f s) (f t)
 corAnglais :: Instrument
-cosine :: Floating a => Behavior a
-coverRests :: Voice (Maybe a) -> Maybe (Voice a)
-createClass ::
-  Functor f => (Bool -> f Bool) -> LensRules -> f LensRules
-createInstance ::
-  Functor f => (Bool -> f Bool) -> LensRules -> f LensRules
-cs :: IsPitch a => a
-cs' :: IsPitch a => a
-cs'' :: IsPitch a => a
-cs_ :: IsPitch a => a
-cs__ :: IsPitch a => a
-curried ::
-  (Profunctor p, Functor f) =>
-  p (a -> b -> c) (f (d -> e -> f))
-  -> p ((a, b) -> c) (f ((d, e) -> f))
-cycle1 :: Semigroup m => m -> m
-cycled ::
-  (Contravariant f, Data.Functor.Bind.Apply f) =>
-  LensLike f s t a b -> LensLike f s t a b
-d :: IsPitch a => a
-d' :: IsPitch a => a
-d'' :: IsPitch a => a
-d1 :: IsInterval a => a
-d10 :: IsInterval a => a
-d11 :: IsInterval a => a
-d12 :: IsInterval a => a
-d13 :: IsInterval a => a
-d14 :: IsInterval a => a
-d15 :: IsInterval a => a
-d2 :: IsInterval a => a
-d3 :: IsInterval a => a
-d4 :: IsInterval a => a
-d5 :: IsInterval a => a
-d6 :: IsInterval a => a
-d7 :: IsInterval a => a
-d8 :: IsInterval a => a
-d9 :: IsInterval a => a
-d_ :: IsPitch a => a
-d__ :: IsPitch a => a
-db :: IsPitch a => a
-db' :: IsPitch a => a
-db'' :: IsPitch a => a
-db_ :: IsPitch a => a
-db__ :: IsPitch a => a
-decibel :: HasAmplitude a => a -> Decibel
-declareClassy ::
-  Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-declareClassyFor ::
-  [(String, (String, String))]
-  -> [(String, String)]
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-declareFields ::
-  Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-declareFieldsWith ::
-  FieldRules
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-declareIso ::
-  Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-declareLenses ::
-  Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-declareLensesFor ::
-  [(String, String)]
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-declareLensesWith ::
-  LensRules
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-declarePrisms ::
-  Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-declareWrapped ::
-  Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-deep ::
-  (Conjoined p, Applicative f, Plated s) =>
-  Traversing p f s s a b -> Over p f s s a b
-deepOf ::
-  (Conjoined p, Applicative f) =>
-  LensLike f s t s t -> Traversing p f s t a b -> Over p f s t a b
-defaultClef :: Part -> Int
-defaultFieldRules :: FieldRules
-defaultMidiChannel :: Part -> Int
-defaultMidiNote :: Part -> Int
-defaultMidiProgram :: Part -> Int
-defaultRules :: LensRules
-delay :: Transformable a => Duration -> a -> a
-delayComponent :: Span -> Time
-delayTime :: Transformable a => Time -> a -> a
-delayed ::
-  (Profunctor p, Functor f) =>
-  p (Delayed a) (f (Delayed b)) -> p (Time, a) (f (Time, b))
-delayedValue ::
-  (Transformable a, Transformable b) =>
-  Lens (Delayed a) (Delayed b) a b
-delayeds ::
-  Functor f =>
-  ([Delayed a] -> f [Delayed b]) -> Track a -> f (Track b)
-delaying :: Duration -> Span
-delta ::
-  (Profunctor p, Functor f) =>
-  p (Time, Duration) (f (Time, Duration)) -> p Span (f Span)
-denoteTitle :: Title -> Title
-devoid :: Over p f Data.Void.Void Data.Void.Void a b
-diff :: Semigroup m => m -> Endo m
-dimapping ::
-  (Profunctor p, Profunctor q) =>
-  AnIso s t a b
-  -> AnIso s' t' a' b' -> Iso (p a s') (q b t') (p s a') (q t b')
-diminished :: Number -> Interval
-discrete :: Reactive a -> Behavior a
-distance ::
-  (AffineSpace p, v ~ Diff p, InnerSpace v, s ~ Scalar v,
-   Floating (Scalar v)) =>
-  p -> p -> s
-distanceSq ::
-  (AffineSpace p, v ~ Diff p, InnerSpace v) => p -> p -> Scalar v
-ditone :: Semitones
-divide :: Int -> Part -> [Part]
-divisions :: Int -> [Division]
-doubleBarline :: (HasMeta a, HasPosition a) => Barline -> a -> a
+defaultClef :: Music.Parts.Part -> GHC.Types.Int
+defaultMidiChannel :: Music.Parts.Part -> GHC.Types.Int
+defaultMidiNote :: Music.Parts.Part -> GHC.Types.Int
+defaultMidiProgram :: Music.Parts.Part -> GHC.Types.Int
+divide :: GHC.Types.Int -> Music.Parts.Part -> [Music.Parts.Part]
 doubleBass :: Instrument
-doubleBasses :: Part
-doubleFlat :: Accidental
-doubleSharp :: Accidental
-doublyAugmented :: Number -> Interval
-doublyDiminished :: Number -> Interval
-down :: (Transposable a) => Music.Score.Pitch.Interval a -> a -> a
-dropping ::
-  (Conjoined p, Applicative f) =>
-  Int
-  -> Over p (Control.Lens.Internal.Indexed.Indexing f) s t a a
-  -> Over p f s t a a
-droppingWhile ::
-  (Conjoined p, Profunctor q, Applicative f) =>
-  (a -> Bool)
-  -> Optical
-       p
-       q
-       (Data.Functor.Compose.Compose
-          (Control.Monad.Trans.State.Lazy.State Bool) f)
-       s
-       t
-       a
-       a
-  -> Optical p q f s t a a
-ds :: IsPitch a => a
-ds' :: IsPitch a => a
-ds'' :: IsPitch a => a
-ds_ :: IsPitch a => a
-ds__ :: IsPitch a => a
+doubleBasses :: Music.Parts.Part
 dulcimer :: Instrument
-duodecim :: Number
-duration :: (Transformable a, HasDuration a) => Lens' a Duration
-during ::
-  (HasPosition a, HasPosition b, Transformable a, Transformable b) =>
-  a -> b -> a
-dynamic' :: (HasDynamic s t, s ~ t) => Lens' s (Dynamic s)
-dynamics' :: (HasDynamics s t, s ~ t) => Traversal' s (Dynamic s)
-e :: IsPitch a => a
-e' :: IsPitch a => a
-e'' :: IsPitch a => a
-e_ :: IsPitch a => a
-e__ :: IsPitch a => a
-eb :: IsPitch a => a
-eb' :: IsPitch a => a
-eb'' :: IsPitch a => a
 ebClarinet :: Instrument
-eb_ :: IsPitch a => a
-eb__ :: IsPitch a => a
-elemOf :: Eq a => Getting Any s a -> a -> s -> Bool
-element :: Traversable t => Int -> IndexedTraversal' Int (t a) a
-elementOf ::
-  Applicative f =>
-  LensLike (Control.Lens.Internal.Indexed.Indexing f) s t a a
-  -> Int -> IndexedLensLike Int f s t a a
-elements ::
-  Traversable t => (Int -> Bool) -> IndexedTraversal' Int (t a) a
-elementsOf ::
-  Applicative f =>
-  LensLike (Control.Lens.Internal.Indexed.Indexing f) s t a a
-  -> (Int -> Bool) -> IndexedLensLike Int f s t a a
-encloses :: Span -> Span -> Bool
-enum :: Enum a => Iso' Int a
-era :: (HasPosition a, Transformable a) => Lens' a Span
-es :: IsPitch a => a
-es' :: IsPitch a => a
-es'' :: IsPitch a => a
-es_ :: IsPitch a => a
-es__ :: IsPitch a => a
-event ::
-  (Profunctor p, Functor f) =>
-  p (Time, Duration, a) (f (Time, Duration, b))
-  -> p (Music.Time.Note.Note a) (f (Music.Time.Note.Note b))
-events ::
-  Functor f =>
-  ([(Time, Duration, a)] -> f [(Time, Duration, b)])
-  -> Score a -> f (Score b)
-eventsV ::
-  Functor f =>
-  ([(Duration, a)] -> f [(Duration, b)]) -> Voice a -> f (Voice b)
-export ::
-  (HasBackendScore b s, HasBackendNote b (BackendScoreEvent b s)) =>
-  b -> s -> BackendMusic b
-extractPart ::
-  (Eq (Music.Score.Part.Part a), HasPart' a) =>
-  Music.Score.Part.Part a -> Score a -> Score a
-extractParts ::
-  (Ord (Music.Score.Part.Part a), HasPart' a) => Score a -> [Score a]
-extractParts' ::
-  (Ord (Music.Score.Part.Part a), HasPart' a) =>
-  Score a -> [(Music.Score.Part.Part a, Score a)]
-extracted ::
-  (Ord (Music.Score.Part.Part a), HasPart' a) =>
-  Iso (Score a) (Score b) [Score a] [Score b]
-extracted' ::
-  (Ord (Music.Score.Part.Part a), Ord (Music.Score.Part.Part b),
-   HasPart' a, HasPart' b) =>
-  Iso
-    (Score a)
-    (Score b)
-    [(Music.Score.Part.Part a, Score a)]
-    [(Music.Score.Part.Part b, Score b)]
-f :: IsPitch a => a
-f' :: IsPitch a => a
-f'' :: IsPitch a => a
-f_ :: IsPitch a => a
-f__ :: IsPitch a => a
-fadeIn ::
-  (HasPosition a, HasDynamics a a, Dynamic a ~ Behavior c,
-   Fractional c) =>
-  Duration -> a -> a
-fadeOut ::
-  (HasPosition a, HasDynamics a a, Dynamic a ~ Behavior c,
-   Fractional c) =>
-  Duration -> a -> a
-failing ::
-  (Conjoined p, Applicative f) =>
-  Traversing p f s t a b
-  -> Traversing p f s t a b -> Over p f s t a b
-failover ::
-  (Profunctor p, Alternative m) =>
-  Over p ((,) Any) s t a b -> p a b -> s -> m t
-fb :: IsPitch a => a
-fb' :: IsPitch a => a
-fb'' :: IsPitch a => a
-fb_ :: IsPitch a => a
-fb__ :: IsPitch a => a
-fermata :: (HasMeta a, HasPosition a) => Fermata -> a -> a
-fermataDuring :: HasMeta a => Span -> Fermata -> a -> a
+flute :: Instrument
+flutes :: Music.Parts.Part
+flutes1 :: Music.Parts.Part
+flutes2 :: Music.Parts.Part
+glockenspiel :: Instrument
+harmonica :: Instrument
+harp :: Music.Parts.Part
+heckelphone :: Instrument
+highHorns :: [Music.Parts.Part]
+horn :: Instrument
+horns :: Music.Parts.Part
+lowHorns :: [Music.Parts.Part]
+marimba :: Instrument
+oboe :: Instrument
+oboes :: Music.Parts.Part
+oboes1 :: Music.Parts.Part
+oboes2 :: Music.Parts.Part
+piano :: Instrument
+piccoloFlute :: Instrument
+piccoloFlutes :: Music.Parts.Part
+piccoloTrumpet :: Instrument
+solo :: Instrument -> Music.Parts.Part
+sopranoSax :: Instrument
+tenorSax :: Instrument
+tenorTrombone :: Instrument
+timpani :: Instrument
+trombone :: Instrument
+trombones :: Music.Parts.Part
+trombones1 :: Music.Parts.Part
+trombones2 :: Music.Parts.Part
+trumpet :: Instrument
+trumpets :: Music.Parts.Part
+trumpets1 :: Music.Parts.Part
+trumpets2 :: Music.Parts.Part
+tuba :: Instrument
+tubas :: Music.Parts.Part
+tubularBells :: Instrument
+tutti :: Instrument -> Music.Parts.Part
+vibraphone :: Instrument
+viola :: Instrument
+violas :: Music.Parts.Part
+violin :: Instrument
+violins :: Music.Parts.Part
+violins1 :: Music.Parts.Part
+violins2 :: Music.Parts.Part
+xylophone :: Instrument
+xylorimba :: Instrument
+newtype BasicPart
+  = Music.Parts.Basic.BasicPart {Music.Parts.Basic.getBasicPart :: Option
+                                                                     (First
+                                                                        integer-gmp:GHC.Integer.Type.Integer)}
+newtype Division
+  = Music.Parts.Division.Division {getDivision :: (GHC.Types.Int,
+                                                   GHC.Types.Int)}
+data Instrument
+  = StdInstrument GHC.Types.Int | OtherInstrument GHC.Base.String
+data Solo = Solo | Tutti
+newtype Subpart = Subpart [Division]
+containsSubpart :: Subpart -> Subpart -> GHC.Types.Bool
+divisions :: GHC.Types.Int -> [Division]
+showDivision :: Division -> GHC.Base.String
+showDivisionR :: Division -> GHC.Base.String
+
+
+newtype Amplitude = Amplitude {getAmplitude :: GHC.Types.Double}
+newtype Bel
+  = Music.Dynamics.Absolute.Bel {Music.Dynamics.Absolute.getBel :: Amplitude}
+newtype Decibel
+  = Music.Dynamics.Absolute.Decibel {Music.Dynamics.Absolute.getDecibel :: Amplitude}
+type Dynamics = Data.Monoid.Average.Average GHC.Types.Double
+newtype DynamicsL
+  = DynamicsL {getDynamicsL :: (Data.Maybe.Maybe GHC.Types.Double,
+                                Data.Maybe.Maybe GHC.Types.Double)}
+class HasAmplitude a where
+  amplitude :: a -> Amplitude
+class IsDynamics a where
+  fromDynamics :: DynamicsL -> a
+_f :: IsDynamics a => a
+_p :: IsDynamics a => a
+bel :: HasAmplitude a => a -> Bel
+decibel :: HasAmplitude a => a -> Decibel
 ff :: IsDynamics a => a
 fff :: IsDynamics a => a
 ffff :: IsDynamics a => a
 fffff :: IsDynamics a => a
 ffffff :: IsDynamics a => a
-fifteenth :: Number
-fifth :: Number
-fifths :: HasFrequency a => a -> Fifths
-fifthsAbove ::
-  (Semigroup a, Transposable a) =>
-  Scalar (Music.Score.Pitch.Interval a) -> a -> a
-fifthsBelow ::
-  (Semigroup a, Transposable a) =>
-  Scalar (Music.Score.Pitch.Interval a) -> a -> a
-fifthsDown ::
-  (Transposable a) => Scalar (Music.Score.Pitch.Interval a) -> a -> a
-fifthsUp ::
-  (Transposable a) => Scalar (Music.Score.Pitch.Interval a) -> a -> a
-filterEvents ::
-  (Time -> Duration -> a -> Bool) -> Score a -> Score a
-filterM :: Monad m => (a -> m Bool) -> [a] -> m [a]
-filterWithSpan :: (Span -> a -> Bool) -> Score a -> Score a
-filtered ::
-  (Choice p, Applicative f) => (a -> Bool) -> Optic' p f a a
-final :: Reactive a -> a
-finalBarline :: (HasMeta a, HasPosition a) => Barline -> a -> a
-findMOf ::
-  (Monad m, Conjoined p) =>
-  Accessing p (Endo (m (Maybe a))) s a
-  -> p a (m Bool) -> s -> m (Maybe a)
-findOf ::
-  Conjoined p =>
-  Accessing p (Endo (Maybe a)) s a -> p a Bool -> s -> Maybe a
-firstOf :: Getting (Leftmost a) s a -> s -> Maybe a
-fixedDurationSpan ::
-  (Choice p, Applicative f) => p Time (f Time) -> p Span (f Span)
-fixedOnsetSpan ::
-  (Choice p, Applicative f) =>
-  p Duration (f Duration) -> p Span (f Span)
-flat :: Accidental
-flipped ::
-  (Profunctor p, Functor f) =>
-  p (b -> a -> c) (f (b' -> a' -> c'))
-  -> p (a -> b -> c) (f (a' -> b' -> c'))
-flute :: Instrument
-flutes :: Part
-flutes1 :: Part
-flutes2 :: Part
-focusing ::
-  Functor f =>
-  (Segment a -> f (Segment a)) -> Behavior a -> f (Behavior a)
-foldBy ::
-  Data.Foldable.Foldable t => (a -> a -> a) -> a -> t a -> a
-foldByOf ::
-  (forall i. Getting (Control.Lens.Internal.Fold.M a i) s a)
-  -> (a -> a -> a) -> a -> s -> a
-foldM :: Monad m => (a -> b -> m a) -> a -> [b] -> m a
-foldM_ :: Monad m => (a -> b -> m a) -> a -> [b] -> m ()
-foldMapBy ::
-  Data.Foldable.Foldable t =>
-  (r -> r -> r) -> r -> (a -> r) -> t a -> r
-foldMapByOf ::
-  (forall s. Getting (Control.Lens.Internal.Fold.M r s) t a)
-  -> (r -> r -> r) -> r -> (a -> r) -> t -> r
-foldMapOf :: Profunctor p => Accessing p r s a -> p a r -> s -> r
-foldOf :: Getting a s a -> s -> a
-folded :: Data.Foldable.Foldable f => IndexedFold Int (f a) a
-folded64 ::
-  Data.Foldable.Foldable f => IndexedFold GHC.Int.Int64 (f a) a
-folding ::
-  (Data.Foldable.Foldable f, Contravariant g, Applicative g) =>
-  (s -> f a) -> LensLike g s t a b
-foldl1Of ::
-  Getting (Dual (Endo (Maybe a))) s a -> (a -> a -> a) -> s -> a
-foldl1Of' ::
-  Getting (Endo (Endo (Maybe a))) s a -> (a -> a -> a) -> s -> a
-foldlMOf ::
-  Monad m =>
-  Getting (Endo (r -> m r)) s a -> (r -> a -> m r) -> r -> s -> m r
-foldlOf ::
-  Getting (Dual (Endo r)) s a -> (r -> a -> r) -> r -> s -> r
-foldlOf' ::
-  Getting (Endo (Endo r)) s a -> (r -> a -> r) -> r -> s -> r
-foldr1Of :: Getting (Endo (Maybe a)) s a -> (a -> a -> a) -> s -> a
-foldr1Of' ::
-  Getting (Dual (Endo (Endo (Maybe a)))) s a
-  -> (a -> a -> a) -> s -> a
-foldrMOf ::
-  Monad m =>
-  Getting (Dual (Endo (r -> m r))) s a
-  -> (a -> r -> m r) -> r -> s -> m r
-foldrOf ::
-  Profunctor p =>
-  Accessing p (Endo r) s a -> p a (r -> r) -> r -> s -> r
-foldrOf' ::
-  Getting (Dual (Endo (Endo r))) s a -> (a -> r -> r) -> r -> s -> r
-follow ::
-  (HasPosition a, HasPosition b, Transformable b) => a -> b -> b
-forM :: Monad m => [a] -> (a -> m b) -> m [b]
-forMOf ::
-  Profunctor p =>
-  Over p (WrappedMonad m) s t a b -> s -> p a (m b) -> m t
-forMOf_ ::
-  (Profunctor p, Monad m) =>
-  Accessing p (Sequenced r m) s a -> s -> p a (m r) -> m ()
-forM_ :: Monad m => [a] -> (a -> m b) -> m ()
-forOf :: Over p f s t a b -> s -> p a (f b) -> f t
-forOf_ ::
-  (Profunctor p, Functor f) =>
-  Accessing p (Traversed r f) s a -> s -> p a (f r) -> f ()
-forever :: Monad m => m a -> m b
-fourteenth :: Number
-fourth :: Number
 fp :: IsDynamics a => a
-from :: AnIso s t a b -> Iso b a t s
-fromDuration :: Fractional a => Duration -> a
-fromEq :: AnEquality s t a b -> Equality b a t s
-fromMetaReactive ::
-  (IsAttribute b) => Maybe a -> Meta -> Reactive b
-fromMidi :: (IsMidi a) => Codec.Midi.Midi -> Score a
-fromPitch' ::
-  (HasPitches' a, IsPitch a) => Music.Score.Pitch.Pitch a -> a
-fromTime :: Fractional a => Time -> a
-fs :: IsPitch a => a
-fs' :: IsPitch a => a
-fs'' :: IsPitch a => a
-fs_ :: IsPitch a => a
-fs__ :: IsPitch a => a
-fuse :: Eq a => Voice a -> Voice a
-fuseBy :: (a -> a -> Bool) -> Voice a -> Voice a
-fuseRests :: Voice (Maybe a) -> Voice (Maybe a)
 fz :: IsDynamics a => a
-g :: IsPitch a => a
-g' :: IsPitch a => a
-g'' :: IsPitch a => a
-g_ :: IsPitch a => a
-g__ :: IsPitch a => a
-gb :: IsPitch a => a
-gb' :: IsPitch a => a
-gb'' :: IsPitch a => a
-gb_ :: IsPitch a => a
-gb__ :: IsPitch a => a
-generateSignatures ::
-  Functor f => (Bool -> f Bool) -> LensRules -> f LensRules
-getAttribution :: Attribution -> String -> Maybe String
-getBarDurations :: [(TimeSignature, Duration)] -> [Duration]
-getBarTimeSignatures ::
-  [(TimeSignature, Duration)] -> [TimeSignature]
-getTempo :: Tempo -> (NoteValue, Bpm)
-getTimeSignature :: TimeSignature -> ([Integer], Integer)
-getTimeSignatureChanges ::
-  TimeSignature -> Score a -> [(Time, TimeSignature)]
-getTimeSignatures ::
-  TimeSignature -> Score a -> Reactive TimeSignature
-getTitle :: Title -> [String]
-getTitleAt :: Title -> Int -> Maybe String
-glissando :: (HasPhrases' s a, HasSlide a) => s -> s
-glockenspiel :: Instrument
-gs :: IsPitch a => a
-gs' :: IsPitch a => a
-gs'' :: IsPitch a => a
-gs_ :: IsPitch a => a
-gs__ :: IsPitch a => a
-guard :: MonadPlus m => Bool -> m ()
-handleSingletons ::
-  Functor f => (Bool -> f Bool) -> LensRules -> f LensRules
-harmonic :: HasHarmonic a => Int -> a -> a
-harmonica :: Instrument
-harp :: Part
-has :: Getting Any s a -> s -> Bool
-hasn't :: Getting All s a -> s -> Bool
-headOf :: Getting (Data.Monoid.First a) s a -> s -> Maybe a
-heckelphone :: Instrument
-highHorns :: [Part]
-highestPitch ::
-  (HasPitches' a, Ord (Music.Score.Pitch.Pitch a)) =>
-  a -> Music.Score.Pitch.Pitch a
-holes ::
-  Plated a => a -> [Control.Lens.Internal.Context.Pretext (->) a a a]
-holesOf ::
-  Conjoined p =>
-  Over p (Bazaar p a a) s t a a
-  -> s -> [Control.Lens.Internal.Context.Pretext p a a t]
-holesOn ::
-  Conjoined p =>
-  Optical p (->) (Bazaar p a a) s t a a
-  -> s -> [Control.Lens.Internal.Context.Pretext p a a t]
-holesOnOf ::
-  Conjoined p =>
-  LensLike (Bazaar p r r) s t a b
-  -> Optical p (->) (Bazaar p r r) a b r r
-  -> s
-  -> [Control.Lens.Internal.Context.Pretext p r r t]
-horn :: Instrument
-horns :: Part
-iact :: Monad m => (s -> m (i, a)) -> IndexedAction i m s a
-iall :: FoldableWithIndex i f => (i -> a -> Bool) -> f a -> Bool
-iallOf :: IndexedGetting i All s a -> (i -> a -> Bool) -> s -> Bool
-iany :: FoldableWithIndex i f => (i -> a -> Bool) -> f a -> Bool
-ianyOf :: IndexedGetting i Any s a -> (i -> a -> Bool) -> s -> Bool
-icensoring ::
-  Control.Monad.Writer.Class.MonadWriter w m =>
-  IndexedSetter i w w u v -> (i -> u -> v) -> m a -> m a
-icompose ::
-  Indexable p c =>
-  (i -> j -> p)
-  -> (Indexed i s t -> r) -> (Indexed j a b -> s -> t) -> c a b -> r
-iconcatMap ::
-  FoldableWithIndex i f => (i -> a -> [b]) -> f a -> [b]
-iconcatMapOf ::
-  IndexedGetting i [r] s a -> (i -> a -> [r]) -> s -> [r]
-idroppingWhile ::
-  (Indexable i p, Profunctor q, Applicative f) =>
-  (i -> a -> Bool)
-  -> Optical
-       (Indexed i)
-       q
-       (Data.Functor.Compose.Compose
-          (Control.Monad.Trans.State.Lazy.State Bool) f)
-       s
-       t
-       a
-       a
-  -> Optical p q f s t a a
-ifailover ::
-  Alternative m =>
-  Over (Indexed i) ((,) Any) s t a b -> (i -> a -> b) -> s -> m t
-ifiltered ::
-  (Indexable i p, Applicative f) =>
-  (i -> a -> Bool) -> Optical' p (Indexed i) f a a
-ifind ::
-  FoldableWithIndex i f => (i -> a -> Bool) -> f a -> Maybe (i, a)
-ifindMOf ::
-  Monad m =>
-  IndexedGetting i (Endo (m (Maybe a))) s a
-  -> (i -> a -> m Bool) -> s -> m (Maybe a)
-ifindOf ::
-  IndexedGetting i (Endo (Maybe a)) s a
-  -> (i -> a -> Bool) -> s -> Maybe a
-ifoldMapBy ::
-  FoldableWithIndex i t =>
-  (r -> r -> r) -> r -> (i -> a -> r) -> t a -> r
-ifoldMapByOf ::
-  (forall s. IndexedGetting i (Control.Lens.Internal.Fold.M r s) t a)
-  -> (r -> r -> r) -> r -> (i -> a -> r) -> t -> r
-ifoldMapOf :: IndexedGetting i m s a -> (i -> a -> m) -> s -> m
-ifolding ::
-  (Data.Foldable.Foldable f, Indexable i p, Contravariant g,
-   Applicative g) =>
-  (s -> f (i, a)) -> Over p g s t a b
-ifoldlM ::
-  (FoldableWithIndex i f, Monad m) =>
-  (i -> b -> a -> m b) -> b -> f a -> m b
-ifoldlMOf ::
-  Monad m =>
-  IndexedGetting i (Endo (r -> m r)) s a
-  -> (i -> r -> a -> m r) -> r -> s -> m r
-ifoldlOf ::
-  IndexedGetting i (Dual (Endo r)) s a
-  -> (i -> r -> a -> r) -> r -> s -> r
-ifoldlOf' ::
-  IndexedGetting i (Endo (r -> r)) s a
-  -> (i -> r -> a -> r) -> r -> s -> r
-ifoldrM ::
-  (FoldableWithIndex i f, Monad m) =>
-  (i -> a -> b -> m b) -> b -> f a -> m b
-ifoldrMOf ::
-  Monad m =>
-  IndexedGetting i (Dual (Endo (r -> m r))) s a
-  -> (i -> a -> r -> m r) -> r -> s -> m r
-ifoldrOf ::
-  IndexedGetting i (Endo r) s a -> (i -> a -> r -> r) -> r -> s -> r
-ifoldrOf' ::
-  IndexedGetting i (Dual (Endo (r -> r))) s a
-  -> (i -> a -> r -> r) -> r -> s -> r
-ifor ::
-  (TraversableWithIndex i t, Applicative f) =>
-  t a -> (i -> a -> f b) -> f (t b)
-iforM ::
-  (TraversableWithIndex i t, Monad m) =>
-  t a -> (i -> a -> m b) -> m (t b)
-iforMOf ::
-  (Indexed i a (WrappedMonad m b) -> s -> WrappedMonad m t)
-  -> s -> (i -> a -> m b) -> m t
-iforMOf_ ::
-  Monad m =>
-  IndexedGetting i (Sequenced r m) s a
-  -> s -> (i -> a -> m r) -> m ()
-iforM_ ::
-  (FoldableWithIndex i t, Monad m) => t a -> (i -> a -> m b) -> m ()
-iforOf ::
-  (Indexed i a (f b) -> s -> f t) -> s -> (i -> a -> f b) -> f t
-iforOf_ ::
-  Functor f =>
-  IndexedGetting i (Traversed r f) s a
-  -> s -> (i -> a -> f r) -> f ()
-ifor_ ::
-  (FoldableWithIndex i t, Applicative f) =>
-  t a -> (i -> a -> f b) -> f ()
-ignored :: Applicative f => pafb -> s -> f s
-ilens :: (s -> (i, a)) -> (s -> b -> t) -> IndexedLens i s t a b
-ilevels ::
-  AnIndexedTraversal i s t a b
-  -> IndexedTraversal
-       Int
-       s
-       t
-       (Control.Lens.Internal.Level.Level i a)
-       (Control.Lens.Internal.Level.Level j b)
-ilistening ::
-  Control.Monad.Writer.Class.MonadWriter w m =>
-  IndexedGetting i (i, u) w u -> m a -> m (a, (i, u))
-ilistenings ::
-  Control.Monad.Writer.Class.MonadWriter w m =>
-  IndexedGetting i v w u -> (i -> u -> v) -> m a -> m (a, v)
-iloci ::
-  (Indexable i p, Applicative f) =>
-  p a (f b)
-  -> Bazaar (Indexed i) a c s -> f (Bazaar (Indexed i) b c s)
-imagma ::
-  Over (Indexed i) (Control.Lens.Internal.Magma.Molten i a b) s t a b
-  -> Iso s t' (Magma i t b a) (Magma j t' c c)
-imapAccumL ::
-  TraversableWithIndex i t =>
-  (i -> s -> a -> (s, b)) -> s -> t a -> (s, t b)
-imapAccumLOf ::
-  Over (Indexed i) (Control.Monad.Trans.State.Lazy.State acc) s t a b
-  -> (i -> acc -> a -> (acc, b)) -> acc -> s -> (acc, t)
-imapAccumR ::
-  TraversableWithIndex i t =>
-  (i -> s -> a -> (s, b)) -> s -> t a -> (s, t b)
-imapAccumROf ::
-  Over
-    (Indexed i)
-    (Control.Applicative.Backwards.Backwards
-       (Control.Monad.Trans.State.Lazy.State acc))
-    s
-    t
-    a
-    b
-  -> (i -> acc -> a -> (acc, b)) -> acc -> s -> (acc, t)
-imapM ::
-  (TraversableWithIndex i t, Monad m) =>
-  (i -> a -> m b) -> t a -> m (t b)
-imapMOf ::
-  (Indexed i a (WrappedMonad m b) -> s -> WrappedMonad m t)
-  -> (i -> a -> m b) -> s -> m t
-imapMOf_ ::
-  Monad m =>
-  IndexedGetting i (Sequenced r m) s a
-  -> (i -> a -> m r) -> s -> m ()
-imapM_ ::
-  (FoldableWithIndex i t, Monad m) => (i -> a -> m b) -> t a -> m ()
-imapOf :: AnIndexedSetter i s t a b -> (i -> a -> b) -> s -> t
-impulse :: Num a => Behavior a
-inSum ::
-  (a -> b) -> Data.AdditiveGroup.Sum a -> Data.AdditiveGroup.Sum b
-inSum2 ::
-  (a -> b -> c)
-  -> Data.AdditiveGroup.Sum a
-  -> Data.AdditiveGroup.Sum b
-  -> Data.AdditiveGroup.Sum c
-index ::
-  (Indexable i p, Eq i, Applicative f) =>
-  i -> Optical' p (Indexed i) f a a
-indexing ::
-  Indexable Int p =>
-  ((a -> Control.Lens.Internal.Indexed.Indexing f b)
-   -> s -> Control.Lens.Internal.Indexed.Indexing f t)
-  -> p a (f b) -> s -> f t
-indexing64 ::
-  Indexable GHC.Int.Int64 p =>
-  ((a -> Control.Lens.Internal.Indexed.Indexing64 f b)
-   -> s -> Control.Lens.Internal.Indexed.Indexing64 f t)
-  -> p a (f b) -> s -> f t
-indices ::
-  (Indexable i p, Applicative f) =>
-  (i -> Bool) -> Optical' p (Indexed i) f a a
-initial :: Reactive a -> a
-inone :: FoldableWithIndex i f => (i -> a -> Bool) -> f a -> Bool
-inoneOf ::
-  IndexedGetting i Any s a -> (i -> a -> Bool) -> s -> Bool
-inside :: Time -> Span -> Bool
-intermediate ::
-  Transformable a => Reactive a -> [Music.Time.Note.Note a]
-intervalDiff :: Interval -> Int
-inv :: (Transposable a) => Music.Score.Pitch.Pitch a -> a -> a
-invert :: Interval -> Interval
-invertPitches ::
-  (Transposable a) => Music.Score.Pitch.Pitch a -> a -> a
-invertQuality :: Quality -> Quality
-involuted :: (a -> a) -> Iso' a a
-iover :: AnIndexedSetter i s t a b -> (i -> a -> b) -> s -> t
-ipartsOf ::
-  (Indexable [i] p, Functor f) =>
-  Traversing (Indexed i) f s t a a -> Over p f s t [a] [a]
-ipartsOf' ::
-  (Indexable [i] p, Functor f) =>
-  Over (Indexed i) (Bazaar' (Indexed i) a) s t a a
-  -> Over p f s t [a] [a]
-ipassing ::
-  Control.Monad.Writer.Class.MonadWriter w m =>
-  IndexedSetter i w w u v -> m (a, i -> u -> v) -> m a
-iperform ::
-  Monad m => IndexedActing i m (i, a) s a -> s -> m (i, a)
-iperforms ::
-  Monad m => IndexedActing i m e s a -> (i -> a -> e) -> s -> m e
-iplens :: (s -> a) -> (s -> b -> t) -> IndexPreservingLens s t a b
-ipre ::
-  IndexedGetting i (Data.Monoid.First (i, a)) s a
-  -> IndexPreservingGetter s (Maybe (i, a))
-ipreuse ::
-  Control.Monad.State.Class.MonadState s m =>
-  IndexedGetting i (Data.Monoid.First (i, a)) s a -> m (Maybe (i, a))
-ipreuses ::
-  Control.Monad.State.Class.MonadState s m =>
-  IndexedGetting i (Data.Monoid.First r) s a
-  -> (i -> a -> r) -> m (Maybe r)
-ipreview ::
-  Control.Monad.Reader.Class.MonadReader s m =>
-  IndexedGetting i (Data.Monoid.First (i, a)) s a -> m (Maybe (i, a))
-ipreviews ::
-  Control.Monad.Reader.Class.MonadReader s m =>
-  IndexedGetting i (Data.Monoid.First r) s a
-  -> (i -> a -> r) -> m (Maybe r)
-isAugmented :: HasQuality a => a -> Bool
-isBackwardSpan :: Span -> Bool
-isBefore :: Span -> Span -> Bool
-isCompound :: Interval -> Bool
-isCompoundTime :: TimeSignature -> Bool
-isConsonance :: Interval -> Bool
-isDiminished :: HasQuality a => a -> Bool
-isDissonance :: Interval -> Bool
-isEmptySpan :: Span -> Bool
-isFlattened :: Accidental -> Bool
-isForwardSpan :: Span -> Bool
-isImperfectConsonance :: Interval -> Bool
-isLeap :: Interval -> Bool
-isMajor :: HasQuality a => a -> Bool
-isMajorKey :: KeySignature -> Bool
-isMelodicConsonance :: Interval -> Bool
-isMelodicDissonance :: Interval -> Bool
-isMinor :: HasQuality a => a -> Bool
-isMinorKey :: KeySignature -> Bool
-isNatural :: Accidental -> Bool
-isNegative :: Interval -> Bool
-isNonNegative :: Interval -> Bool
-isPerfect :: HasQuality a => a -> Bool
-isPerfectConsonance :: Interval -> Bool
-isPerfectUnison :: Interval -> Bool
-isPositive :: Interval -> Bool
-isProper :: Span -> Bool
-isSemitone :: HasSemitones a => a -> Bool
-isSharpened :: Accidental -> Bool
-isSimple :: Interval -> Bool
-isSimpleTime :: TimeSignature -> Bool
-isStandard :: Accidental -> Bool
-isStep :: Interval -> Bool
-isTone :: HasSemitones a => a -> Bool
-isTritone :: HasSemitones a => a -> Bool
-isets :: ((i -> a -> b) -> s -> t) -> IndexedSetter i s t a b
-isn't :: APrism s t a b -> s -> Bool
-iso :: (s -> a) -> (b -> t) -> Iso s t a b
-isoRules :: LensRules
-itakingWhile ::
-  (Indexable i p, Profunctor q, Contravariant f, Applicative f) =>
-  (i -> a -> Bool)
-  -> Optical (Indexed i) q (Const (Endo (f s))) s s a a
-  -> Optical p q f s s a a
-iterated :: (a -> a) -> Fold1 a a
-ito :: (s -> (i, a)) -> IndexedGetter i s a
-itoList :: FoldableWithIndex i f => f a -> [(i, a)]
-itoListOf :: IndexedGetting i (Endo [(i, a)]) s a -> s -> [(i, a)]
-itransform :: Transformable a => Span -> a -> a
-itraverseOf ::
-  (Indexed i a (f b) -> s -> f t) -> (i -> a -> f b) -> s -> f t
-itraverseOf_ ::
-  Functor f =>
-  IndexedGetting i (Traversed r f) s a
-  -> (i -> a -> f r) -> s -> f ()
-itraverse_ ::
-  (FoldableWithIndex i t, Applicative f) =>
-  (i -> a -> f b) -> t a -> f ()
-iunsafePartsOf ::
-  (Indexable [i] p, Functor f) =>
-  Traversing (Indexed i) f s t a b -> Over p f s t [a] [b]
-iunsafePartsOf' ::
-  Over (Indexed i) (Bazaar (Indexed i) a b) s t a b
-  -> IndexedLens [i] s t [a] [b]
-iuse ::
-  Control.Monad.State.Class.MonadState s m =>
-  IndexedGetting i (i, a) s a -> m (i, a)
-iuses ::
-  Control.Monad.State.Class.MonadState s m =>
-  IndexedGetting i r s a -> (i -> a -> r) -> m r
-iview ::
-  Control.Monad.Reader.Class.MonadReader s m =>
-  IndexedGetting i (i, a) s a -> m (i, a)
-iviews ::
-  Control.Monad.Reader.Class.MonadReader s m =>
-  IndexedGetting i r s a -> (i -> a -> r) -> m r
-ixAt :: At m => Index m -> Traversal' m (IxValue m)
-join :: Monad m => m (m a) -> m a
-key :: Music.Score.Meta.Key.Fifths -> Bool -> KeySignature
-keySignature ::
-  (HasMeta a, HasPosition a) => KeySignature -> a -> a
-keySignatureDuring :: HasMeta a => Span -> KeySignature -> a -> a
-lastOf :: Getting (Rightmost a) s a -> s -> Maybe a
-lazy :: Strict lazy strict => Iso' strict lazy
-lead ::
-  (HasPosition a, HasPosition b, Transformable a) => a -> b -> a
-legatissimo ::
-  (HasArticulations' s, Articulation s ~ a, Articulated a) => s -> s
-legato ::
-  (HasArticulations' s, Articulation s ~ a, Articulated a) => s -> s
-lengthOf :: Getting (Endo (Endo Int)) s a -> s -> Int
-lens :: (s -> a) -> (s -> b -> t) -> Lens s t a b
-lensClass ::
-  Functor f =>
-  ((String -> Maybe (String, String))
-   -> f (String -> Maybe (String, String)))
-  -> LensRules -> f LensRules
-lensField ::
-  Functor f =>
-  ((String -> Maybe String) -> f (String -> Maybe String))
-  -> LensRules -> f LensRules
-lensFlags ::
-  Functor f =>
-  (containers-0.5.0.0:Data.Set.Base.Set LensFlag
-   -> f (containers-0.5.0.0:Data.Set.Base.Set LensFlag))
-  -> LensRules -> f LensRules
-lensIso ::
-  Functor f =>
-  ((String -> Maybe String) -> f (String -> Maybe String))
-  -> LensRules -> f LensRules
-lensRules :: LensRules
-lerp :: VectorSpace v => v -> v -> Scalar v -> v
-level :: (Attenuable a) => Dynamic a -> a -> a
-levels ::
-  ATraversal s t a b
-  -> IndexedTraversal
-       Int
-       s
-       t
-       (Control.Lens.Internal.Level.Level () a)
-       (Control.Lens.Internal.Level.Level () b)
-liftA :: Applicative f => (a -> b) -> f a -> f b
-liftA2 :: Applicative f => (a -> b -> c) -> f a -> f b -> f c
-liftA3 ::
-  Applicative f => (a -> b -> c -> d) -> f a -> f b -> f c -> f d
-liftAct ::
-  (Control.Monad.Trans.Class.MonadTrans trans, Monad m) =>
-  Acting m a s a -> IndexPreservingAction (trans m) s a
-liftM :: Monad m => (a1 -> r) -> m a1 -> m r
-liftM2 :: Monad m => (a1 -> a2 -> r) -> m a1 -> m a2 -> m r
-liftM3 ::
-  Monad m => (a1 -> a2 -> a3 -> r) -> m a1 -> m a2 -> m a3 -> m r
-liftM4 ::
-  Monad m =>
-  (a1 -> a2 -> a3 -> a4 -> r) -> m a1 -> m a2 -> m a3 -> m a4 -> m r
-liftM5 ::
-  Monad m =>
-  (a1 -> a2 -> a3 -> a4 -> a5 -> r)
-  -> m a1 -> m a2 -> m a3 -> m a4 -> m a5 -> m r
-lifted :: Monad m => Setter (m a) (m b) a b
-line :: Fractional a => Behavior a
-linearCombo :: VectorSpace v => [(v, Scalar v)] -> v
-lined :: Applicative f => IndexedLensLike' Int f String String
-listAsVoice ::
-  (Profunctor p, Functor f) =>
-  p (Voice a) (f (Voice b)) -> p [a] (f [b])
-listening ::
-  Control.Monad.Writer.Class.MonadWriter w m =>
-  Getting u w u -> m a -> m (a, u)
-listenings ::
-  Control.Monad.Writer.Class.MonadWriter w m =>
-  Getting v w u -> (u -> v) -> m a -> m (a, v)
-lmapping ::
-  (Profunctor p, Profunctor q) =>
-  AnIso s t a b -> Iso (p a x) (q b y) (p s x) (q t y)
-loci ::
-  Applicative f =>
-  (a -> f b) -> Bazaar (->) a c s -> f (Bazaar (->) b c s)
-locus ::
-  Control.Lens.Internal.Context.IndexedComonadStore p =>
-  Lens (p a c s) (p b c s) a b
-louder :: (Attenuable a) => Level a -> a -> a
-lowHorns :: [Part]
-lowestPitch ::
-  (HasPitches' a, Ord (Music.Score.Pitch.Pitch a)) =>
-  a -> Music.Score.Pitch.Pitch a
-lyricist :: (HasMeta a, HasPosition a) => String -> a -> a
-lyricistDuring :: HasMeta a => Span -> String -> a -> a
-m10 :: IsInterval a => a
-m13 :: IsInterval a => a
-m14 :: IsInterval a => a
-m2 :: IsInterval a => a
-m3 :: IsInterval a => a
-m6 :: IsInterval a => a
-m7 :: IsInterval a => a
-m9 :: IsInterval a => a
-magma ::
-  LensLike (Control.Lens.Internal.Magma.Mafic a b) s t a b
-  -> Iso s u (Magma Int t b a) (Magma j u c c)
-magnitude :: (InnerSpace v, s ~ Scalar v, Floating s) => v -> s
-magnitudeSq :: (InnerSpace v, s ~ Scalar v) => v -> s
-major :: Number -> Interval
-makeClassy ::
-  Language.Haskell.TH.Syntax.Name
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-makeClassyFor ::
-  String
-  -> String
-  -> [(String, String)]
-  -> Language.Haskell.TH.Syntax.Name
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-makeClassy_ ::
-  Language.Haskell.TH.Syntax.Name
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-makeFields ::
-  Language.Haskell.TH.Syntax.Name
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-makeFieldsWith ::
-  FieldRules
-  -> Language.Haskell.TH.Syntax.Name
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-makeIso ::
-  Language.Haskell.TH.Syntax.Name
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-makeLenses ::
-  Language.Haskell.TH.Syntax.Name
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-makeLensesFor ::
-  [(String, String)]
-  -> Language.Haskell.TH.Syntax.Name
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-makeLensesWith ::
-  LensRules
-  -> Language.Haskell.TH.Syntax.Name
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-makePrisms ::
-  Language.Haskell.TH.Syntax.Name
-  -> Language.Haskell.TH.Syntax.Q [Language.Haskell.TH.Syntax.Dec]
-makeWrapped ::
-  Language.Haskell.TH.Syntax.Name -> Language.Haskell.TH.Lib.DecsQ
-mapAccumLOf ::
-  Conjoined p =>
-  Over p (Control.Monad.Trans.State.Lazy.State acc) s t a b
-  -> p acc (a -> (acc, b)) -> acc -> s -> (acc, t)
-mapAccumROf ::
-  Conjoined p =>
-  Over
-    p
-    (Control.Applicative.Backwards.Backwards
-       (Control.Monad.Trans.State.Lazy.State acc))
-    s
-    t
-    a
-    b
-  -> p acc (a -> (acc, b)) -> acc -> s -> (acc, t)
-mapAndUnzipM :: Monad m => (a -> m (b, c)) -> [a] -> m ([b], [c])
-mapEq :: AnEquality s t a b -> f s -> f a
-mapEvents :: (Time -> Duration -> a -> b) -> Score a -> Score b
-mapFilterEvents ::
-  (Time -> Duration -> a -> Maybe b) -> Score a -> Score b
-mapFilterWithSpan :: (Span -> a -> Maybe b) -> Score a -> Score b
-mapM :: Monad m => (a -> m b) -> [a] -> m [b]
-mapMOf ::
-  Profunctor p =>
-  Over p (WrappedMonad m) s t a b -> p a (m b) -> s -> m t
-mapMOf_ ::
-  (Profunctor p, Monad m) =>
-  Accessing p (Sequenced r m) s a -> p a (m r) -> s -> m ()
-mapM_ :: Monad m => (a -> m b) -> [a] -> m ()
-mapOf :: Profunctor p => Setting p s t a b -> p a b -> s -> t
-mapWithSpan :: (Span -> a -> b) -> Score a -> Score b
-mapped :: Functor f => Setter (f a) (f b) a b
-mapping ::
-  (Functor f, Functor g) =>
-  AnIso s t a b -> Iso (f s) (g t) (f a) (g b)
-marcato ::
-  (HasPhrases' s b, HasArticulations' b, Articulation b ~ a,
-   Articulated a) =>
-  s -> s
-marcatoAll ::
-  (HasArticulations' s, Articulation s ~ a, Articulated a) => s -> s
-marcatoLast ::
-  (HasPhrases' s b, HasArticulations' b, Articulation b ~ a,
-   Articulated a) =>
-  s -> s
-marimba :: Instrument
-maximumByOf ::
-  Getting (Endo (Endo (Maybe a))) s a
-  -> (a -> a -> Ordering) -> s -> Maybe a
-maximumOf ::
-  Ord a => Getting (Endo (Endo (Maybe a))) s a -> s -> Maybe a
-mcatMaybes :: MonadPlus m => m (Maybe a) -> m a
-mconcatMap :: MonadPlus m => (a -> [b]) -> m a -> m b
-mconcatMap' ::
-  (MonadPlus m, Data.Foldable.Foldable t) => (a -> t b) -> m a -> m b
-meanPitch ::
-  (HasPitches' a, Fractional (Music.Score.Pitch.Pitch a)) =>
-  a -> Music.Score.Pitch.Pitch a
-metaAt :: (IsAttribute b) => Time -> Score a -> b
-metaAtStart :: (IsAttribute b) => Score a -> b
-metronome :: Duration -> Bpm -> Tempo
 mf :: IsDynamics a => a
-mfilter :: MonadPlus m => (a -> Bool) -> m a -> m a
-mfold :: (MonadPlus m, Data.Foldable.Foldable t) => t a -> m a
-mfromList :: MonadPlus m => [a] -> m a
-mfromMaybe :: MonadPlus m => Maybe a -> m a
-midpoint :: (HasPosition a, Transformable a) => Lens' a Time
-minimumByOf ::
-  Getting (Endo (Endo (Maybe a))) s a
-  -> (a -> a -> Ordering) -> s -> Maybe a
-minimumOf ::
-  Ord a => Getting (Endo (Endo (Maybe a))) s a -> s -> Maybe a
-minor :: Number -> Interval
-mirror :: AdditiveGroup v => Point v -> Point v
-mkInterval :: Quality -> Number -> Interval
-mkInterval' :: Int -> Int -> Interval
-mkPitch :: Name -> Accidental -> Pitch
-mlefts :: MonadPlus m => m (Either a b) -> m a
-mmapMaybe :: MonadPlus m => (a -> Maybe b) -> m a -> m b
-modally :: Spelling
 mp :: IsDynamics a => a
-mpartition :: MonadPlus m => (a -> Bool) -> m a -> (m a, m a)
-mpartitionEithers :: MonadPlus m => m (Either a b) -> (m a, m b)
-mreturn :: MonadPlus m => (a -> Maybe b) -> a -> m b
-mrights :: MonadPlus m => m (Either a b) -> m b
-mscatter :: MonadPlus m => m [b] -> m b
-mscatter' ::
-  (MonadPlus m, Data.Foldable.Foldable t) => m (t b) -> m b
-msum :: MonadPlus m => [m a] -> m a
-msum' :: (MonadPlus m, Data.Foldable.Foldable t) => t (m a) -> m a
-msumOf :: MonadPlus m => Getting (Endo (m a)) s (m a) -> s -> m a
-mvoicePVoice ::
-  Functor f => (PVoice a -> f (PVoice b)) -> MVoice a -> f (MVoice b)
-name :: Pitch -> Name
-natural :: Accidental
-nearly :: a -> (a -> Bool) -> Prism' a ()
-never :: a -> Maybe c
-ninth :: Number
-non :: Eq a => a -> Iso' (Maybe a) a
-non' :: APrism' a () -> Iso' (Maybe a) a
-none :: Data.Foldable.Foldable f => (a -> Bool) -> f a -> Bool
-noneOf ::
-  Profunctor p => Accessing p Any s a -> p a Bool -> s -> Bool
-normalizeScore :: Score a -> Score a
-normalizeSpan :: Span -> Span
-normalized :: (InnerSpace v, s ~ Scalar v, Floating s) => v -> v
-notElemOf :: Eq a => Getting All s a -> a -> s -> Bool
-notNullOf :: Getting Any s a -> s -> Bool
-note ::
-  (Profunctor p, Functor f) =>
-  p (Music.Time.Note.Note a) (f (Music.Time.Note.Note b))
-  -> p (Span, a) (f (Span, b))
-noteValue ::
-  (Transformable a, Transformable b) =>
-  Lens (Music.Time.Note.Note a) (Music.Time.Note.Note b) a b
-notes ::
-  Functor f =>
-  ([Music.Time.Note.Note a] -> f [Music.Time.Note.Note b])
-  -> Score a -> f (Score b)
-nullOf :: Getting All s a -> s -> Bool
-oboe :: Instrument
-oboes :: Part
-oboes1 :: Part
-oboes2 :: Part
-occs :: Reactive a -> [Time]
-octave :: Number
-octaves :: Interval -> Octaves
-octavesAbove ::
-  (Semigroup a, Transposable a) =>
-  Scalar (Music.Score.Pitch.Interval a) -> a -> a
-octavesBelow ::
-  (Semigroup a, Transposable a) =>
-  Scalar (Music.Score.Pitch.Interval a) -> a -> a
-octavesDown ::
-  (Transposable a) => Scalar (Music.Score.Pitch.Interval a) -> a -> a
-octavesUp ::
-  (Transposable a) => Scalar (Music.Score.Pitch.Interval a) -> a -> a
-offset :: (HasPosition a, Transformable a) => Lens' a Time
-offsetPoints :: AffineSpace a => a -> [Diff a] -> [a]
-onSpan ::
-  (Transformable a, Functor f) =>
-  LensLike' f a b -> Span -> LensLike' f a b
-only :: Eq a => a -> Prism' a ()
-onset :: (HasPosition a, Transformable a) => Lens' a Time
-op :: Wrapped s => (Unwrapped s -> s) -> s -> Unwrapped s
-open :: Score StandardNote -> IO ()
-openAndPlay :: Score StandardNote -> IO b
-openLilypond :: (HasLilypond a) => a -> IO ()
-openLilypond' :: (HasLilypond a) => LilypondOptions -> a -> IO ()
-openMidi :: (HasMidi a) => a -> IO ()
-openMusicXml :: (HasMusicXml a) => a -> IO ()
-openSuperCollider :: (HasSuperCollider a) => a -> IO ()
-option :: b -> (a -> b) -> Option a -> b
-optional :: Alternative f => f a -> f (Maybe a)
-orOf :: Getting Any s Bool -> s -> Bool
-origin :: AdditiveGroup v => Point v
-outside ::
-  Data.Profunctor.Rep.Representable p =>
-  APrism s t a b -> Lens (p t r) (p s r) (p b r) (p a r)
-over :: Profunctor p => Setting p s t a b -> p a b -> s -> t
-overA ::
-  Control.Arrow.Arrow ar =>
-  LensLike (Context a b) s t a b -> ar a b -> ar s t
-overlaps :: Span -> Span -> Bool
-palindrome :: (Semigroup a, Reversible a, HasPosition a) => a -> a
-para :: Plated a => (a -> [r] -> r) -> a -> r
-paraOf :: Getting (Endo [a]) a a -> (a -> [r] -> r) -> a -> r
-part' :: (HasPart s t, s ~ t) => Lens' s (Music.Score.Part.Part s)
-partial :: (a -> Bool) -> a -> Maybe a
-partialLenses ::
-  Functor f => (Bool -> f Bool) -> LensRules -> f LensRules
-parts' ::
-  (HasParts s t, s ~ t) => Traversal' s (Music.Score.Part.Part s)
-partsOf ::
-  Functor f => Traversing (->) f s t a a -> LensLike f s t [a] [a]
-partsOf' :: ATraversal s t a a -> Lens s t [a] [a]
-passing ::
-  Control.Monad.Writer.Class.MonadWriter w m =>
-  Setter w w u v -> m (a, u -> v) -> m a
-past :: Past a -> Time -> Maybe a
-pastSeg :: Past (Segment a) -> Behavior (Maybe a)
-pcat :: (Semigroup a, Monoid a) => [a] -> a
-perfect :: Number -> Interval
-perform :: Monad m => Acting m a s a -> s -> m a
-performs ::
-  (Profunctor p, Monad m) =>
-  Over p (Control.Lens.Internal.Action.Effect m e) s t a b
-  -> p a e -> s -> m e
-phrases ::
-  HasPhrases s t a b => Traversal s t (Phrase a) (Phrase b)
-phrases' :: HasPhrases' s a => Traversal' s (Phrase a)
-piano :: Instrument
-piccoloFlute :: Instrument
-piccoloFlutes :: Part
-piccoloTrumpet :: Instrument
-pitch' ::
-  (HasPitch s t, s ~ t) => Lens' s (Music.Score.Pitch.Pitch s)
-pitches' ::
-  (HasPitches s t, s ~ t) => Traversal' s (Music.Score.Pitch.Pitch s)
-placeAt ::
-  (Transformable a, HasPosition a) => Duration -> Time -> a -> a
-play :: t
-portato ::
-  (HasArticulations' s, Articulation s ~ a, Articulated a) => s -> s
-position ::
-  (HasPosition a, Transformable a) => Duration -> Lens' a Time
-postOffset :: (HasPosition a, Transformable a) => Lens' a Time
-postOnset :: (HasPosition a, Transformable a) => Lens' a Time
 pp :: IsDynamics a => a
 ppp :: IsDynamics a => a
 pppp :: IsDynamics a => a
 ppppp :: IsDynamics a => a
 pppppp :: IsDynamics a => a
-pre ::
-  Getting (Data.Monoid.First a) s a
-  -> IndexPreservingGetter s (Maybe a)
-preOnset :: (HasPosition a, Transformable a) => Lens' a Time
-predicate :: (a -> Maybe a) -> a -> Bool
-preuse ::
-  Control.Monad.State.Class.MonadState s m =>
-  Getting (Data.Monoid.First a) s a -> m (Maybe a)
-preuses ::
-  Control.Monad.State.Class.MonadState s m =>
-  Getting (Data.Monoid.First r) s a -> (a -> r) -> m (Maybe r)
-preview ::
-  Control.Monad.Reader.Class.MonadReader s m =>
-  Getting (Data.Monoid.First a) s a -> m (Maybe a)
-previews ::
-  Control.Monad.Reader.Class.MonadReader s m =>
-  Getting (Data.Monoid.First r) s a -> (a -> r) -> m (Maybe r)
+rfz :: IsDynamics a => a
+sffz :: IsDynamics a => a
+sfz :: IsDynamics a => a
+
+type Music.Articulation.Articulation =
+  (Data.Monoid.Average.Average GHC.Types.Double,
+   Data.Monoid.Average.Average GHC.Types.Double)
+   
+newtype Cents
+  = Music.Pitch.Absolute.Cents {Music.Pitch.Absolute.getCents :: Hertz}
+newtype Fifths
+  = Music.Pitch.Absolute.Fifths {Music.Pitch.Absolute.getFifths :: Hertz}
+class HasFrequency a where
+  frequency :: a -> Hertz
+newtype Hertz = Hertz {getHertz :: GHC.Types.Double}
+cents :: HasFrequency a => a -> Cents
+fifths :: HasFrequency a => a -> Fifths
+
+type Intonation p = p -> Hertz
+type Tuning i = i -> Hertz
+fiftyThreeToneEqual :: Tuning Music.Pitch.Common.Interval.Interval
+fiveToneEqual :: Tuning Music.Pitch.Common.Interval.Interval
+intone ::
+  (Music.Pitch.Common.Pitch.Pitch, Hertz)
+  -> Tuning Music.Pitch.Common.Interval.Interval
+  -> Intonation Music.Pitch.Common.Pitch.Pitch
+nineteenToneEqual :: Tuning Music.Pitch.Common.Interval.Interval
+pureOctaveWith ::
+  (Music.Pitch.Common.Interval.Interval, Hertz)
+  -> Music.Pitch.Common.Interval.Interval -> Hertz
+pythagorean :: Tuning Music.Pitch.Common.Interval.Interval
+quarterCommaMeantone :: Tuning Music.Pitch.Common.Interval.Interval
+schismaticMeantone :: Tuning Music.Pitch.Common.Interval.Interval
+sevenToneEqual :: Tuning Music.Pitch.Common.Interval.Interval
+standardIntonation :: Intonation Music.Pitch.Common.Pitch.Pitch
+synTune ::
+  (Music.Pitch.Common.Interval.Interval, Hertz)
+  -> (Music.Pitch.Common.Interval.Interval, Hertz)
+  -> Music.Pitch.Common.Interval.Interval
+  -> Hertz
+tetTune ::
+  Music.Pitch.Common.Interval.Interval
+  -> Music.Pitch.Common.Interval.Interval -> Hertz
+thirtyOneToneEqual :: Tuning Music.Pitch.Common.Interval.Interval
+twelveToneEqual :: Tuning Music.Pitch.Common.Interval.Interval
+
+(/:=) :: HasSemitones a => a -> a -> GHC.Types.Bool
+(=:=) :: HasSemitones a => a -> a -> GHC.Types.Bool
+newtype Accidental
+  = Music.Pitch.Common.Pitch.Accidental {Music.Pitch.Common.Pitch.getAccidental :: integer-gmp:GHC.Integer.Type.Integer}
+class HasNumber a where
+  number :: a -> Number
+class HasQuality a where
+  quality :: a -> Quality
+class HasSemitones a where
+  semitones :: a -> Semitones
+newtype Interval
+  = Interval {getInterval :: (GHC.Types.Int, GHC.Types.Int)}
+data IntervalBasis = Chromatic | Diatonic
+data Name = C | D | E | F | G | A | B
+newtype Number
+  = Music.Pitch.Common.Interval.Number {Music.Pitch.Common.Interval.getNumber :: GHC.Types.Int}
+newtype Octaves
+  = Music.Pitch.Common.Semitones.Octaves {Music.Pitch.Common.Semitones.getOctaves :: integer-gmp:GHC.Integer.Type.Integer}
+newtype Pitch = Pitch {getPitch :: Interval}
+data Quality
+  = Major
+  | Minor
+  | Perfect
+  | Augmented GHC.Types.Int
+  | Diminished GHC.Types.Int
+newtype Semitones
+  = Music.Pitch.Common.Semitones.Semitones {Music.Pitch.Common.Semitones.getSemitones :: integer-gmp:GHC.Integer.Type.Integer}
+type Spelling = Semitones -> Number
+newtype Steps
+  = Music.Pitch.Common.Semitones.Steps {Music.Pitch.Common.Semitones.getSteps :: integer-gmp:GHC.Integer.Type.Integer}
+accidental :: Pitch -> Accidental
+asInterval :: Interval -> Interval
+asPitch :: Pitch -> Pitch
+augmented :: Number -> Interval
+basis_A1 :: Interval
+basis_P1 :: Interval
+basis_P5 :: Interval
+basis_P8 :: Interval
+basis_d2 :: Interval
+convertBasis ::
+  Interval
+  -> Interval
+  -> Interval
+  -> Data.Maybe.Maybe (GHC.Types.Int, GHC.Types.Int)
+convertBasisFloat ::
+  (GHC.Real.Fractional t, GHC.Classes.Eq t) =>
+  Interval -> Interval -> Interval -> Data.Maybe.Maybe (t, t)
+diminished :: Number -> Interval
+ditone :: Semitones
+doubleFlat :: Accidental
+doubleSharp :: Accidental
+doublyAugmented :: Number -> Interval
+doublyDiminished :: Number -> Interval
+duodecim :: Number
+fifteenth :: Number
+fifth :: Number
+flat :: Accidental
+fourteenth :: Number
+fourth :: Number
+intervalDiff :: Interval -> GHC.Types.Int
+intervalDiv :: Interval -> Interval -> GHC.Types.Int
+invert :: Interval -> Interval
+invertQuality :: Quality -> Quality
+isAugmented :: HasQuality a => a -> GHC.Types.Bool
+isCompound :: Interval -> GHC.Types.Bool
+isConsonance :: Interval -> GHC.Types.Bool
+isDiminished :: HasQuality a => a -> GHC.Types.Bool
+isDissonance :: Interval -> GHC.Types.Bool
+isFlattened :: Accidental -> GHC.Types.Bool
+isImperfectConsonance :: Interval -> GHC.Types.Bool
+isLeap :: Interval -> GHC.Types.Bool
+isMajor :: HasQuality a => a -> GHC.Types.Bool
+isMelodicConsonance :: Interval -> GHC.Types.Bool
+isMelodicDissonance :: Interval -> GHC.Types.Bool
+isMinor :: HasQuality a => a -> GHC.Types.Bool
+isNatural :: Accidental -> GHC.Types.Bool
+isNegative :: Interval -> GHC.Types.Bool
+isNonNegative :: Interval -> GHC.Types.Bool
+isPerfect :: HasQuality a => a -> GHC.Types.Bool
+isPerfectConsonance :: Interval -> GHC.Types.Bool
+isPerfectUnison :: Interval -> GHC.Types.Bool
+isPositive :: Interval -> GHC.Types.Bool
+isSemitone :: HasSemitones a => a -> GHC.Types.Bool
+isSharpened :: Accidental -> GHC.Types.Bool
+isSimple :: Interval -> GHC.Types.Bool
+isStandard :: Accidental -> GHC.Types.Bool
+isStep :: Interval -> GHC.Types.Bool
+isTone :: HasSemitones a => a -> GHC.Types.Bool
+isTritone :: HasSemitones a => a -> GHC.Types.Bool
+major :: Number -> Interval
+minor :: Number -> Interval
+mkInterval :: Quality -> Number -> Interval
+mkInterval' :: GHC.Types.Int -> GHC.Types.Int -> Interval
+mkPitch :: Name -> Accidental -> Pitch
+modally :: Spelling
+name :: Pitch -> Name
+natural :: Accidental
+ninth :: Number
+octave :: Number
+octaves :: Interval -> Octaves
+perfect :: Number -> Interval
 prime :: Number
-printEras :: Score a -> IO ()
-prism :: (b -> t) -> (s -> Either t a) -> Prism s t a b
-prism' :: (b -> s) -> (s -> Maybe a) -> Prism s s a b
-productOf :: Num a => Getting (Endo (Endo a)) s a -> s -> a
-project ::
-  (InnerSpace v, s ~ Scalar v, Fractional s) => v -> v -> v
+second :: Number
+semitone :: Semitones
+separate :: Interval -> (Octaves, Interval)
+seventh :: Number
+sharp :: Accidental
+simple :: Interval -> Interval
+sixth :: Number
+spell :: HasSemitones a => Spelling -> a -> Interval
+spelled :: HasSemitones a => a -> Spelling -> Interval
+tenth :: Number
+third :: Number
+thirteenth :: Number
+tone :: Semitones
+tritone :: Semitones
+twelfth :: Number
+unison :: Number
+usingFlats :: Spelling
+usingSharps :: Spelling
+
+(!) ::
+  Data.Functor.Rep.Representable f =>
+  f a -> Data.Functor.Rep.Rep f -> a
+(<-<) :: Duration -> Time -> Span
+(<->) :: Time -> Time -> Span
+(<|) ::
+  (Data.Semigroup.Semigroup a, HasPosition a, Transformable a) =>
+  a -> a -> a
+(>->) :: Time -> Duration -> Span
+newtype Behavior a
+  = Music.Time.Behavior.Behavior {Music.Time.Behavior.getBehavior :: Time
+                                                                     -> a}
+newtype Bound a
+  = Music.Time.Bound.Bound {Music.Time.Bound.getBound :: (Span, a)}
+type role Chord nominal
+newtype Chord a
+  = Music.Time.Chord.Chord {Music.Time.Chord.getChord :: Music.Time.Chord.ChordList
+                                                           (Music.Time.Chord.ChordEv a)}
+newtype Delayed a
+  = Music.Time.Delayed.Delayed {Music.Time.Delayed._delayedValue :: (Time,
+                                                                     a)}
+newtype Duration
+  = Music.Time.Types.Duration {Music.Time.Types.getDuration :: Music.Time.Types.TimeBase}
+newtype Future a
+  = Future {getFuture :: (Data.Semigroup.Max Time, a)}
+type role Graces representational nominal
+newtype Graces (f :: * -> *) a
+  = Graces {getGraces :: (Nominal f a, f a, Nominal f a)}
+class HasDuration a where
+  _duration :: a -> Duration
+class HasDuration a => HasPosition a where
+  _position :: a -> Duration -> Time
+  _onset :: a -> Time
+  _offset :: a -> Time
+newtype NoReverse a = NoReverse {getNoReverse :: a}
+type role Nominal representational nominal
+newtype Nominal (f :: * -> *) a = Nominal {getNominal :: f a}
+newtype Note a
+  = Music.Time.Note.Note {Music.Time.Note._noteValue :: (Span, a)}
+newtype Past a = Past {getPast :: (Data.Semigroup.Min Time, a)}
+newtype Reactive a
+  = Music.Time.Reactive.Reactive {Music.Time.Reactive.getReactive :: ([Time],
+                                                                      Behavior a)}
+class Transformable a => Reversible a where
+  rev :: a -> a
+newtype Score a
+  = Music.Time.Score.Score {Music.Time.Score.getScore' :: (Music.Time.Meta.Meta,
+                                                           Music.Time.Score.NScore a)}
+newtype Segment a
+  = Music.Time.Segment.Segment {Music.Time.Segment.getSegment :: Data.Clipped.Clipped
+                                                                   Duration
+                                                                 -> a}
+newtype Span
+  = Music.Time.Types.Delta {Music.Time.Types._delta :: (Time,
+                                                        Duration)}
+class Splittable a where
+  split :: Duration -> a -> (a, a)
+  beginning :: Duration -> a -> a
+  ending :: Duration -> a -> a
+newtype Stretched a
+  = Music.Time.Stretched.Stretched {Music.Time.Stretched._stretchee :: Data.Functor.Couple.Couple
+                                                                         Duration a}
+newtype Time
+  = Music.Time.Types.Time {Music.Time.Types.getTime :: Music.Time.Types.TimeBase}
+type role Track nominal
+newtype Track a
+  = Music.Time.Track.Track {Music.Time.Track.getTrack :: Music.Time.Track.TrackList
+                                                           (Music.Time.Track.TrackEv a)}
+class Transformable a where
+  transform :: Span -> a -> a
+type role Voice nominal
+newtype Voice a
+  = Music.Time.Voice.Voice {Music.Time.Voice.getVoice :: Music.Time.Voice.VoiceList
+                                                           (Music.Time.Voice.VoiceEv a)}
+_getEra :: HasPosition a => a -> Span
+_setEra :: (HasPosition a, Transformable a) => Span -> a -> a
+after ::
+  (Data.Semigroup.Semigroup a, Transformable a, HasPosition a) =>
+  a -> a -> a
+afterOffset :: Time -> Span -> GHC.Types.Bool
+afterOnset :: Time -> Span -> GHC.Types.Bool
+apSegments :: Voice (Segment a) -> Stretched (Segment a)
+apSegments' ::
+  Stretched (Segment a)
+  -> Stretched (Segment a) -> Stretched (Segment a)
+atTime :: Reactive a -> Time -> a
+before ::
+  (Data.Semigroup.Semigroup a, Transformable a, HasPosition a) =>
+  a -> a -> a
+beforeOffset :: Time -> Span -> GHC.Types.Bool
+beforeOnset :: Time -> Span -> GHC.Types.Bool
+behavior ::
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
+  p (Behavior a) (f (Behavior b)) -> p (Time -> a) (f (Time -> b))
+bounded ::
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
+  p (Bound (Behavior a)) (f (Bound (Behavior b)))
+  -> p (Note (Segment a)) (f (Note (Segment b)))
+bounded' ::
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
+  p (Bound (Behavior a)) (f (Bound (Behavior a)))
+  -> p (Note (Segment a)) (f (Note (Segment a)))
+bounding :: Span -> a -> Bound a
+bounds :: Time -> Time -> a -> Bound a
+chord ::
+  (Data.Functor.Contravariant.Contravariant f, GHC.Base.Functor f) =>
+  (Chord a -> f (Chord a)) -> [Delayed a] -> f [Delayed a]
+chunks :: (Splittable a, HasDuration a) => Duration -> a -> [a]
+codelta ::
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
+  p (Duration, Time) (f (Duration, Time)) -> p Span (f Span)
+compress :: Transformable a => Duration -> a -> a
+compressing :: Duration -> Span
+concatB :: Data.Monoid.Monoid a => Score (Behavior a) -> Behavior a
+continous :: Reactive (Segment a) -> Behavior a
+continousWith :: Segment (a -> b) -> Reactive a -> Behavior b
+cosine :: GHC.Float.Floating a => Behavior a
+coverRests ::
+  Voice (Data.Maybe.Maybe a) -> Data.Maybe.Maybe (Voice a)
+delay :: Transformable a => Duration -> a -> a
+delayComponent :: Span -> Time
+delayTime :: Transformable a => Time -> a -> a
+delayed ::
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
+  p (Delayed a) (f (Delayed b)) -> p (Time, a) (f (Time, b))
+delayedValue ::
+  (Transformable a, Transformable b) =>
+  Control.Lens.Type.Lens (Delayed a) (Delayed b) a b
+delayeds ::
+  GHC.Base.Functor f =>
+  ([Delayed a] -> f [Delayed b]) -> Track a -> f (Track b)
+delaying :: Duration -> Span
+delta ::
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
+  p (Time, Duration) (f (Time, Duration)) -> p Span (f Span)
+discrete :: Reactive a -> Behavior a
+duration ::
+  (Transformable a, HasDuration a) =>
+  Control.Lens.Type.Lens' a Duration
+durationsV ::
+  GHC.Base.Functor f =>
+  ([Duration] -> f [Duration]) -> Voice a -> f (Voice a)
+during ::
+  (HasPosition a, HasPosition b, Transformable a, Transformable b) =>
+  a -> b -> a
+encloses :: Span -> Span -> GHC.Types.Bool
+era ::
+  (HasPosition a, Transformable a) => Control.Lens.Type.Lens' a Span
+eras ::
+  Control.Applicative.Applicative f =>
+  (Span -> f Span) -> Score a -> f (Score a)
+event ::
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
+  p (Time, Duration, a) (f (Time, Duration, b))
+  -> p (Note a) (f (Note b))
+events ::
+  GHC.Base.Functor f =>
+  ([(Time, Duration, a)] -> f [(Time, Duration, b)])
+  -> Score a -> f (Score b)
+eventsV ::
+  GHC.Base.Functor f =>
+  ([(Duration, a)] -> f [(Duration, b)]) -> Voice a -> f (Voice b)
+filterEvents ::
+  (Time -> Duration -> a -> GHC.Types.Bool) -> Score a -> Score a
+filterWithSpan ::
+  (Span -> a -> GHC.Types.Bool) -> Score a -> Score a
+final :: Reactive a -> a
+firstTrue :: [Data.Maybe.Maybe a] -> Data.Maybe.Maybe a
+fixedDurationSpan ::
+  (Data.Profunctor.Choice p, Control.Applicative.Applicative f) =>
+  p Time (f Time) -> p Span (f Span)
+fixedOnsetSpan ::
+  (Data.Profunctor.Choice p, Control.Applicative.Applicative f) =>
+  p Duration (f Duration) -> p Span (f Span)
+focusing ::
+  GHC.Base.Functor f =>
+  (Segment a -> f (Segment a)) -> Behavior a -> f (Behavior a)
+follow ::
+  (HasPosition a, HasPosition b, Transformable b) => a -> b -> b
+fuse :: GHC.Classes.Eq a => Voice a -> Voice a
+fuseBy :: (a -> a -> GHC.Types.Bool) -> Voice a -> Voice a
+fuseRests ::
+  Voice (Data.Maybe.Maybe a) -> Voice (Data.Maybe.Maybe a)
+future :: Future a -> Time -> Data.Maybe.Maybe a
+futureSeg :: Future (Segment a) -> Behavior (Data.Maybe.Maybe a)
+impulse :: GHC.Num.Num a => Behavior a
+indexPast :: [Past a] -> Time -> Data.Maybe.Maybe a
+initial :: Reactive a -> a
+inside :: Time -> Span -> GHC.Types.Bool
+intermediate :: Transformable a => Reactive a -> [Note a]
+isBackwardSpan :: Span -> GHC.Types.Bool
+isBefore :: Span -> Span -> GHC.Types.Bool
+isEmptySpan :: Span -> GHC.Types.Bool
+isForwardSpan :: Span -> GHC.Types.Bool
+isProper :: Span -> GHC.Types.Bool
+itransform :: Transformable a => Span -> a -> a
+lead ::
+  (HasPosition a, HasPosition b, Transformable a) => a -> b -> a
+line :: GHC.Real.Fractional a => Behavior a
+listAsVoice ::
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
+  p (Voice a) (f (Voice b)) -> p [a] (f [b])
+mapEvents :: (Time -> Duration -> a -> b) -> Score a -> Score b
+mapFilterEvents ::
+  (Time -> Duration -> a -> Data.Maybe.Maybe b) -> Score a -> Score b
+mapFilterWithSpan ::
+  (Span -> a -> Data.Maybe.Maybe b) -> Score a -> Score b
+mapWithSpan :: (Span -> a -> b) -> Score a -> Score b
+midpoint ::
+  (HasPosition a, Transformable a) => Control.Lens.Type.Lens' a Time
+normalizeScore :: Score a -> Score a
+normalizeSpan :: Span -> Span
+note ::
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
+  p (Note a) (f (Note b)) -> p (Span, a) (f (Span, b))
+noteValue ::
+  (Transformable a, Transformable b) =>
+  Control.Lens.Type.Lens (Note a) (Note b) a b
+notes ::
+  GHC.Base.Functor f =>
+  ([Note a] -> f [Note b]) -> Score a -> f (Score b)
+occs :: Reactive a -> [Time]
+offset ::
+  (HasPosition a, Transformable a) => Control.Lens.Type.Lens' a Time
+offsetPoints ::
+  Data.AffineSpace.AffineSpace a =>
+  a -> [Data.AffineSpace.Diff a] -> [a]
+onset ::
+  (HasPosition a, Transformable a) => Control.Lens.Type.Lens' a Time
+overlaps :: Span -> Span -> GHC.Types.Bool
+palindrome ::
+  (Data.Semigroup.Semigroup a, Reversible a, HasPosition a) => a -> a
+past :: Past a -> Time -> Data.Maybe.Maybe a
+pastSeg :: Past (Segment a) -> Behavior (Data.Maybe.Maybe a)
+pcat ::
+  (Data.Semigroup.Semigroup a, Data.Monoid.Monoid a) => [a] -> a
+placeAt ::
+  (Transformable a, HasPosition a) => Duration -> Time -> a -> a
+position ::
+  (HasPosition a, Transformable a) =>
+  Duration -> Control.Lens.Type.Lens' a Time
+postOffset ::
+  (HasPosition a, Transformable a) => Control.Lens.Type.Lens' a Time
+postOnset ::
+  (HasPosition a, Transformable a) => Control.Lens.Type.Lens' a Time
+preOnset ::
+  (HasPosition a, Transformable a) => Control.Lens.Type.Lens' a Time
+printEras :: Score a -> GHC.Types.IO ()
+properlyEncloses :: Span -> Span -> GHC.Types.Bool
 range ::
-  (Profunctor p, Functor f) =>
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
   p (Time, Time) (f (Time, Time)) -> p Span (f Span)
-rcat ::
-  (HasParts' a, Enum (Music.Score.Part.Part a)) =>
-  [Score a] -> Score a
-re :: AReview s t a b -> Getter b t
-readMidi :: (IsMidi a) => FilePath -> IO (Score a)
-readMidiEither ::
-  (IsMidi a) => FilePath -> IO (Either String (Score a))
-readMidiMaybe :: (IsMidi a) => FilePath -> IO (Maybe (Score a))
 reflectSpan :: Time -> Span -> Span
-reflectThrough :: AffineSpace p => p -> p -> p
-rehearsalMark ::
-  (HasMeta a, HasPosition a) => RehearsalMark -> a -> a
-rehearsalMarkDuring :: HasMeta a => Span -> RehearsalMark -> a -> a
-reindexed ::
-  Indexable j p => (i -> j) -> (Indexed i a b -> r) -> p a b -> r
-relative :: AffineSpace p => p -> (Diff p -> Diff p) -> p -> p
-relative2 ::
-  AffineSpace p => p -> (Diff p -> Diff p -> Diff p) -> p -> p -> p
-relative3 ::
-  AffineSpace p =>
-  p -> (Diff p -> Diff p -> Diff p -> Diff p) -> p -> p -> p -> p
-renderTempo :: Score a -> Score a
-repeated ::
-  (Contravariant f, Data.Functor.Bind.Apply f) =>
-  (a -> f a) -> a -> f a
-replicateM :: Monad m => Int -> m a -> m [a]
-replicateM_ :: Monad m => Int -> m a -> m ()
-replicated :: Int -> Fold a a
-rest :: Applicative f => f (Maybe a)
-retagged :: (Profunctor p, Bifunctor p) => p a b -> p s b
-reuse ::
-  Control.Monad.State.Class.MonadState b m => AReview s t a b -> m t
-reuses ::
-  Control.Monad.State.Class.MonadState b m =>
-  AReview s t a b -> (t -> r) -> m r
+rest :: Control.Applicative.Applicative f => f (Data.Maybe.Maybe a)
 revDefault :: (HasPosition a, Transformable a) => a -> a
 reverseDurations :: Voice a -> Voice a
 reverseSpan :: Span -> Span
 reverseValues :: Voice a -> Voice a
-reversed :: Reversible a => Iso' a a
-review ::
-  Control.Monad.Reader.Class.MonadReader b m =>
-  AReview s t a b -> m t
-reviews ::
-  Control.Monad.Reader.Class.MonadReader b m =>
-  AReview s t a b -> (t -> r) -> m r
-rewriteM :: (Monad m, Plated a) => (a -> m (Maybe a)) -> a -> m a
-rewriteMOf ::
-  Monad m =>
-  LensLike' (WrappedMonad m) a a -> (a -> m (Maybe a)) -> a -> m a
-rewriteMOn ::
-  (Monad m, Plated a) =>
-  LensLike (WrappedMonad m) s t a a -> (a -> m (Maybe a)) -> s -> m t
-rewriteMOnOf ::
-  Monad m =>
-  LensLike (WrappedMonad m) s t a a
-  -> LensLike' (WrappedMonad m) a a -> (a -> m (Maybe a)) -> s -> m t
-rewriteOf :: ASetter' a a -> (a -> Maybe a) -> a -> a
-rewriteOn ::
-  Plated a => ASetter s t a a -> (a -> Maybe a) -> s -> t
-rewriteOnOf ::
-  ASetter s t a a -> ASetter' a a -> (a -> Maybe a) -> s -> t
-rfz :: IsDynamics a => a
-rmapping ::
-  (Profunctor p, Profunctor q) =>
-  AnIso s t a b -> Iso (p x s) (q y t) (p x a) (q y b)
-rotateDurations :: Int -> Voice a -> Voice a
-rotateValues :: Int -> Voice a -> Voice a
-runEq :: AnEquality s t a b -> Identical s t a b
+reversed :: Reversible a => Control.Lens.Type.Iso' a a
+rotateDurations :: GHC.Types.Int -> Voice a -> Voice a
+rotateValues :: GHC.Types.Int -> Voice a -> Voice a
 sample :: [Time] -> Behavior a -> Reactive a
-sans :: At m => Index m -> m -> m
-sawtooth :: RealFrac a => Behavior a
-scanl1Of ::
-  LensLike (Control.Monad.Trans.State.Lazy.State (Maybe a)) s t a a
-  -> (a -> a -> a) -> s -> t
-scanr1Of ::
-  LensLike
-    (Control.Applicative.Backwards.Backwards
-       (Control.Monad.Trans.State.Lazy.State (Maybe a)))
-    s
-    t
-    a
-    a
-  -> (a -> a -> a) -> s -> t
+sawtooth :: GHC.Real.RealFrac a => Behavior a
 scat ::
-  (Semigroup a, Monoid a, HasPosition a, Transformable a) => [a] -> a
+  (Data.Semigroup.Semigroup a, Data.Monoid.Monoid a, HasPosition a,
+   Transformable a) =>
+  [a] -> a
 score ::
-  (Contravariant f, Functor f) =>
-  (Score a -> f (Score a))
-  -> [Music.Time.Note.Note a] -> f [Music.Time.Note.Note a]
-scribe ::
-  (Control.Monad.Writer.Class.MonadWriter t m, Monoid s) =>
-  ASetter s t a b -> b -> m ()
-second :: Number
+  (Data.Functor.Contravariant.Contravariant f, GHC.Base.Functor f) =>
+  (Score a -> f (Score a)) -> [Note a] -> f [Note a]
 segment ::
-  (Profunctor p, Functor f) =>
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
   p (Segment a) (f (Segment b))
   -> p (Duration -> a) (f (Duration -> b))
-selfIndex :: Indexable a p => p a fb -> a -> fb
-semitone :: Semitones
-separate :: Interval -> (Octaves, Interval)
-separated ::
-  (HasArticulations' s, Articulation s ~ a, Articulated a) => s -> s
-sequence :: Monad m => [m a] -> m [a]
-sequenceAOf :: LensLike f s t (f b) b -> s -> f t
-sequenceAOf_ ::
-  Functor f => Getting (Traversed a f) s (f a) -> s -> f ()
-sequenceOf :: LensLike (WrappedMonad m) s t (m b) b -> s -> m t
-sequenceOf_ ::
-  Monad m => Getting (Sequenced a m) s (m a) -> s -> m ()
-sequence_ :: Monad m => [m a] -> m ()
-set :: ASetter s t a b -> b -> s -> t
-set' :: ASetter' s a -> a -> s -> s
-setMeta :: HasMeta a => Meta -> a -> a
-setMetaAttr :: (IsAttribute b, HasMeta a) => b -> a -> a
-setMetaTAttr :: (IsTAttribute b, HasMeta a) => b -> a -> a
-sets ::
-  (Profunctor p, Profunctor q, Settable f) =>
-  (p a b -> q s t) -> Optical p q f s t a b
-setting :: ((a -> b) -> s -> t) -> IndexPreservingSetter s t a b
-seventh :: Number
-sffz :: IsDynamics a => a
-sfz :: IsDynamics a => a
-sharp :: Accidental
-showAnnotations ::
-  (HasPart' a, Ord (Music.Score.Part.Part a), HasText a) =>
-  Score a -> Score a
-showAnnotations' ::
-  (HasPart' a, Ord (Music.Score.Part.Part a), HasText a) =>
-  String -> Score a -> Score a
-showCodelta :: Span -> String
-showDelta :: Span -> String
-showLilypond :: (HasLilypond a) => a -> IO ()
-showMidi :: (HasMidi a) => a -> IO ()
-showMusicXml :: (HasMusicXml a) => a -> IO ()
-showRange :: Span -> String
-simple :: Interval -> Interval
-simpleLenses ::
-  Functor f => (Bool -> f Bool) -> LensRules -> f LensRules
-simply :: (Optic' p f s a -> r) -> Optic' p f s a -> r
+showCodelta :: Span -> GHC.Base.String
+showDelta :: Span -> GHC.Base.String
+showRange :: Span -> GHC.Base.String
 simult ::
-  Transformable a => Lens (Score a) (Score b) (Score [a]) (Score [b])
+  Transformable a =>
+  Control.Lens.Type.Lens (Score a) (Score b) (Score [a]) (Score [b])
 simultaneous ::
-  (Transformable a, Semigroup a) => Score a -> Score a
-sine :: Floating a => Behavior a
+  (Transformable a, Data.Semigroup.Semigroup a) => Score a -> Score a
+sine :: GHC.Float.Floating a => Behavior a
 singleDelayed ::
-  (Choice p, Applicative f) =>
+  (Data.Profunctor.Choice p, Control.Applicative.Applicative f) =>
   p (Delayed a) (f (Delayed a)) -> p (Track a) (f (Track a))
-singleMVoice ::
-  (Choice p, Applicative f) =>
-  p (MVoice a) (f (MVoice b)) -> p (Score a) (f (Score b))
 singleNote ::
-  (Choice p, Applicative f) =>
-  p (Music.Time.Note.Note a) (f (Music.Time.Note.Note a))
-  -> p (Score a) (f (Score a))
+  (Data.Profunctor.Choice p, Control.Applicative.Applicative f) =>
+  p (Note a) (f (Note a)) -> p (Score a) (f (Score a))
 singleStretched ::
-  (Choice p, Applicative f) =>
+  (Data.Profunctor.Choice p, Control.Applicative.Applicative f) =>
   p (Stretched a) (f (Stretched a)) -> p (Voice a) (f (Voice a))
-singletonAndField ::
-  Functor f => (Bool -> f Bool) -> LensRules -> f LensRules
-singletonIso ::
-  Functor f => (Bool -> f Bool) -> LensRules -> f LensRules
-singletonRequired ::
-  Functor f => (Bool -> f Bool) -> LensRules -> f LensRules
-singular ::
-  (Conjoined p, Functor f) =>
-  Traversing p f s t a a -> Over p f s t a a
-sixth :: Number
-slide :: (HasPhrases' s a, HasSlide a) => s -> s
-snoc :: Snoc s s a a => s -> a -> s
-softer :: (Attenuable a) => Level a -> a -> a
-solo :: Instrument -> Part
-sopranoSax :: Instrument
-spanned ::
-  (Transformable a, Transformable b) => Span -> Lens a b a b
-spell :: HasSemitones a => Spelling -> a -> Interval
-spelled :: HasSemitones a => a -> Spelling -> Interval
-spiccato ::
-  (HasArticulations' s, Articulation s ~ a, Articulated a) => s -> s
 splice :: Behavior a -> Bound (Behavior a) -> Behavior a
 splitAbs :: (HasPosition a, Splittable a) => Time -> a -> (a, a)
 splitReactive ::
-  Reactive a
-  -> Either a ((a, Time), [Music.Time.Note.Note a], (Time, a))
-splitTiesVoice :: Tiable a => Voice a -> Voice a
-splitTiesVoiceAt :: Tiable a => [Duration] -> Voice a -> [Voice a]
-staccatissimo ::
-  (HasArticulations' s, Articulation s ~ a, Articulated a) => s -> s
-staccato ::
-  (HasArticulations' s, Articulation s ~ a, Articulated a) => s -> s
-standardTimeSignature :: Duration -> TimeSignature
+  Reactive a -> Data.Either.Either a ((a, Time), [Note a], (Time, a))
 startAt :: (Transformable a, HasPosition a) => Time -> a -> a
+startsBefore :: Span -> Span -> GHC.Types.Bool
+startsLater :: Span -> Span -> GHC.Types.Bool
+startsWhenStarts :: Span -> Span -> GHC.Types.Bool
+startsWhenStops :: Span -> Span -> GHC.Types.Bool
 stopAt :: (Transformable a, HasPosition a) => Time -> a -> a
-storing :: ALens s t a b -> b -> s -> t
+stopsAtTheSameTime :: Span -> Span -> GHC.Types.Bool
+stopsBefore :: Span -> Span -> GHC.Types.Bool
+stopsLater :: Span -> Span -> GHC.Types.Bool
+stopsWhenStarts :: Span -> Span -> GHC.Types.Bool
+stopsWhenStops :: Span -> Span -> GHC.Types.Bool
 stretch :: Transformable a => Duration -> a -> a
 stretchComponent :: Span -> Duration
 stretchTo :: (Transformable a, HasDuration a) => Duration -> a -> a
 stretched ::
-  (Profunctor p, Functor f) =>
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
   p (Stretched a) (f (Stretched b))
   -> p (Duration, a) (f (Duration, b))
-stretchedValue ::
-  (Transformable a, Transformable b) =>
-  Lens (Stretched a) (Stretched b) a b
 stretcheds ::
-  Functor f =>
+  GHC.Base.Functor f =>
   ([Stretched a] -> f [Stretched b]) -> Voice a -> f (Voice b)
+stretchee ::
+  (Transformable a, Transformable b) =>
+  Control.Lens.Type.Lens (Stretched a) (Stretched b) a b
 stretching :: Duration -> Span
-substEq :: AnEquality s t a b -> ((s ~ a, t ~ b) => r) -> r
-subsubtitle :: (HasMeta a, HasPosition a) => Title -> a -> a
-subsubtitleDuring :: HasMeta a => Span -> Title -> a -> a
-subtitle :: (HasMeta a, HasPosition a) => Title -> a -> a
-subtitleDuring :: HasMeta a => Span -> Title -> a -> a
-sumOf :: Num a => Getting (Endo (Endo a)) s a -> s -> a
-sumV :: (Data.Foldable.Foldable f, AdditiveGroup v) => f v -> v
+strictlyAfterOffset :: Time -> Span -> GHC.Types.Bool
+strictlyAfterOnset :: Time -> Span -> GHC.Types.Bool
+strictlyBeforeOffset :: Time -> Span -> GHC.Types.Bool
+strictlyBeforeOnset :: Time -> Span -> GHC.Types.Bool
 sustain ::
-  (Semigroup a, HasPosition a, Transformable a) => a -> a -> a
+  (Data.Semigroup.Semigroup a, HasPosition a, Transformable a) =>
+  a -> a -> a
 switch :: Time -> Behavior a -> Behavior a -> Behavior a
 switch' ::
   Time -> Behavior a -> Behavior a -> Behavior a -> Behavior a
 switchR :: Time -> Reactive a -> Reactive a -> Reactive a
-taking ::
-  (Conjoined p, Applicative f) =>
-  Int -> Traversing p f s t a a -> Over p f s t a a
-takingWhile ::
-  (Conjoined p, Applicative f) =>
-  (a -> Bool)
-  -> Over p (Control.Lens.Internal.Magma.TakingWhile p f a a) s t a a
-  -> Over p f s t a a
-tempo :: (HasMeta a, HasPosition a) => Tempo -> a -> a
-tempoBeatsPerMinute :: Tempo -> Bpm
-tempoDuring :: HasMeta a => Span -> Tempo -> a -> a
-tempoNoteValue :: Tempo -> Maybe NoteValue
-tempoToDuration :: Tempo -> Duration
-tenorSax :: Instrument
-tenorTrombone :: Instrument
-tenth :: Number
-tenuto ::
-  (HasArticulations' s, Articulation s ~ a, Articulated a) => s -> s
-text :: (HasPhrases' s a, HasText a) => String -> s -> s
-third :: Number
-thirteenth :: Number
-time :: Integer -> Integer -> TimeSignature
-timeSignature ::
-  (HasMeta a, HasPosition a) => TimeSignature -> a -> a
-timeSignatureDuring :: HasMeta a => Span -> TimeSignature -> a -> a
 times ::
-  (Semigroup a, Monoid a, HasPosition a, Transformable a) =>
-  Int -> a -> a
-timesN ::
-  (Numeric.Natural.Internal.Whole n, Monoid a) => n -> a -> a
-timpani :: Instrument
-title :: (HasMeta a, HasPosition a) => Title -> a -> a
-titleDuring :: HasMeta a => Span -> Title -> a -> a
-to :: (s -> a) -> IndexPreservingGetter s a
-toAbs :: [Duration] -> [Time]
-toDuration :: Real a => a -> Duration
-toLilypond :: (HasLilypond a) => a -> Music.Lilypond.Music
-toLilypondString :: (HasLilypond a) => a -> String
-toListOf :: Getting (Endo [a]) s a -> s -> [a]
-toMidi :: (HasMidi a) => a -> Codec.Midi.Midi
-toMusicXml :: (HasMusicXml a) => a -> Music.MusicXml.Score.Score
-toMusicXmlString :: (HasMusicXml a) => a -> String
-toNoteList ::
-  (HasBackendNote NoteList (BackendScoreEvent NoteList s),
-   HasBackendScore NoteList s) =>
-  s -> [(Int, Int)]
-toSimpleTime :: TimeSignature -> TimeSignature
-toSuperCollider :: (HasSuperCollider a) => a -> String
-toTime :: Real a => a -> Time
-tone :: Semitones
+  (Data.Semigroup.Semigroup a, Data.Monoid.Monoid a, HasPosition a,
+   Transformable a) =>
+  GHC.Types.Int -> a -> a
+toAbsoluteTime :: [Duration] -> [Time]
+toRelativeTime :: [Time] -> [Duration]
+toRelativeTimeN :: [Time] -> [Duration]
+toRelativeTimeN' :: Time -> [Time] -> [Duration]
 track ::
-  (Contravariant f, Functor f) =>
+  (Data.Functor.Contravariant.Contravariant f, GHC.Base.Functor f) =>
   (Track a -> f (Track a)) -> [Delayed a] -> f [Delayed a]
-transformM :: (Monad m, Plated a) => (a -> m a) -> a -> m a
-transformMOf ::
-  Monad m => LensLike' (WrappedMonad m) a a -> (a -> m a) -> a -> m a
-transformMOn ::
-  (Monad m, Plated a) =>
-  LensLike (WrappedMonad m) s t a a -> (a -> m a) -> s -> m t
-transformMOnOf ::
-  Monad m =>
-  LensLike (WrappedMonad m) s t a a
-  -> LensLike' (WrappedMonad m) a a -> (a -> m a) -> s -> m t
-transformOf :: ASetter' a a -> (a -> a) -> a -> a
-transformOn :: Plated a => ASetter s t a a -> (a -> a) -> s -> t
-transformOnOf ::
-  ASetter s t a a -> ASetter' a a -> (a -> a) -> s -> t
-transformed :: Transformable a => Span -> Iso' a a
-transposeOf :: LensLike ZipList s t [a] a -> s -> [t]
-traverseOf :: Over p f s t a b -> p a (f b) -> s -> f t
-traverseOf_ ::
-  (Profunctor p, Functor f) =>
-  Accessing p (Traversed r f) s a -> p a (f r) -> s -> f ()
-traversed :: Traversable f => IndexedTraversal Int (f a) (f b) a b
-traversed1 ::
-  Traversable1 f => IndexedTraversal1 Int (f a) (f b) a b
-traversed64 ::
-  Traversable f => IndexedTraversal GHC.Int.Int64 (f a) (f b) a b
-tremolo :: HasTremolo a => Int -> a -> a
-trim :: Monoid b => Bound (Behavior b) -> Behavior b
-trimAfter :: Monoid a => Time -> Behavior a -> Behavior a
-trimBefore :: Monoid a => Time -> Behavior a -> Behavior a
-trimR :: Monoid a => Span -> Reactive a -> Reactive a
-tritone :: Semitones
-trombone :: Instrument
-trombones :: Part
-trombones1 :: Part
-trombones2 :: Part
-trumpet :: Instrument
-trumpets :: Part
-trumpets1 :: Part
-trumpets2 :: Part
-tuba :: Instrument
-tubas :: Part
-tubularBells :: Instrument
-turnOff :: Num a => Behavior a
-turnOn :: Num a => Behavior a
-tutti :: Instrument -> Part
-twelfth :: Number
-un ::
-  (Profunctor p, Bifunctor p, Functor f) =>
-  Getting a s a -> Optic' p f a s
-unPoint :: Point v -> v
-uncons :: Cons s s a a => s -> Maybe (a, s)
-uncurried ::
-  (Profunctor p, Functor f) =>
-  p ((a, b) -> c) (f ((d, e) -> f))
-  -> p (a -> b -> c) (f (d -> e -> f))
+transformed ::
+  (Transformable a, Transformable b) =>
+  Span -> Control.Lens.Type.Iso a b a b
+trim :: Data.Monoid.Monoid b => Bound (Behavior b) -> Behavior b
+trimAfter ::
+  Data.Monoid.Monoid a => Time -> Behavior a -> Behavior a
+trimBefore ::
+  Data.Monoid.Monoid a => Time -> Behavior a -> Behavior a
+trimR :: Data.Monoid.Monoid a => Span -> Reactive a -> Reactive a
+turnOff :: GHC.Num.Num a => Behavior a
+turnOn :: GHC.Num.Num a => Behavior a
+unchord ::
+  GHC.Base.Functor f =>
+  ([Delayed a] -> f [Delayed b]) -> Chord a -> f (Chord b)
 undelay :: Transformable a => Duration -> a -> a
 undelaying :: Duration -> Span
-under :: AnIso s t a b -> (t -> s) -> b -> a
-underscoreFields :: FieldRules
-unfolded :: (b -> Maybe (a, b)) -> Fold b a
-unison :: Number
-unit :: Fractional a => Behavior a
-united :: Functor f => (() -> f ()) -> a -> f a
-universe :: Plated a => a -> [a]
-universeOf :: Getting [a] a a -> a -> [a]
-universeOn :: Plated a => Getting [a] s a -> s -> [a]
-universeOnOf :: Getting [a] s a -> Getting [a] a a -> s -> [a]
-unless :: Monad m => Bool -> m () -> m ()
+unit :: GHC.Real.Fractional a => Behavior a
 unsafeChord ::
-  (Profunctor p, Functor f) =>
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
   p [Delayed a] (f [Delayed b]) -> p (Chord a) (f (Chord b))
 unsafeEvents ::
-  (Profunctor p, Functor f) =>
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
   p [(Time, Duration, a)] (f [(Time, Duration, b)])
   -> p (Score a) (f (Score b))
 unsafeEventsV ::
-  (Profunctor p, Functor f) =>
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
   p [(Duration, a)] (f [(Duration, b)]) -> p (Voice a) (f (Voice b))
-unsafeMvoicePVoice ::
-  (Profunctor p, Functor f) =>
-  p (PVoice a) (f (PVoice b)) -> p (MVoice a) (f (MVoice b))
 unsafeNotes ::
-  (Profunctor p, Functor f) =>
-  p [Music.Time.Note.Note a] (f [Music.Time.Note.Note b])
-  -> p (Score a) (f (Score b))
-unsafePartsOf ::
-  Functor f => Traversing (->) f s t a b -> LensLike f s t [a] [b]
-unsafePartsOf' :: ATraversal s t a b -> Lens s t [a] [b]
-unsafeSingular ::
-  (Conjoined p, Functor f) =>
-  Traversing p f s t a b -> Over p f s t a b
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
+  p [Note a] (f [Note b]) -> p (Score a) (f (Score b))
 unsafeStretcheds ::
-  (Profunctor p, Functor f) =>
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
   p [Stretched a] (f [Stretched b]) -> p (Voice a) (f (Voice b))
-unsnoc :: Snoc s s a a => s -> Maybe (s, a)
-unto ::
-  (Profunctor p, Bifunctor p, Functor f) =>
-  (b -> t) -> Optic p f s t a b
-unwrapAttr :: (IsAttribute a) => Attribute -> Maybe a
-unwrapMeta :: (IsAttribute a) => Meta -> Maybe a
 unzipVoice :: Voice (a, b) -> (Voice a, Voice b)
-up :: (Transposable a) => Music.Score.Pitch.Interval a -> a -> a
 updates :: Reactive a -> [(Time, a)]
-use ::
-  Control.Monad.State.Class.MonadState s m => Getting a s a -> m a
-uses ::
-  (Profunctor p, Control.Monad.State.Class.MonadState s m) =>
-  Optical p (->) (Const r) s s a a -> p a r -> m r
-usingFlats :: Spelling
-usingSharps :: Spelling
-vdynamic ::
-  (HasDynamic a a, HasDynamic a b) =>
-  Lens (Voice a) (Voice b) (Voice (Dynamic a)) (Voice (Dynamic b))
-vibraphone :: Instrument
-view ::
-  Control.Monad.Reader.Class.MonadReader s m => Getting a s a -> m a
-views ::
-  (Profunctor p, Control.Monad.Reader.Class.MonadReader s m) =>
-  Optical p (->) (Const r) s s a a -> p a r -> m r
-viola :: Instrument
-violas :: Part
-violin :: Instrument
-violins :: Part
-violins1 :: Part
-violins2 :: Part
+valuesV ::
+  GHC.Base.Functor f => ([a] -> f [b]) -> Voice a -> f (Voice b)
 voice ::
-  (Contravariant f, Functor f) =>
+  (Data.Functor.Contravariant.Contravariant f, GHC.Base.Functor f) =>
   (Voice a -> f (Voice a)) -> [Stretched a] -> f [Stretched a]
 voiceAsList ::
-  (Profunctor p, Functor f) =>
+  (Data.Profunctor.Unsafe.Profunctor p, GHC.Base.Functor f) =>
   p [a] (f [b]) -> p (Voice a) (f (Voice b))
 voiceLens ::
   (s -> a)
-  -> (b -> s -> t) -> Lens (Voice s) (Voice t) (Voice a) (Voice b)
-void :: Functor f => f a -> f ()
-when :: Monad m => Bool -> m () -> m ()
+  -> (b -> s -> t)
+  -> Control.Lens.Type.Lens (Voice s) (Voice t) (Voice a) (Voice b)
 whilst ::
   (Transformable a, Transformable b) => (a -> b) -> Span -> a -> b
-withAnnotations ::
-  (HasParts' a, HasText a) =>
-  ([String] -> Score a -> Score a) -> Score a -> Score a
-withAttribution ::
-  String -> (String -> Score a -> Score a) -> Score a -> Score a
-withAttribution' ::
-  (Attribution -> Score a -> Score a) -> Score a -> Score a
-withBarline ::
-  (Barline -> Score a -> Score a) -> Score a -> Score a
-withClef ::
-  Clef -> (Clef -> Score a -> Score a) -> Score a -> Score a
-withContext :: Voice a -> Voice (Maybe a, a, Maybe a)
+withContext :: Voice a -> Voice (Data.Functor.Context.Ctxt a)
 withDurations :: ([Duration] -> [Duration]) -> Voice a -> Voice a
-withFermata ::
-  (Fermata -> Score a -> Score a) -> Score a -> Score a
-withGlobalMeta ::
-  (IsAttribute a) => (a -> Score b -> Score b) -> Score b -> Score b
-withGlobalMetaAtStart ::
-  (IsAttribute a) => (a -> Score b -> Score b) -> Score b -> Score b
-withIndex ::
-  (Indexable i p, Functor f) =>
-  Optical p (Indexed i) f s t (i, s) (j, t)
-withIso :: AnIso s t a b -> ((s -> a) -> (b -> t) -> r) -> r
-withKeySignature ::
-  KeySignature
-  -> (KeySignature -> Score a -> Score a) -> Score a -> Score a
-withMeta ::
-  (IsAttribute a) => (a -> Score b -> Score b) -> Score b -> Score b
-withMetaAtStart ::
-  (IsAttribute a) => (a -> Score b -> Score b) -> Score b -> Score b
-withRehearsalMark ::
-  (RehearsalMark -> Score a -> Score a) -> Score a -> Score a
-withTimeSignature ::
-  TimeSignature
-  -> (TimeSignature -> Score a -> Score a) -> Score a -> Score a
-withTitle :: (Title -> Score a -> Score a) -> Score a -> Score a
 withValues :: ([a] -> [b]) -> Voice a -> Voice b
-without ::
-  APrism s t a b
-  -> APrism u v c d
-  -> Prism (Either s u) (Either t v) (Either a c) (Either b d)
-worded :: Applicative f => IndexedLensLike' Int f String String
-wrapAttr :: (IsAttribute a) => a -> Attribute
-wrapMeta :: (IsAttribute a) => a -> Meta
-wrapTAttr :: (IsTAttribute a) => a -> Attribute
-wrapTMeta :: (IsTAttribute a) => a -> Meta
-writeLilypond :: (HasLilypond a) => FilePath -> a -> IO ()
-writeLilypond' ::
-  (HasLilypond a) => LilypondOptions -> FilePath -> a -> IO ()
-writeMidi :: (HasMidi a) => FilePath -> a -> IO ()
-writeMusicXml :: (HasMusicXml a) => FilePath -> a -> IO ()
-writeSuperCollider ::
-  (HasSuperCollider a) => FilePath -> a -> IO ()
-xylophone :: Instrument
-xylorimba :: Instrument
 zipVoice :: Voice a -> Voice b -> Voice (a, b)
 zipVoice3 :: Voice a -> Voice b -> Voice c -> Voice (a, (b, c))
 zipVoice4 ::
@@ -3099,11 +703,7 @@ zipVoiceWith' ::
   -> (a -> b -> c) -> Voice a -> Voice b -> Voice c
 zipVoiceWithNoScale ::
   (a -> b -> c) -> Voice a -> Voice b -> Voice c
-zipWithM :: Monad m => (a -> b -> m c) -> [a] -> [b] -> m [c]
-zipWithM_ :: Monad m => (a -> b -> m c) -> [a] -> [b] -> m ()
 (|>) ::
-  (Semigroup a, HasPosition a, Transformable a) => a -> a -> a
-(||=) ::
-  Control.Monad.State.Class.MonadState s m =>
-  ASetter' s Bool -> Bool -> m ()
-(||~) :: ASetter s t Bool Bool -> Bool -> s -> t
+  (Data.Semigroup.Semigroup a, HasPosition a, Transformable a) =>
+  a -> a -> a
+>>> 
