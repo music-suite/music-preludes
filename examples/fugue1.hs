@@ -5,7 +5,7 @@ import Music.Prelude hiding ((</>))
 import qualified Music.Score
 
 mn = set parts' violins $ scat [a^*2,b,c',gs^*3,scat[a,b]^/2]^/4
-cn = (\x -> x |> downDiatonic c 1 x |> downDiatonic c 2 x) $ scat [c',e',d',c']^/8
+cn = (\x -> x |> downDiatonic c 1 x |> (downDiatonic c 2 x)) $ scat [c',e',d',c']^/8
 s = mn |> cn
 
 ex1 = delay 2 (up _P5 s) </> s
@@ -59,13 +59,23 @@ a </> b = set parts' pa a <> set parts' pb b
     -- [pa',pb'] = divide 2 pa
 
 
+upDiatonic :: (HasPitches' t, Functor f, Music.Score.Pitch t ~ f Pitch) => Pitch -> Number -> t -> t
+upDiatonic o n = over pitches' (fmap $ upDiatonicP o n)
+
+downDiatonic :: (HasPitches' t, Functor f, Music.Score.Pitch t ~ f Pitch) => Pitch -> Number -> t -> t
 downDiatonic o n = over pitches' (fmap $ downDiatonicP o n)
+
+invertPitchesDiatonically :: (HasPitches' t, Functor f, Music.Score.Pitch t ~ f Pitch) => Pitch -> t -> t
+invertPitchesDiatonically o = over pitches' (fmap $ invertPitchesDiatonicallyP o)
 
 upDiatonicP :: Pitch -> Number -> Pitch -> Pitch
 upDiatonicP origin n = relative origin $ \x -> mkIntervalNice (quality x) (number x + n)
 
 downDiatonicP :: Pitch -> Number -> Pitch -> Pitch
 downDiatonicP origin n = relative origin $ \x -> mkIntervalNice (quality x) (number x - n)
+
+invertPitchesDiatonicallyP :: Pitch -> Pitch -> Pitch
+invertPitchesDiatonicallyP origin = relative origin $ \x -> mkIntervalNice (quality x) (negate (number x))
 
 data QualityType = PerfectType | MajorMinorType
   deriving (Eq, Ord, Read, Show)
@@ -97,6 +107,7 @@ toPerfectType    Minor   = (Diminished 1)
 
 -- TODO be "nice"
 mkIntervalNice q n
+  | n < 0 = negate $ mkIntervalNice q (abs n)
   | expectedQualityType n `elem` qualityTypes q = mkInterval q n 
   | expectedQualityType n == MajorMinorType     = mkInterval (toMajorMinorType q) n
   | expectedQualityType n == PerfectType        = mkInterval (toPerfectType q) n
