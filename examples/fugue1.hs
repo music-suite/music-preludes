@@ -1,5 +1,6 @@
 -- -fno-warn-typed-holes
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 import Music.Prelude hiding ((</>))
 import qualified Music.Score
@@ -58,25 +59,6 @@ a </> b = set parts' pa a <> set parts' pb b
     -- if equal
     -- [pa',pb'] = divide 2 pa
 
-
-upDiatonic :: (HasPitches' t, Functor f, Music.Score.Pitch t ~ f Pitch) => Pitch -> Number -> t -> t
-upDiatonic o n = over pitches' (fmap $ upDiatonicP o n)
-
-downDiatonic :: (HasPitches' t, Functor f, Music.Score.Pitch t ~ f Pitch) => Pitch -> Number -> t -> t
-downDiatonic o n = over pitches' (fmap $ downDiatonicP o n)
-
-invertPitchesDiatonically :: (HasPitches' t, Functor f, Music.Score.Pitch t ~ f Pitch) => Pitch -> t -> t
-invertPitchesDiatonically o = over pitches' (fmap $ invertPitchesDiatonicallyP o)
-
-upDiatonicP :: Pitch -> Number -> Pitch -> Pitch
-upDiatonicP origin n = relative origin $ \x -> mkIntervalNice (quality x) (number x + n)
-
-downDiatonicP :: Pitch -> Number -> Pitch -> Pitch
-downDiatonicP origin n = relative origin $ \x -> mkIntervalNice (quality x) (number x - n)
-
-invertPitchesDiatonicallyP :: Pitch -> Pitch -> Pitch
-invertPitchesDiatonicallyP origin = relative origin $ \x -> mkIntervalNice (quality x) (negate (number x))
-
 data QualityType = PerfectType | MajorMinorType
   deriving (Eq, Ord, Read, Show)
 
@@ -105,10 +87,106 @@ toPerfectType    Major   = Perfect
 toPerfectType    Minor   = (Diminished 1)
 -- toPerfectType    x = x
 
+
+
+
+
+{-
+>>> let x = scat [colorRed c,d,e] in (x |> scat (fmap (\n -> text (show n) $ upDiatonic c n x) [0..10]))
+
+-- TODO this one still crashes
+>>> let x = scat [colorRed c,d,e] in (x |> scat (fmap (\n -> text (show n) $ upDiatonic c n x) [0..10]))
+
+
+-}
+
+
+upDiatonic :: (HasPitches' t, Functor f, Music.Score.Pitch t ~ f Pitch) => Pitch -> DiatonicSteps -> t -> t
+upDiatonic o n = over pitches' (fmap $ upDiatonicP o n)
+
+downDiatonic :: (HasPitches' t, Functor f, Music.Score.Pitch t ~ f Pitch) => Pitch -> DiatonicSteps -> t -> t
+downDiatonic o n = over pitches' (fmap $ downDiatonicP o n)
+
+invertPitchesDiatonically :: (HasPitches' t, Functor f, Music.Score.Pitch t ~ f Pitch) => Pitch -> t -> t
+invertPitchesDiatonically o = over pitches' (fmap $ invertPitchesDiatonicallyP o)
+
+
+
+
+upDiatonicP :: Pitch -> DiatonicSteps -> Pitch -> Pitch
+upDiatonicP origin n = relative origin $ (_steps +~ n) . (_quality %~ if n >= 0 then id else invertQuality)
+
+downDiatonicP :: Pitch -> DiatonicSteps -> Pitch -> Pitch
+downDiatonicP origin n = relative origin $ (_steps -~ n) .  (_quality %~ if n < 0 then id else invertQuality)
+
+-- TODO mixing up reflection point and tonic?
+-- Basically, we always invert around c, adding relative only moves the tonic and inverts around c
+invertPitchesDiatonicallyP :: Pitch -> Pitch -> Pitch
+invertPitchesDiatonicallyP origin = relative origin $ ((_steps %~ negate) . (_quality %~ invertQuality))
+
+interval :: Iso' (Quality, Number) Interval
+interval = iso (uncurry mkIntervalNice) (\x -> (quality x, number x))
+
+{-|
+>>> m3 & _number %~ pred
+m2
+>>> m3 & _number %~ succ
+d4
+>>> _M3 & _number %~ succ
+_P4
+
+
+>>> m3 & _number +~ 1
+d4
+>>> m3 & _number +~ 2
+d5
+>>> m3 & _number +~ 3
+m6
+>>> m3 & _number +~ 4
+
+
+>>> m3 & _quality .~ Minor
+m3
+>>> _P5 & _quality .~ Minor
+d5
+>>> (-d5) & _quality %~ diminish
+
+
+TODO only obeys lens laws up to quality normalization
+
+>>> _P5 & _quality .~ Minor
+d5
+>>> _P5 & _quality .~ (Diminished 1)
+d5
+
+-}
+
+newtype DiatonicSteps = DiatonicSteps { getDiatonicSteps :: Integer }
+  deriving (Eq, Ord, Show, Enum, Num, Real, Integral)
+
+diatonicSteps :: Iso' Number DiatonicSteps
+diatonicSteps = iso n2d d2n
+  where
+    n2d n | n > 0  = fromIntegral (n - 1)
+    n2d n | n == 0 = error "diatonicSteps: Invalid number 0"
+    n2d n | n < 0  = fromIntegral (n + 1)
+
+    d2n n | n >= 0 = fromIntegral (n + 1)
+    d2n n | n <  0 = fromIntegral (n - 1)
+
+_quality :: Lens' Interval Quality
+_quality = from interval . _1
+
+_number :: Lens' Interval Number 
+_number = from interval . _2
+
+_steps :: Lens' Interval DiatonicSteps
+_steps = _number . diatonicSteps
+
 -- TODO be "nice"
 mkIntervalNice q n
+  | n == 0 = error "mkIntervalNice: Invalid number 0"
   | n < 0 = negate $ mkIntervalNice q (abs n)
   | expectedQualityType n `elem` qualityTypes q = mkInterval q n 
   | expectedQualityType n == MajorMinorType     = mkInterval (toMajorMinorType q) n
   | expectedQualityType n == PerfectType        = mkInterval (toPerfectType q) n
-
