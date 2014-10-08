@@ -1,13 +1,36 @@
-
+-- -fno-warn-typed-holes
 {-# LANGUAGE TypeFamilies #-}
 
 import Music.Prelude hiding ((</>))
 import qualified Music.Score
 
-s = set parts' violins $ scat [a^*2,b,c',gs^*3,scat[a,b]^/2]^/4
-
+mn = set parts' violins $ scat [a^*2,b,c',gs^*3,scat[a,b]^/2]^/4
+cn = (\x -> x |> downDiatonic c 1 x |> downDiatonic c 2 x) $ scat [c',e',d',c']^/8
+s = mn |> cn
 
 ex1 = delay 2 (up _P5 s) </> s
+
+main = open $ asScore ex1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -35,4 +58,46 @@ a </> b = set parts' pa a <> set parts' pb b
     -- if equal
     -- [pa',pb'] = divide 2 pa
 
--- TODO check parts and divide if equal
+
+downDiatonic o n = over pitches' (fmap $ downDiatonicP o n)
+
+upDiatonicP :: Pitch -> Number -> Pitch -> Pitch
+upDiatonicP origin n = relative origin $ \x -> mkIntervalNice (quality x) (number x + n)
+
+downDiatonicP :: Pitch -> Number -> Pitch -> Pitch
+downDiatonicP origin n = relative origin $ \x -> mkIntervalNice (quality x) (number x - n)
+
+data QualityType = PerfectType | MajorMinorType
+  deriving (Eq, Ord, Read, Show)
+
+expectedQualityType :: HasNumber a => a -> QualityType
+expectedQualityType x = if ((abs (number x) - 1) `mod` 7) + 1 `elem` [1,4,5]
+  then PerfectType else MajorMinorType
+
+qualityTypes :: Quality -> [QualityType]
+qualityTypes Perfect = [PerfectType]
+qualityTypes Major   = [MajorMinorType]
+qualityTypes Minor   = [MajorMinorType]
+qualityTypes _       = [PerfectType, MajorMinorType]
+
+qualityToDiff :: QualityType -> Quality -> Int
+qualityToDiff MajorMinorType (Augmented n)  = 0 + n
+qualityToDiff MajorMinorType Major = 0
+qualityToDiff MajorMinorType Minor          = (-1)
+qualityToDiff MajorMinorType (Diminished n) = (-1) - n
+qualityToDiff PerfectType (Augmented n)  = 0 + n
+qualityToDiff PerfectType Perfect        = 0
+qualityToDiff PerfectType (Diminished n) = 0 - n
+qualityToDiff qt q = error $ "qualityToDiff: Unknown interval expression (" ++ show qt ++ ", " ++ show q ++ ")"
+
+toMajorMinorType Perfect = Major
+toPerfectType    Major   = Perfect
+toPerfectType    Minor   = (Diminished 1)
+-- toPerfectType    x = x
+
+-- TODO be "nice"
+mkIntervalNice q n
+  | expectedQualityType n `elem` qualityTypes q = mkInterval q n 
+  | expectedQualityType n == MajorMinorType     = mkInterval (toMajorMinorType q) n
+  | expectedQualityType n == PerfectType        = mkInterval (toPerfectType q) n
+
