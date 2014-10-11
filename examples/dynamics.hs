@@ -6,9 +6,6 @@ import Music.Prelude
 -- A simple subject
 subj  = times 20 $ scat [c,d,e,f]^/8 |> scat [g,fs]^/2
 
-unb :: Behavior a -> a
-unb = (! 0)
-
 -- The 
 music = id
   $ title "Dynamics"
@@ -17,4 +14,4 @@ music = id
   $ 
     rcat $ map (\phase -> level (stretch phase sine*fff) $ subj) [5.0,5.2..6.0]
 
-main  = open $ asScore $ music
+main = open music

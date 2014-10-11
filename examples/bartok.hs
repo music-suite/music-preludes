@@ -1,18 +1,12 @@
 
-{-# LANGUAGE OverloadedStrings #-}
-
 import Music.Prelude.Basic
 
-{-  
-  Bela Bartok: Wandering (excerpt)
-  From Mikrokosmos, vol. III
-
-  Inspired by the Abjad transcription
--}
-
-main = openLilypond music
-
-
+-- |
+-- Bela Bartok: Wandering (excerpt)
+-- From Mikrokosmos, vol. III
+-- 
+-- Inspired by the Abjad transcription
+-- 
 
 music :: Score BasicNote
 music = let
@@ -35,4 +29,4 @@ music = let
 
   in meta $ compress 8 $ left </> down _P8 right
 
-
+main = openLilypond music

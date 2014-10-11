@@ -1,11 +1,5 @@
 
-{-# LANGUAGE NoMonomorphismRestriction #-}
-
 import Music.Prelude
-
-import Control.Concurrent.Async
-import Control.Applicative
-import System.Process (system)
 
 -- kStrum = 0.005
 kStrum = 0

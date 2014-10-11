@@ -1,12 +1,8 @@
 
-{-# LANGUAGE OverloadedStrings #-}
-
-{-
-  This simple example shows how to construct a 4-part canon.
--}
-module Main where
-
-import Music.Prelude.Basic
+-- |
+-- Simple canon on a familiar subject.
+-- 
+import Music.Prelude
 
 frere = mempty
   |> times 2 (scat [c,d,e,c]^/4) 
