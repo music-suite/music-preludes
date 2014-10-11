@@ -90,6 +90,10 @@ toPerfectType    Minor   = (Diminished 1)
 
 
 
+p1 = scat $ take 5 $ iterate (times 3 . compress 2) $ scat [c,g,f]
+p2 = scat $ take 5 $ iterate (times 3 . compress 2) $ scat [c,g,fs,f]
+p3 = scat $ take 4 $ iterate (times 3 . compress 2) $ scat [c,ab,g,fs,f]
+p4 = scat $ take 4 $ iterate (times 3 . compress 2) $ scat [c,bb,a,ab,g]
 
 {-
 >>> let x = scat [colorRed c,d,e] in (x |> scat (fmap (\n -> text (show n) $ upDiatonic c n x) [0..10]))
@@ -112,6 +116,7 @@ invertPitchesDiatonically o = over pitches' (fmap $ invertPitchesDiatonicallyP o
 
 
 
+-- TODO workaround: transpose down by transposing upward and octave-transposing
 
 upDiatonicP :: Pitch -> DiatonicSteps -> Pitch -> Pitch
 upDiatonicP origin n = relative origin $ (_steps +~ n) . (_quality %~ if n >= 0 then id else invertQuality)
