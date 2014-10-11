@@ -1,38 +1,23 @@
 
 {-# LANGUAGE OverloadedStrings, TypeFamilies #-}
 
-import Music.Prelude.Standard hiding (open, play, openAndPlay)
+-- |
+-- Arvo Pärt: Cantus in Memory of Benjamin Britten (1977)
+-- 
+-- Inspired by the Abjad transcription
+--
+import Music.Prelude hiding (open)
 import qualified Music.Score as Score
-import Control.Concurrent.Async
-import Control.Applicative
-import System.Process (system)
-
-{-    
-    Arvo Pärt: Cantus in Memory of Benjamin Britten (1977)
-
-    Inspired by the Abjad transcription
--}
-
-
-main :: IO ()
-main = open music
 
 ensemble :: [Part]
 ensemble = [solo tubularBells] <> (divide 2 (tutti violin)) <> [tutti viola] <> [tutti cello] <> [tutti doubleBass]
 
-music :: Score StandardNote
-music = meta $ stretch (3/2) $ {-before 60-} (mempty <> bell <> delay 6 strings)
-    where
-        meta = id
-          . title "Cantus in Memoriam Benjamin Britten" 
-          . composer "Arvo Pärt" 
-          . timeSignature (6/4) 
-          . tempo (metronome (1/4) 120)
-
 withTintin :: (HasPitches' a, Score.Pitch a ~ Behavior Pitch) => Pitch -> Score a -> Score a
 withTintin p x = x <> tintin p x
 
--- | Given the melody voice return the tintinnabular voice.
+-- | 
+-- Given the a melody voice return the tintinnabuli voice.
+-- 
 tintin :: (HasPitches' a, Score.Pitch a ~ Behavior Pitch) => Pitch -> Score a -> Score a
 tintin tonic = pitches . mapped %~ relative tonic tintin'
 
@@ -50,6 +35,19 @@ tintin' melInterval
         tintinStandardNotes = concat $ iterate (fmap (+ _P8)) minorTriad
         minorTriad = [_P1,m3,_P5]
 
+fallingScale :: [Score StandardNote]
+fallingScale = [a',g'..a_]
+
+fallingScaleSect :: Int -> [Score StandardNote]
+fallingScaleSect n = {-fmap (annotate (show n)) $-} take n $ fallingScale
+
+mapEvensOdds :: (a -> b) -> (a -> b) -> [a] -> [b]
+mapEvensOdds f g [] = []
+mapEvensOdds f g [a] = [f a]
+mapEvensOdds f g (a : b : cs) = f a : g b : mapEvensOdds f g cs
+
+mainSubject :: Score StandardNote
+mainSubject = stretch (1/6) $ asScore $ scat $ mapEvensOdds (accent . (^*2)) id $ concatMap fallingScaleSect [1..30]
 
 bell :: Score StandardNote
 bell = let
@@ -59,74 +57,26 @@ bell = let
 
 strings :: Score StandardNote
 strings = strings_vln1 <> strings_vln2 <> strings_vla <> strings_vc <> strings_db
+  where
+    strings_vln1 = clef GClef $ parts' .~ (ensemble !! 1) $ up (_P8^*1)   $ strings_cue
+    strings_vln2 = clef GClef $ parts' .~ (ensemble !! 2) $ up (_P8^*0)   $ stretch 2 strings_cue
+    strings_vla  = clef CClef $ parts' .~ (ensemble !! 3) $ down (_P8^*1) $ stretch 4 strings_cue
+    strings_vc   = clef FClef $ parts' .~ (ensemble !! 4) $ down (_P8^*2) $ stretch 8 strings_cue
+    strings_db   = clef FClef $ parts' .~ (ensemble !! 5) $ down (_P8^*3) $ stretch 16 strings_cue
 
-strings_vln1 = clef GClef $ parts' .~ (ensemble !! 1) $ up (_P8^*1)   $ strings_cue
-strings_vln2 = clef GClef $ parts' .~ (ensemble !! 2) $ up (_P8^*0)   $ stretch 2 strings_cue
-strings_vla  = clef CClef $ parts' .~ (ensemble !! 3) $ down (_P8^*1) $ stretch 4 strings_cue
-strings_vc   = clef FClef $ parts' .~ (ensemble !! 4) $ down (_P8^*2) $ stretch 8 strings_cue
-strings_db   = clef FClef $ parts' .~ (ensemble !! 5) $ down (_P8^*3) $ stretch 16 strings_cue
-strings_cue = delay (1/2) $ withTintin (down (_P8^*4) $ asPitch a) $ mainSubject
+    strings_cue  = delay (1/2) $ withTintin (down (_P8^*4) $ asPitch a) $ mainSubject
 
-fallingScale :: [Score StandardNote]
-fallingScale = [a',g'..a_]
+music :: Score StandardNote
+music = meta $ stretch (3/2) $ {-before 60-} (mempty <> bell <> delay 6 strings)
+    where
+        meta = id
+          . title "Cantus in Memoriam Benjamin Britten" 
+          . composer "Arvo Pärt" 
+          . timeSignature (6/4) 
+          . tempo (metronome (1/4) 120)
 
-fallingScaleSect :: Int -> [Score StandardNote]
-fallingScaleSect n = {-fmap (annotate (show n)) $-} take n $ fallingScale
+openBook :: Score StandardNote -> IO ()
+openBook = openLilypond' LyScoreFormat
 
-mainSubject :: Score StandardNote
-mainSubject = stretch (1/6) $ asScore $ scat $ mapEvensOdds (accent . (^*2)) id $ concatMap fallingScaleSect [1..30]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-mapEvensOdds :: (a -> b) -> (a -> b) -> [a] -> [b]
-mapEvensOdds f g xs = let
-    evens = fmap (xs !!) [0,2..]
-    odds = fmap (xs !!) [1,3..]
-    merge xs ys = concatMap (\(x,y) -> [x,y]) $ xs `zip` ys
-    in take (length xs) $ map f evens `merge` map g odds
-
-
-openAudacity :: Score StandardNote -> IO ()    
-openAudacity x = do
-    void $ writeMidi "test.mid" $ x
-    void $ system "timidity -Ow test.mid"
-    void $ system "open -a Audacity test.wav"
-
-openAudio :: Score StandardNote -> IO ()    
-openAudio x = do
-    -- void $ writeMidi "test.mid" $ x
-    void $ system "timidity -Ow test.mid"
-    void $ system "open -a Audacity test.wav"
-
-fixClefs :: Score StandardNote -> Score StandardNote
-fixClefs = id
--- fixClefs = pcat . fmap (uncurry g) . extractParts'
---     where
---         g p x = clef (case defaultClef p of { 0 -> GClef; 1 -> CClef; 2 -> FClef } ) x
-
-concurrently_ :: IO a -> IO b -> IO ()
-concurrently_ = concurrentlyWith (\x y -> ())
-
-concurrentlyWith :: (a -> b -> c) -> IO a -> IO b -> IO c
-concurrentlyWith f x y = uncurry f <$> x `concurrently` y
-
-play, open, openAndPlay :: Score StandardNote -> IO ()   
-tempo_ = 120
-play x = openAudio $ stretch ((60*4)/tempo_) $ fixClefs $ x
-open x = openLilypond' LyScoreFormat $ fixClefs $ x
-openAndPlay x = play x `concurrently_` open x
-
+main :: IO ()
+main = openBook music
