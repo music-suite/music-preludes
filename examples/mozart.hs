@@ -1,16 +1,6 @@
 
-{-# LANGUAGE
-    OverloadedStrings,
-    TypeFamilies,
-    FlexibleContexts,
-    NoMonomorphismRestriction #-}
-
-module Main where
+import Music.Prelude
 import qualified Music.Score
-import Music.Prelude.Standard hiding (open, play, openAndPlay)
-import Control.Concurrent.Async
-import Control.Applicative
-import System.Process (system)
 
 {-    
     W.A. Mozart: Ave Verum (excerpt)
@@ -178,23 +168,7 @@ openAudio x = do
 --         g p x = clef (case defaultClef p of { 0 -> GClef; 1 -> CClef; 2 -> FClef } ) x
 fixClefs = id
 
-concurrently_ :: IO a -> IO b -> IO ()
-concurrently_ = concurrentlyWith (\x y -> ())
-
-concurrentlyWith :: (a -> b -> c) -> IO a -> IO b -> IO c
-concurrentlyWith f x y = uncurry f <$> x `concurrently` y
-
 palindrome x = rev x |> x
-
-
-
 
 main :: IO ()
 main = open score'
-
--- play, open, openAndPlay :: Score Note -> IO ()   
-tempo_ = 80
-play x = return () -- openAudio $ stretch ((60*(8/3))/tempo_) $ fixClefs $ x
-open x = openLilypond' LyScoreFormat $ fixClefs $ x
-openAndPlay x = play x `concurrently_` open x
-

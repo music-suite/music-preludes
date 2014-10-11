@@ -3,8 +3,6 @@
 
 module Main where
 
-import Prelude
-import System.Process (runCommand)
 import Music.Prelude.Basic
 
 test 1  = group 5 g |> g^*3                  
