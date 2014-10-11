@@ -10,8 +10,8 @@
 
   See Scheme files in example directory
 
-  Requires husk-scheme to be in your path
-    http://hackage.haskell.org/package/husk-scheme
+  Requires husk-scheme, to install say:
+    cabal install husk-scheme
 -}
 module Main where
 
@@ -29,8 +29,6 @@ import           Music.Prelude
 import qualified Music.Score               as Score
 import qualified System.Environment
 import qualified System.IO.Unsafe
--- import qualified Data.List
--- import System.Random
 
 type LispScore = Score Integer
 instance AffineSpace Integer where
@@ -129,8 +127,11 @@ fromRight _         = error "Unknown error"
 class HasLisp a where
   _unlisp :: Prism' LispVal a
 
+_lisp :: HasLisp a => Getter a LispVal
+_lisp = re _unlisp
+
 toLisp :: HasLisp a => a -> LispVal
-toLisp = view (re _unlisp)
+toLisp = view _lisp
 
 fromLisp :: HasLisp a => LispVal -> Maybe a
 fromLisp = preview _unlisp
