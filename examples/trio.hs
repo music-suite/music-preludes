@@ -3,7 +3,7 @@
     OverloadedStrings,
     NoMonomorphismRestriction #-}
 
-import Music.Prelude.Standard hiding (open, play, openAndPlay)
+import Music.Prelude
 import Control.Concurrent.Async
 import Control.Applicative
 import System.Process (system)
@@ -85,51 +85,51 @@ mainCanon = timeSignature (time 6 8) $ asScore $
 
 
 
-
-mapEvensOdds :: (a -> b) -> (a -> b) -> [a] -> [b]
-mapEvensOdds f g xs = let
-    evens = fmap (xs !!) [0,2..]
-    odds = fmap (xs !!) [1,3..]
-    merge xs ys = concatMap (\(x,y) -> [x,y]) $ xs `zip` ys
-    in take (length xs) $ map f evens `merge` map g odds
-
-
-openAudacity :: Score StandardNote -> IO ()    
-openAudacity x = do
-    void $ writeMidi "test.mid" $ x
-    void $ system "timidity -Ow test.mid"
-    void $ system "open -a Audacity test.wav"
-
-openAudio :: Score StandardNote -> IO ()    
-openAudio x = do
-    void $ writeMidi "test.mid" $ x
-    void $ system "timidity -Ow test.mid"
-    void $ system "open -a Audacity test.wav"
-
-fixClefs :: Score StandardNote -> Score StandardNote
-fixClefs = pcat . fmap (uncurry g) . extractPartsWithInfo
-    where
-        g p x = clef (case defaultClef p of { 0 -> GClef; 1 -> CClef; 2 -> FClef } ) x
-
-concurrently_ :: IO a -> IO b -> IO ()
-concurrently_ = concurrentlyWith (\x y -> ())
-
-concurrentlyWith :: (a -> b -> c) -> IO a -> IO b -> IO c
-concurrentlyWith f x y = uncurry f <$> x `concurrently` y
-
--- palindrome x = rev2 x |> x
--- TODO
--- rev2 = rev
+-- 
+-- mapEvensOdds :: (a -> b) -> (a -> b) -> [a] -> [b]
+-- mapEvensOdds f g xs = let
+--     evens = fmap (xs !!) [0,2..]
+--     odds = fmap (xs !!) [1,3..]
+--     merge xs ys = concatMap (\(x,y) -> [x,y]) $ xs `zip` ys
+--     in take (length xs) $ map f evens `merge` map g odds
+-- 
+-- 
+-- openAudacity :: Score StandardNote -> IO ()    
+-- openAudacity x = do
+--     void $ writeMidi "test.mid" $ x
+--     void $ system "timidity -Ow test.mid"
+--     void $ system "open -a Audacity test.wav"
+-- 
+-- openAudio :: Score StandardNote -> IO ()    
+-- openAudio x = do
+--     void $ writeMidi "test.mid" $ x
+--     void $ system "timidity -Ow test.mid"
+--     void $ system "open -a Audacity test.wav"
+-- 
+-- fixClefs :: Score StandardNote -> Score StandardNote
+-- fixClefs = pcat . fmap (uncurry g) . extractPartsWithInfo
+--     where
+--         g p x = clef (case defaultClef p of { 0 -> GClef; 1 -> CClef; 2 -> FClef } ) x
+-- 
+-- concurrently_ :: IO a -> IO b -> IO ()
+-- concurrently_ = concurrentlyWith (\x y -> ())
+-- 
+-- concurrentlyWith :: (a -> b -> c) -> IO a -> IO b -> IO c
+-- concurrentlyWith f x y = uncurry f <$> x `concurrently` y
+-- 
+-- -- palindrome x = rev2 x |> x
+-- -- TODO
+-- -- rev2 = rev
 rev2 = id
-
-
-
+-- 
+-- 
+-- 
 main :: IO ()
 main = open music
-
-play, open, openAndPlay :: Score StandardNote -> IO ()   
-tempo_ = 130
-play x = openAudio $ stretch ((60*(8/3))/tempo_) $ fixClefs $ x
-open x = openLilypond' LyScoreFormat $ fixClefs $ x
-openAndPlay x = play x `concurrently_` open x
-
+-- 
+-- play, open, openAndPlay :: Score StandardNote -> IO ()   
+-- tempo_ = 130
+-- play x = openAudio $ stretch ((60*(8/3))/tempo_) $ fixClefs $ x
+-- open x = openLilypond' LyScoreFormat $ fixClefs $ x
+-- openAndPlay x = play x `concurrently_` open x
+--    
