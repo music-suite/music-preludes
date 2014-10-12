@@ -18,8 +18,7 @@ description:
 
 extra-source-files:     README.md,
                         examples/*.hs,
-                        examples/*.scm,
-                        examples/*.music
+                        examples/*.scm
 
 source-repository head
   type:                 git
