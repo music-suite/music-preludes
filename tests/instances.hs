@@ -391,7 +391,7 @@ main = defaultMain $ testGroup "Instances" $ [
   -- I_TEST(_Splittable, Reactive Int),
 
   I_TEST(_Splittable, Voice Int),
-  I_TEST(_Splittable, Track Int),
+--  I_TEST(_Splittable, Track Int),
   I_TEST(_Splittable, Chord Int),
   I_TEST(_Splittable, Score Int),
   I_TEST(_Splittable, Note (Note Int)),
