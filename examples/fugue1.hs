@@ -59,6 +59,18 @@ a </> b = set parts' pa a <> set parts' pb b
     -- if equal
     -- [pa',pb'] = divide 2 pa
 
+
+
+
+
+
+
+
+
+
+
+
+
 data QualityType = PerfectType | MajorMinorType
   deriving (Eq, Ord, Read, Show)
 
@@ -72,20 +84,36 @@ qualityTypes Major   = [MajorMinorType]
 qualityTypes Minor   = [MajorMinorType]
 qualityTypes _       = [PerfectType, MajorMinorType]
 
-qualityToDiff :: QualityType -> Quality -> Int
-qualityToDiff MajorMinorType (Augmented n)  = 0 + n
-qualityToDiff MajorMinorType Major = 0
-qualityToDiff MajorMinorType Minor          = (-1)
-qualityToDiff MajorMinorType (Diminished n) = (-1) - n
-qualityToDiff PerfectType (Augmented n)  = 0 + n
-qualityToDiff PerfectType Perfect        = 0
-qualityToDiff PerfectType (Diminished n) = 0 - n
-qualityToDiff qt q = error $ "qualityToDiff: Unknown interval expression (" ++ show qt ++ ", " ++ show q ++ ")"
+-- FIXME problem that this treats major as neutral, while this only holds for positive intervals
+qualityToDiff :: QualityType -> Quality -> ChromaticSteps
+qualityToDiff qt q = fromIntegral $ go qt q
+  where
+    go MajorMinorType (Augmented n)  = 0 + n
+    go MajorMinorType Major          = 0
+    go MajorMinorType Minor          = (-1)
+    go MajorMinorType (Diminished n) = (-1) - n
 
-toMajorMinorType Perfect = Major
-toPerfectType    Major   = Perfect
-toPerfectType    Minor   = (Diminished 1)
--- toPerfectType    x = x
+    -- go MajorMinorType (Augmented n)  = 1 + n
+    -- go MajorMinorType Major          = 1
+    -- go MajorMinorType Minor          = 0
+    -- go MajorMinorType (Diminished n) = 0 - n
+    
+    go PerfectType (Augmented n)  = 0 + n
+    go PerfectType Perfect        = 0
+    go PerfectType (Diminished n) = 0 - n
+    
+    go qt q = error $ "qualityToDiff: Unknown interval expression (" ++ show qt ++ ", " ++ show q ++ ")"
+
+mkInterval2 :: Quality -> Number -> Interval
+mkInterval2 q n = mkInterval' (fromIntegral diff) (fromIntegral steps)
+  where
+    diff  = qualityToDiff (expectedQualityType n) (if n < 0 then invertQuality q else q)
+    steps = case n `compare` 0 of
+      GT -> n - 1
+      EQ -> error "diatonicSteps: Invalid number 0"
+      LT -> n + 1
+    -- steps = n^.diatonicSteps
+
 
 
 
@@ -95,11 +123,17 @@ p2 = scat $ take 5 $ iterate (times 3 . compress 2) $ scat [c,g,fs,f]
 p3 = scat $ take 4 $ iterate (times 3 . compress 2) $ scat [c,ab,g,fs,f]
 p4 = scat $ take 4 $ iterate (times 3 . compress 2) $ scat [c,bb,a,ab,g]
 
+-- OK
+-- >>> :o scat $ down (_P8) $ take 8 $ iterate (upDiatonic c 1) $ pcat [c,e,g]
+-- NOT OK
+-- >>> :o scat $ up (_P8) $ take 8 $ iterate (downDiatonic c 1) $ pcat [c,e,g]
+
+
 {-
->>> let x = scat [colorRed c,d,e] in (x |> scat (fmap (\n -> text (show n) $ upDiatonic c n x) [0..10]))
+>>> :o let x = scat [colorRed c,d,e]^/3 in (x |> scat (fmap (\n -> text (show n) $ upDiatonic c n x) [0..10]))
 
 -- TODO this one still crashes
->>> let x = scat [colorRed c,d,e] in (x |> scat (fmap (\n -> text (show n) $ upDiatonic c n x) [0..10]))
+>>> :o let x = scat [colorRed c,d,e]^/3 in (x |> scat (fmap (\n -> text (show n) $ upDiatonic c n x) [0..10]))
 
 
 -}
@@ -119,18 +153,17 @@ invertPitchesDiatonically o = over pitches' (fmap $ invertPitchesDiatonicallyP o
 -- TODO workaround: transpose down by transposing upward and octave-transposing
 
 upDiatonicP :: Pitch -> DiatonicSteps -> Pitch -> Pitch
-upDiatonicP origin n = relative origin $ (_steps +~ n) . (_quality %~ if n >= 0 then id else invertQuality)
+upDiatonicP origin n = relative origin $ (_steps +~ n)
 
+-- TODO bad
 downDiatonicP :: Pitch -> DiatonicSteps -> Pitch -> Pitch
-downDiatonicP origin n = relative origin $ (_steps -~ n) .  (_quality %~ if n < 0 then id else invertQuality)
+downDiatonicP origin n = relative origin $ (_steps -~ n)
 
 -- TODO mixing up reflection point and tonic?
 -- Basically, we always invert around c, adding relative only moves the tonic and inverts around c
 invertPitchesDiatonicallyP :: Pitch -> Pitch -> Pitch
-invertPitchesDiatonicallyP origin = relative origin $ ((_steps %~ negate) . (_quality %~ invertQuality))
+invertPitchesDiatonicallyP origin = relative origin $ (_steps %~ negate)
 
-interval :: Iso' (Quality, Number) Interval
-interval = iso (uncurry mkIntervalNice) (\x -> (quality x, number x))
 
 {-|
 >>> m3 & _number %~ pred
@@ -165,9 +198,14 @@ d5
 d5
 
 -}
+newtype ChromaticSteps = ChromaticSteps { getChromaticSteps :: Integer }
+  deriving (Eq, Ord, Show, Enum, Num, Real, Integral)
 
 newtype DiatonicSteps = DiatonicSteps { getDiatonicSteps :: Integer }
   deriving (Eq, Ord, Show, Enum, Num, Real, Integral)
+
+_steps :: Lens' Interval DiatonicSteps
+_steps = from interval' . _2
 
 diatonicSteps :: Iso' Number DiatonicSteps
 diatonicSteps = iso n2d d2n
@@ -185,13 +223,23 @@ _quality = from interval . _1
 _number :: Lens' Interval Number 
 _number = from interval . _2
 
-_steps :: Lens' Interval DiatonicSteps
-_steps = _number . diatonicSteps
+interval :: Iso' (Quality, Number) Interval
+interval = iso (uncurry mkIntervalNice) (\x -> (quality x, number x))
+
+-- Interval as alteration and diatonic steps
+interval' :: Iso' (ChromaticSteps, DiatonicSteps) Interval
+interval' = iso (\(d,s) -> mkInterval' (fromIntegral d) (fromIntegral s)) 
+  (\x -> (qualityToDiff (expectedQualityType (number x)) (quality x), (number x)^.diatonicSteps))
 
 -- TODO be "nice"
+mkIntervalNice :: Quality -> Number -> Interval
 mkIntervalNice q n
-  | n == 0 = error "mkIntervalNice: Invalid number 0"
-  | n < 0 = negate $ mkIntervalNice q (abs n)
-  | expectedQualityType n `elem` qualityTypes q = mkInterval q n 
-  | expectedQualityType n == MajorMinorType     = mkInterval (toMajorMinorType q) n
-  | expectedQualityType n == PerfectType        = mkInterval (toPerfectType q) n
+  | expectedQualityType n `elem` qualityTypes q = mkInterval2 q n 
+  | expectedQualityType n == MajorMinorType     = mkInterval2 (toMajorMinorType q) n
+  | expectedQualityType n == PerfectType        = mkInterval2 (toPerfectType q) n
+
+toMajorMinorType Perfect = Major
+toPerfectType    Major   = Perfect
+toPerfectType    Minor   = (Diminished 1)
+-- toPerfectType    x = x
+
