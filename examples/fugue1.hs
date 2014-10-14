@@ -46,6 +46,8 @@ main = open $ asScore ex1
 -- For an unexpected result, see
 -- >>> foldl (</>) mempty [c,d,e,f,g]
 --
+(<<>) = (</>)
+
 (</>) :: (HasParts' a, Semigroup a, Music.Score.Part a ~ Part) => a -> a -> a
 a </> b = set parts' pa a <> set parts' pb b
   where
@@ -85,29 +87,29 @@ qualityTypes Minor   = [MajorMinorType]
 qualityTypes _       = [PerfectType, MajorMinorType]
 
 -- FIXME problem that this treats major as neutral, while this only holds for positive intervals
-qualityToDiff :: QualityType -> Quality -> ChromaticSteps
-qualityToDiff qt q = fromIntegral $ go qt q
+qualityToDiff :: Bool -> QualityType -> Quality -> ChromaticSteps
+qualityToDiff positive qt q = fromIntegral $ go positive qt q
   where
-    go MajorMinorType (Augmented n)  = 0 + n
-    go MajorMinorType Major          = 0
-    go MajorMinorType Minor          = (-1)
-    go MajorMinorType (Diminished n) = (-1) - n
+    go True MajorMinorType (Augmented n)  = 0 + n
+    go True MajorMinorType Major          = 0
+    go True MajorMinorType Minor          = (-1)
+    go True MajorMinorType (Diminished n) = (-1) - n
 
-    -- go MajorMinorType (Augmented n)  = 1 + n
-    -- go MajorMinorType Major          = 1
-    -- go MajorMinorType Minor          = 0
-    -- go MajorMinorType (Diminished n) = 0 - n
+    go False MajorMinorType (Augmented n)  = 1 + n
+    go False MajorMinorType Major          = 1
+    go False MajorMinorType Minor          = 0
+    go False MajorMinorType (Diminished n) = 0 - n
     
-    go PerfectType (Augmented n)  = 0 + n
-    go PerfectType Perfect        = 0
-    go PerfectType (Diminished n) = 0 - n
+    go _ PerfectType (Augmented n)  = 0 + n
+    go _ PerfectType Perfect        = 0
+    go _ PerfectType (Diminished n) = 0 - n
     
-    go qt q = error $ "qualityToDiff: Unknown interval expression (" ++ show qt ++ ", " ++ show q ++ ")"
+    go _ qt q = error $ "qualityToDiff: Unknown interval expression (" ++ show qt ++ ", " ++ show q ++ ")"
 
 mkInterval2 :: Quality -> Number -> Interval
 mkInterval2 q n = mkInterval' (fromIntegral diff) (fromIntegral steps)
   where
-    diff  = qualityToDiff (expectedQualityType n) (if n < 0 then invertQuality q else q)
+    diff  = qualityToDiff (n > 0) (expectedQualityType n) (q)
     steps = case n `compare` 0 of
       GT -> n - 1
       EQ -> error "diatonicSteps: Invalid number 0"
@@ -123,11 +125,14 @@ p2 = scat $ take 5 $ iterate (times 3 . compress 2) $ scat [c,g,fs,f]
 p3 = scat $ take 4 $ iterate (times 3 . compress 2) $ scat [c,ab,g,fs,f]
 p4 = scat $ take 4 $ iterate (times 3 . compress 2) $ scat [c,bb,a,ab,g]
 
--- OK
--- >>> :o scat $ down (_P8) $ take 8 $ iterate (upDiatonic c 1) $ pcat [c,e,g]
--- NOT OK
--- >>> :o scat $ up (_P8) $ take 8 $ iterate (downDiatonic c 1) $ pcat [c,e,g]
-
+{-
+OK
+>>> :o scat $ down (_P8) $ take 8 $ iterate (upDiatonic c 1) $ pcat [c,e,g]
+NOT OK
+>>> :o scat $ up (_P8) $ take 8 $ iterate (downDiatonic c 1) $ pcat [c,e,g]
+-}
+t1 = open $ scat $ down (_P8) $ take 8 $ iterate (upDiatonic c 1) $ pcat [c,e,g]
+t2 = open $ scat $ up (_P8) $ take 8 $ iterate (downDiatonic c 1) $ pcat [c,e,g]
 
 {-
 >>> :o let x = scat [colorRed c,d,e]^/3 in (x |> scat (fmap (\n -> text (show n) $ upDiatonic c n x) [0..10]))
@@ -229,7 +234,7 @@ interval = iso (uncurry mkIntervalNice) (\x -> (quality x, number x))
 -- Interval as alteration and diatonic steps
 interval' :: Iso' (ChromaticSteps, DiatonicSteps) Interval
 interval' = iso (\(d,s) -> mkInterval' (fromIntegral d) (fromIntegral s)) 
-  (\x -> (qualityToDiff (expectedQualityType (number x)) (quality x), (number x)^.diatonicSteps))
+  (\x -> (qualityToDiff (number x >= 0) (expectedQualityType (number x)) (quality x), (number x)^.diatonicSteps))
 
 -- TODO be "nice"
 mkIntervalNice :: Quality -> Number -> Interval
