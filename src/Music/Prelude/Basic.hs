@@ -44,7 +44,7 @@ import qualified Music.Pitch
 import           Music.Dynamics
 import           Music.Articulation
 import           Music.Parts             hiding (Part)
-import           Music.Score             hiding (Pitch, Dynamics, Articulation, Interval)
+import           Music.Score             hiding (Clef(..), Pitch, Dynamics, Articulation, Interval)
 
 import           Control.Lens.Operators  hiding ((<.>), (<|), (|>))
 import           Control.Monad.Plus
