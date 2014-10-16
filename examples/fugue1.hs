@@ -229,19 +229,19 @@ _number :: Lens' Interval Number
 _number = from interval . _2
 
 interval :: Iso' (Quality, Number) Interval
-interval = iso (uncurry mkIntervalNice) (\x -> (quality x, number x))
+interval = iso (uncurry mkInterval2) (\x -> (quality x, number x))
 
 -- Interval as alteration and diatonic steps
 interval' :: Iso' (ChromaticSteps, DiatonicSteps) Interval
 interval' = iso (\(d,s) -> mkInterval' (fromIntegral d) (fromIntegral s)) 
   (\x -> (qualityToDiff (number x >= 0) (expectedQualityType (number x)) (quality x), (number x)^.diatonicSteps))
 
--- TODO be "nice"
-mkIntervalNice :: Quality -> Number -> Interval
-mkIntervalNice q n
-  | expectedQualityType n `elem` qualityTypes q = mkInterval2 q n 
-  | expectedQualityType n == MajorMinorType     = mkInterval2 (toMajorMinorType q) n
-  | expectedQualityType n == PerfectType        = mkInterval2 (toPerfectType q) n
+-- -- TODO be "nice"
+-- mkIntervalNice :: Quality -> Number -> Interval
+-- mkIntervalNice q n
+--   | expectedQualityType n `elem` qualityTypes q = mkInterval2 q n 
+--   | expectedQualityType n == MajorMinorType     = mkInterval2 (toMajorMinorType q) n
+--   | expectedQualityType n == PerfectType        = mkInterval2 (toPerfectType q) n
 
 toMajorMinorType Perfect = Major
 toPerfectType    Major   = Perfect
