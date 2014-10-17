@@ -1,52 +1,13 @@
+
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 import Music.Prelude
-import Music.Score.Convert
+import Music.Time.Internal.Convert
 import Numeric.Natural
 import Control.Applicative
 import Text.Parsec
 import Control.Applicative
-
-newtype Positive = Positive { getPositive :: Natural } deriving
-    ( 
-    Eq,
-    Enum,
-    Integral,
-    -- Data,
-    -- Num,
-    Ord,
-    Read,
-    Real,
-    -- Ix,
-    -- Typeable,
-    -- Bits,
-    -- Hashable,
-    Whole
-    )
-
-instance Show Positive where
-    show (Positive n) = show n
-
-instance Num Positive where
-  Positive n + Positive m = Positive (n + m)
-  {-# INLINE (+) #-}
-  Positive n * Positive m = Positive (n * m)
-  {-# INLINE (*) #-}
-  Positive n - Positive m | result < 0  = error "Positive.(-): negative result"
-                          | result == 0 = error "Positive.(-): result zero"
-                          | otherwise   = Positive result
-    where result = n - m
-  {-# INLINE (-) #-}
-  abs (Positive n) = Positive n
-  {-# INLINE abs #-}
-  signum (Positive n) = Positive (signum n)
-  {-# INLINE signum #-}
-  fromInteger n
-    | n > 0 = Positive (fromInteger n)
-    | n == 0 = error "Positive.fromInteger: zero"
-    | otherwise = error "Positive.fromInteger: negative"
-  {-# INLINE fromInteger #-}
-
+import Numeric.Positive
 
 
 
@@ -62,12 +23,12 @@ data RtmValue
     deriving (Eq, Ord, Show)
 
 rhythmToScore :: Rtm -> Score StandardNote 
-rhythmToScore (Rtm bc rl) = mfilter (\x -> all (== c) $ map (! 0) $ x^..pitches') $ stretchTo (toDuration bc) $ scat $ map rhythmListToScore rl -- TODO: use BeatCount
+rhythmToScore (Rtm bc rl) = mfilter (\x -> all (== c) $ map (! 0) $ x^..pitches') $ stretchTo (realToFrac bc) $ scat $ map rhythmListToScore rl -- TODO: use BeatCount
 
 rhythmListToScore :: RtmValue -> Score StandardNote
-rhythmListToScore (RtmRest d)       = stretch (toDuration d) g_
-rhythmListToScore (RtmNote True d)  = stretch (toDuration d) c 
-rhythmListToScore (RtmNote False d) = endTie $ stretch (toDuration d) c 
+rhythmListToScore (RtmRest d)       = stretch (realToFrac d) g_
+rhythmListToScore (RtmNote True d)  = stretch (realToFrac d) c 
+rhythmListToScore (RtmNote False d) = endTie $ stretch (realToFrac d) c 
 rhythmListToScore (RtmEmbed r)      = rhythmToScore r
 
 openRtm :: Rtm -> IO ()
