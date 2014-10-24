@@ -323,12 +323,12 @@ main = defaultMain $ testGroup "Instances" $ [
   -- SLOW I_TEST(_Transformable, [Chord Int]),
   -- SLOW I_TEST(_Transformable, [Score Int]),
 
-  I_TEST(_HasDuration, Time),
+  -- I_TEST(_HasDuration, Time),
   I_TEST(_HasDuration, Span),
   I_TEST(_HasDuration, Note Int),
   I_TEST(_HasDuration, Note Double),
-  I_TEST(_HasDuration, Delayed Int),
-  I_TEST(_HasDuration, Delayed Double),
+  -- I_TEST(_HasDuration, Delayed Int),
+  -- I_TEST(_HasDuration, Delayed Double),
 
   I_TEST(_HasDuration, Score Int),
   I_TEST(_HasDuration, Chord Int),
@@ -336,18 +336,18 @@ main = defaultMain $ testGroup "Instances" $ [
   -- TODO remove instance I_TEST(_HasDuration, [Chord Int]),
 
 
-  I_TEST(_HasPosition, Time),
+  -- I_TEST(_HasPosition, Time),
   I_TEST(_HasPosition, Span),
   I_TEST(_HasPosition, Note Int),
   I_TEST(_HasPosition, Note Double),
-  I_TEST(_HasPosition, Delayed Int),
-  I_TEST(_HasPosition, Delayed Double),
+  -- I_TEST(_HasPosition, Delayed Int),
+  -- I_TEST(_HasPosition, Delayed Double),
   I_TEST(_HasPosition, Score Int),
   I_TEST(_HasPosition, Note (Note Int)),
   I_TEST(_HasPosition, Note (Score Int)),
   I_TEST(_HasPosition, Score (Delayed Int)),
 
-  I_TEST(_HasPosition, AddMeta (Delayed Duration)),
+  -- I_TEST(_HasPosition, AddMeta (Delayed Duration)),
   -- I_TEST(_HasPosition, Chord Int),
   -- TODO remove instance I_TEST(_HasPosition, [Score Int]),
   -- TODO remove instance I_TEST(_HasPosition, [Chord Int]),
@@ -382,8 +382,8 @@ main = defaultMain $ testGroup "Instances" $ [
   I_TEST(_Splittable, Note Double),
   I_TEST(_Splittable, Stretched Int),
   I_TEST(_Splittable, Stretched Double),
-  I_TEST(_Splittable, Delayed Int),
-  I_TEST(_Splittable, Delayed Double),
+  -- I_TEST(_Splittable, Delayed Int),
+  -- I_TEST(_Splittable, Delayed Double),
 
 
 
