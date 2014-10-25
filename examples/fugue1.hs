@@ -4,7 +4,7 @@
 
 import Music.Prelude hiding ((</>))
 import qualified Music.Score
-
+import qualified System.Process
 
 
 
@@ -16,7 +16,6 @@ mn'' = (stretchTo 1.mconcat)[(stretchTo 1.mconcat)[a,(stretchTo 1.mconcat)[b,c]]
 
 mn = scat [a^*2,b,c',d',gs^*2,scat[a,b]^/2]^/4
 cn = (\x -> x |> downDiatonic c 1 x |> (downDiatonic c 2 x)) $ scat [c',e',d',c']^/8
-
 s  = mn |> cn
 m  = set (pitches'.mapped.rel c._alteration) 0 $ upDiatonic c 2 s
 
@@ -26,8 +25,15 @@ ex1 = delay 2 (up _P5 s)   </> s
 ex2 = delay 2 (down _P4 s) </> s
 ex3 = delay 2 (up _P5 m)   </> m
 ex4 = delay 2 (down _P4 m) </> m
+ex5 = delay 2 (up _P5 s)   </> s
 
-main = open $ over parts' id $ asScore ex1
+-- Interludes
+il = times 8 $ scat [c',e',d',c']^/8
+
+music = scat [ex1,il,ex2,il,ex3,il,ex4,ex5]
+
+
+main = open $ over parts' id $ asScore music
 
 
 
@@ -83,3 +89,7 @@ downDiatonic o n = over (pitches'.mapped) (downDiatonicP o n)
 rel o = iso (\p -> p .-. o) (\v -> o .+^ v)
 
 
+openAudio x = do
+    void $ writeMidi "test.mid" $ x
+    void $ System.Process.system "timidity -Ow test.mid"
+    void $ System.Process.system "open -a Audacity test.wav"
