@@ -4,6 +4,6 @@ let
                 (1.5,  up _P5 x)^.placed, 
                 (3.25, up _P8 x)^.placed ]^.track
 
-    trackToScore d = view score . map (view note . (\(t,x) -> (t >-> d,x)) . (view $ from placed)) . view placeds
+    trackToScore d = view score . map (view event . (\(t,x) -> (t >-> d,x)) . (view $ from placed)) . view placeds
     
 in trackToScore (1/8) y
