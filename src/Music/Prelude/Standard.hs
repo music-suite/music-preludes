@@ -40,7 +40,7 @@ import           Music.Pitch
 import           Music.Dynamics
 import           Music.Articulation
 import           Music.Parts
-import           Music.Score             hiding (Clef(..), Fifths, Interval, Note, Part, Pitch, Dynamics, Articulation)
+import           Music.Score             hiding (Clef(..), Fifths, Interval, Part, Pitch, Dynamics, Articulation)
 
 import           Music.Prelude.Instances ()
 

@@ -39,7 +39,7 @@ module Music.Prelude.Basic (
 import           Data.Default
 import           Data.Typeable
 
-import           Music.Pitch             hiding (Fifths, Note)
+import           Music.Pitch             hiding (Fifths)
 import qualified Music.Pitch
 import           Music.Dynamics
 import           Music.Articulation
