@@ -25,7 +25,7 @@ import           Language.Scheme.Core
 import           Language.Scheme.Parser
 import           Language.Scheme.Types
 import           Language.Scheme.Variables
-import           Music.Prelude
+import           Music.Prelude hiding (Number)
 import qualified Music.Score               as Score
 import qualified System.Environment
 import qualified System.IO.Unsafe
@@ -185,8 +185,11 @@ instance HasLisp Span where
 instance HasLisp a => HasLisp (Score.Note a) where
   _unlisp = _unlisp . note
 
+instance HasLisp a => HasLisp (Score.Event a) where
+  _unlisp = _unlisp . event
+
 instance HasLisp a => HasLisp (Score a) where
-  _unlisp = _unlisp . from unsafeNotes
+  _unlisp = _unlisp . from unsafeEvents
 
 instance (HasLisp a, HasLisp b) => HasLisp (a, b) where
   _unlisp = prism' (lcons . over _1 toLisp . over _2 toLisp) $ \xs -> case xs of
