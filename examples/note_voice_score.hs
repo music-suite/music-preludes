@@ -6,11 +6,23 @@
 >>> [(1,c)^.note]^.voice <> [(2,d)^.note]^.voice
 [(1,0)^.note,(2,2)^.note]^.voice
 
->>> :t \xs ys -> (^.from unsafePairs) $ zip xs ys
-[Duration] -> [b] -> Voice b
+-- Compose two voices using relative time, resulting score uses absolute time
+>>> renderAlignedVoice $ aligned 0 0 $ [(1,c)^.note]^.voice <> [(2,d)^.note]^.voice
+[(0 <-> 1,0)^.event,(1 <-> 3,2)^.event]^.score
+
+-- Align end rather than beginning
+>>> renderAlignedVoice $ aligned 0 1 $ [(1,c)^.note]^.voice <> [(2,d)^.note]^.voice
+[(-3 <-> -2,0)^.event,(-2 <-> 0,2)^.event]^.score
+
+-- Align midpoint to 5
+>>> renderAlignedVoice $ aligned 5 0.5 $ [(1,c)^.note]^.voice <> [(3,d)^.note]^.voice
+[(3 <-> 4,0)^.event,(4 <-> 7,2)^.event]^.score
+
+>>> :t \xs ys -> (^.voiceFromPairs) $ zip xs ys
+[Duration] -> [a] -> Voice a
 
 >>> :t \xs ys -> (^.voice) $ zipWith (curry $ (^.note)) xs ys
-[Duration] -> [b] -> Voice b
+[Duration] -> [a] -> Voice a
 
 
 >>> renderAlignedVoice $ aligned 0 0.5 $ [(1,x)^.note | x <- [0..21]]^.voice
