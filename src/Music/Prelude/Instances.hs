@@ -25,7 +25,6 @@
 module Music.Prelude.Instances () where
 
 import           Data.AffineSpace.Point
-import           Data.Default
 import           Data.Typeable
 
 import           Music.Dynamics

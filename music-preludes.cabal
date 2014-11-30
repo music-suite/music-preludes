@@ -26,7 +26,7 @@ source-repository head
 
 library
     build-depends:      base                    >= 4 && < 5,
-                        aeson                   >= 0.7.0.6 && < 1,
+                        -- aeson                   >= 0.7.0.6 && < 1,
                         lens                    >= 4.6 && < 4.7,
                         split,
                         containers,
@@ -38,7 +38,7 @@ library
                         optparse-applicative    >= 0.8  && < 1,
                         average                 >= 0.6  && < 1,
                         semigroups              >= 0.13.0.1 && < 1,
-                        data-default,
+                        -- data-default,
                         monadplus,
                         lilypond                == 1.8,
                         musicxml2               == 1.8,

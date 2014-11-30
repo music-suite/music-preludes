@@ -36,7 +36,6 @@ module Music.Prelude.Basic (
         openAndPlay
   ) where
 
-import           Data.Default
 import           Data.Typeable
 
 import           Music.Pitch             hiding (Fifths)

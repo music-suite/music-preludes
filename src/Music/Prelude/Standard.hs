@@ -33,7 +33,6 @@ module Music.Prelude.Standard (
         openAndPlay
   ) where
 
-import           Data.Default
 import           Data.Typeable
 
 import           Music.Pitch
