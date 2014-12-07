@@ -50,7 +50,7 @@ bell :: Score StandardNote
 bell = let
     cue :: Score (Maybe StandardNote)
     cue = stretchTo 1 (rest |> a) 
-    in parts' .~ solo tubularBells $ text "l.v." $ mcatMaybes $ times 40 $ scat [times 3 $ scat [cue,rest], rest^*2]
+    in parts' .~ solo tubularBells $ text "l.v." $ removeRests $ times 40 $ scat [times 3 $ scat [cue,rest], rest^*2]
 
 strings :: Score StandardNote
 strings = pcat [

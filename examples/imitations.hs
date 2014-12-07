@@ -78,31 +78,31 @@ noteScore = compress 4 $ {-addInstrChange $-}
 
 colLegno1 :: Score Note
 colLegno1 = {-staccato $ -} level (ppp {-`cresc` mp |> mp^*0.2-}) $ text "col legno battuto"  $
-        (down 12 $ delay 0 $ repTimes 7 $ mcatMaybes $ ([4,4,4,5,4] `groupWith` g) |> rest^*6)
-    </> (down 12 $ delay 1 $ repTimes 7 $ mcatMaybes $ ([4,4,5,4,5] `groupWith` g) |> rest^*6)
-    </> (down 24 $ delay 3 $ repTimes 7 $ mcatMaybes $ ([4,5,4,5,4] `groupWith` g) |> rest^*6)
-    </> (down 24 $ delay 6 $ repTimes 7 $ mcatMaybes $ ([3,3,5,3,5] `groupWith` g) |> rest^*6)
+        (down 12 $ delay 0 $ repTimes 7 $ removeRests $ ([4,4,4,5,4] `groupWith` g) |> rest^*6)
+    </> (down 12 $ delay 1 $ repTimes 7 $ removeRests $ ([4,4,5,4,5] `groupWith` g) |> rest^*6)
+    </> (down 24 $ delay 3 $ repTimes 7 $ removeRests $ ([4,5,4,5,4] `groupWith` g) |> rest^*6)
+    </> (down 24 $ delay 6 $ repTimes 7 $ removeRests $ ([3,3,5,3,5] `groupWith` g) |> rest^*6)
 
 -- dur 45
 
 colLegno2 :: Score Note
 colLegno2 = {-staccato $ -} level (mp) $ text "col legno battuto"  $
-        (down 12 $ delay 0 $ repTimes 4 $ mcatMaybes $ [4,4,5,4,5,4]  `groupWith` g |> rest^*6)
-    </> (down 12 $ delay 1 $ repTimes 4 $ mcatMaybes $ [4,4,5,4,5,4]  `groupWith` g |> rest^*6)
-    </> (down 12 $ delay 3 $ repTimes 4 $ mcatMaybes $ [4,5,4,5,4,4]  `groupWith` g |> rest^*6)
-    </> (down 12 $ delay 6 $ repTimes 4 $ mcatMaybes $ [3,3,5,3,3]    `groupWith` g |> rest^*6)
+        (down 12 $ delay 0 $ repTimes 4 $ removeRests $ [4,4,5,4,5,4]  `groupWith` g |> rest^*6)
+    </> (down 12 $ delay 1 $ repTimes 4 $ removeRests $ [4,4,5,4,5,4]  `groupWith` g |> rest^*6)
+    </> (down 12 $ delay 3 $ repTimes 4 $ removeRests $ [4,5,4,5,4,4]  `groupWith` g |> rest^*6)
+    </> (down 12 $ delay 6 $ repTimes 4 $ removeRests $ [3,3,5,3,3]    `groupWith` g |> rest^*6)
 -- 
 colLegno2Alt :: Score Note
 colLegno2Alt = {-staccato $ -} level (mp) $ text "col legno battuto"  $
-        (down 12 $ delay 0 $ mcatMaybes $ repWithIndex 4 $ \t -> [4,4,5,4,5,4]  `groupWith` g |> rest^*(1+4*t))
-    </> (down 12 $ delay 1 $ mcatMaybes $ repWithIndex 4 $ \t -> [4,4,5,4,5,4]  `groupWith` g |> rest^*(1+4*t))
-    </> (down 24 $ delay 3 $ mcatMaybes $ repWithIndex 4 $ \t -> [4,5,4,5,4,4]  `groupWith` g |> rest^*(1+4*t))
-    </> (down 24 $ delay 6 $ mcatMaybes $ repWithIndex 4 $ \t -> [3,3,5,3,3]    `groupWith` g |> rest^*(1+4*t))
+        (down 12 $ delay 0 $ removeRests $ repWithIndex 4 $ \t -> [4,4,5,4,5,4]  `groupWith` g |> rest^*(1+4*t))
+    </> (down 12 $ delay 1 $ removeRests $ repWithIndex 4 $ \t -> [4,4,5,4,5,4]  `groupWith` g |> rest^*(1+4*t))
+    </> (down 24 $ delay 3 $ removeRests $ repWithIndex 4 $ \t -> [4,5,4,5,4,4]  `groupWith` g |> rest^*(1+4*t))
+    </> (down 24 $ delay 6 $ removeRests $ repWithIndex 4 $ \t -> [3,3,5,3,3]    `groupWith` g |> rest^*(1+4*t))
 
 -- --------------------------------------------------------------------------------
 -- 
 makeJete :: Behavior Pitch -> Bool -> Duration -> Score Note
-makeJete p v d = text "jeté" $ pitches' %~ (+ p) $ mcatMaybes $ g_ |> ((if v then cs else cs_){-^/2-}) {-|> rest^/2-} |> rest^*d
+makeJete p v d = text "jeté" $ pitches' %~ (+ p) $ removeRests $ g_ |> ((if v then cs else cs_){-^/2-}) {-|> rest^/2-} |> rest^*d
 
 makeJetes :: [Behavior Pitch] -> [Bool] -> [Duration] -> Score Note
 makeJetes ps vs ds = scat $ zipWith3 makeJete ps vs ds

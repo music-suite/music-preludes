@@ -49,7 +49,7 @@ strum x = strumRhythm Up (map (/8) [2,1,2,1,2])
     dropLast n = reverse . drop n . reverse
 
 
-counterRh = set parts' rh $ (mcatMaybes $ times 4 $ octavesUp 1 $ scat [rest^*2,g,g,g^*2,g^*2, rest^*2, scat [g,g,g]^*2])^/8
+counterRh = set parts' rh $ (removeRests $ times 4 $ octavesUp 1 $ scat [rest^*2,g,g,g^*2,g^*2, rest^*2, scat [g,g,g]^*2])^/8
 
 strings = set parts' (tutti violin) $ octavesAbove 1 $ 
      (c_<>e_<>g_)^*4 
