@@ -242,63 +242,13 @@ _subpart f (Part s i u) = fmap (\u -> Part s i u) $ f u
 _instrument :: Lens' Part Instrument
 _instrument f (Part s i u) = fmap (\i -> Part s i u) $ f i
 
-
 -- Not perfect but works for many cases
-ucat xs = if allDistinctIn ps 
+ucat xs = if allDistinct ps 
     then mconcat xs 
     else mconcat $ zipWith (set parts') (divide (length xs) p) xs
   where
     ps = concatMap (toListOf parts') xs
-    p  = foldr1 smallest' ps
+    p  = foldr1 smallestPart ps
 
-{-
-a <>> b = if {-allDistinct psa psb-}False then (a <> b) else (uncurry (<>) $ disamb a b)
-  where
-    psa = a^..parts
-    psb = b^..parts
-    psa' = firsts  $ (foldr1 smallest' $ psa <> psb)
-    psb' = seconds $ (foldr1 smallest' $ psa <> psb)
-    disamb a b = (set parts' psa' a, set parts' psb' b) -- TODO
--}
-
-smallest' p1@(Part _ _ sp1) p2@(Part _ _ sp2)
-  | sp1 `smallest` sp2 == sp1 = p1
-  | sp1 `smallest` sp2 == sp2 = p2
-
-
-smallest x y
-  | x `isProperSubpartOf` y = x
-  | y `isProperSubpartOf` x = y
-  | otherwise               = x
-
-{-
-isSubpartOf' (Part _ _ sp1) (Part _ _ sp2) = sp1 `isSubpartOf` sp2
--}
-
--- Only True if x and y are completely distinct, i.e. neither contains the other
--- 
--- >>> violins `distinctFrom` trumpets
--- True
--- >>> violins `distinctFrom` violins
--- False
--- >>> violins `distinctFrom` violins1
--- False
--- >>> violins1 `distinctFrom` violins
--- False
--- >>> violins1 `distinctFrom` violins2
--- True
-
-allDistinctIn []     = True
-allDistinctIn (x:xs) = all (distinctFrom x) xs && allDistinctIn xs
-
-allDistinct xs ys = all id $ [x `distinctFrom` y | x <- xs, y <- ys]
-
-distinctFrom :: Part -> Part -> Bool
-distinctFrom (Part s1 i1 sp1) (Part s2 i2 sp2) =
-   s1 /= s2
-    ||
-   i1 /= i2
-    ||
-   ((not $ sp1 `isSubpartOf` sp2) && (not $ sp2 `isSubpartOf` sp1))
 
 
