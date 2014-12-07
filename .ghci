@@ -5,6 +5,7 @@
 :m + Music.Prelude
 :def! open  (\x -> return $ "open  $ asScore $ "++ x)
 :def! play  (\x -> return $ "play  $ asScore $ "++ x)
+:set editor mate
 
 -- let play x = do
 --   writeMidi "test.mid" $ asScore x

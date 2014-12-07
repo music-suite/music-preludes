@@ -207,8 +207,8 @@ instance (Ord k, Arbitrary k, Ord a, Arbitrary a) => Arbitrary (Map.Map k a) whe
 
 instance Arbitrary a => Arbitrary (Voice a) where
   arbitrary = fmap (view voice) arbitrary  
-instance Arbitrary a => Arbitrary (Chord a) where
-  arbitrary = fmap (view chord) arbitrary  
+-- instance Arbitrary a => Arbitrary (Chord a) where
+  -- arbitrary = fmap (view chord) arbitrary  
 instance Arbitrary a => Arbitrary (Score a) where
   arbitrary = fmap (view score) arbitrary  
 instance Arbitrary a => Arbitrary (Track a) where
@@ -282,7 +282,7 @@ main = defaultMain $ testGroup "Instances" $ [
   I_TEST(_Monoid, Note ()),
 
   I_TEST(_Monoid, Voice Int),
-  I_TEST(_Monoid, Chord Int),
+  -- I_TEST(_Monoid, Chord Int),
   I_TEST(_Monoid, Score Int),
 
 
