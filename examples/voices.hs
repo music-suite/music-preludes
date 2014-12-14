@@ -13,4 +13,4 @@ renderVoice = fmap pitchToNote . removeRests . renderAlignedVoice . aligned 0 0
     pitchToNote = fromPitch' . pure
 
 renderChorale :: Chorale -> Score StandardNote
-renderChorale = pcat . fmap renderVoice
+renderChorale = rcat . fmap renderVoice
