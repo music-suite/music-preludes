@@ -2,12 +2,9 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 import Music.Prelude
-import Music.Time.Internal.Convert
-import Numeric.Natural
-import Control.Applicative
-import Text.Parsec
 import Control.Applicative
 import Numeric.Positive
+import qualified Text.Parsec as P
 
 
 
@@ -23,7 +20,8 @@ data RtmValue
     deriving (Eq, Ord, Show)
 
 rhythmToScore :: Rtm -> Score StandardNote 
-rhythmToScore (Rtm bc rl) = mfilter (\x -> all (== c) $ map (! 0) $ x^..pitches') $ stretchTo (realToFrac bc) $ scat $ map rhythmListToScore rl -- TODO: use BeatCount
+rhythmToScore (Rtm bc rl) = mfilter (\x -> all (== c) $ map (! 0) $ x^..pitches')
+  $ stretchTo (realToFrac bc) $ scat $ map rhythmListToScore rl -- TODO: use BeatCount
 
 rhythmListToScore :: RtmValue -> Score StandardNote
 rhythmListToScore (RtmRest d)       = stretch (realToFrac d) g_
@@ -35,30 +33,30 @@ openRtm :: Rtm -> IO ()
 openRtm = open . compress 4 . rhythmToScore
 
 
-type Parser a = Parsec String () a
+type Parser a = P.Parsec String () a
 
-parseRtm :: String -> Either ParseError Rtm
+parseRtm :: String -> Either P.ParseError Rtm
 parseRtm = doParse rhythmParser
   where
-    doParse :: Parser a -> String -> Either ParseError a
-    doParse p = parse p "No source"
+    doParse :: Parser a -> String -> Either P.ParseError a
+    doParse p = P.parse p "No source"
 
 rhythmParser :: Parser Rtm
-rhythmParser = paren $ liftA2 Rtm (number <* space) rtmListParser
+rhythmParser = paren $ liftA2 Rtm (number <* space) rtmListParser
   where
-    rtmListParser = paren $ sepBy1 rtmParser space
-    rtmParser     = choice [restParser, noteParser, embedParser]
-    noteParser    = choice [try $ RtmNote True <$> number <* dotParser <* zeros, RtmNote False <$> number]
+    rtmListParser = paren $ P.sepBy1 rtmParser space
+    rtmParser     = P.choice [restParser, noteParser, embedParser]
+    noteParser    = P.choice [P.try $ RtmNote True <$> number <* dotParser <* zeros, RtmNote False <$> number]
     restParser    = RtmRest <$> (negSignParser *> number)
-    embedParser   = RtmEmbed <$> (try (lookAhead paren1) *> rhythmParser)
+    embedParser   = RtmEmbed <$> (P.try (P.lookAhead paren1) *> rhythmParser)
 
-    paren1        = char '('
-    paren x       = char '(' *> x <* char ')'
-    number        = fmap (fromInteger . read) $ (many1 digit)
-    zeros         = many1 $ char '0'
-    dotParser     = char '.'
-    space         = char ' '
-    negSignParser = char '-'
+    paren1        = P.char '('
+    paren x       = P.char '(' *> x <* P.char ')'
+    number        = fmap (fromInteger . read) $ (P.many1 P.digit)
+    zeros         = P.many1 $ P.char '0'
+    dotParser     = P.char '.'
+    space         = P.char ' '
+    negSignParser = P.char '-'
         
 
 
