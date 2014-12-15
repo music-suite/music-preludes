@@ -81,6 +81,7 @@ rhythmParser = paren $ liftA2 Rtm (number <* space) rtmListParser
 -- (4 (1 (1 -1 1 -1)) (1 (1 1 2)) (1 (2.0 -1 1)) (1 (1.0 -2 1)))
 -- (4 ((1 (1 -1 1 -1)) (1 (1 1 2)) (1 (2.0 -1 1)) (1 (1.0 -2 1))))
 
+-- FIMXE unexpected results if first component in a group is negative (a rest)!
 foo = openRtm $ fromRight $ parseRtm "(4 ((1 (1 -1 1 -1)) (1 (1 1 2)) (1 (2.0 -1 1)) (1 (1.0 -2 1))))"
 fromRight (Right x) = x
 
