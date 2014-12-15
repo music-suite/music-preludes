@@ -1,6 +1,6 @@
 
 name:                   music-preludes
-version:                1.8
+version:                1.8.1
 author:                 Hans Hoglund
 maintainer:             Hans Hoglund
 license:                BSD3
@@ -40,15 +40,15 @@ library
                         semigroups              >= 0.13.0.1 && < 1,
                         -- data-default,
                         monadplus,
-                        lilypond                == 1.8,
-                        musicxml2               == 1.8,
-                        music-score             == 1.8,
-                        music-pitch             == 1.8,
-                        music-dynamics          == 1.8,
-                        music-articulation      == 1.8,
-                        music-parts             == 1.8,
-                        music-pitch-literal     == 1.8,
-                        music-dynamics-literal  == 1.8,
+                        lilypond                == 1.8.1,
+                        musicxml2               == 1.8.1,
+                        music-score             == 1.8.1,
+                        music-pitch             == 1.8.1,
+                        music-dynamics          == 1.8.1,
+                        music-articulation      == 1.8.1,
+                        music-parts             == 1.8.1,
+                        music-pitch-literal     == 1.8.1,
+                        music-dynamics-literal  == 1.8.1,
                         -- For examples:
                         async
     if !os(windows)
