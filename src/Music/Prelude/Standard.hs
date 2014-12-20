@@ -72,7 +72,7 @@ type StandardNote =
               (ArticulationT Articulation
                 (DynamicT Dynamics
                   [TieT
-                    (Behavior Pitch)]))))))))
+                    Pitch]))))))))
 
 
 open          = openLilypond . asScore
