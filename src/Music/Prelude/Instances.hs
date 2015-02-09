@@ -148,7 +148,12 @@ instance HasLilypondInstrument Music.Parts.Part where
 
 instance HasMusicXmlInstrument BasicPart where
     getMusicXmlClef = 0
+    getMusicXmlNumberOfStaves = 1
 
 instance HasMusicXmlInstrument Music.Parts.Part where
     getMusicXmlClef = defaultClef
+    getMusicXmlNumberOfStaves p
+      | p == harp                = 2
+      | p^._instrument == piano  = 2
+      | otherwise                = 1
 
