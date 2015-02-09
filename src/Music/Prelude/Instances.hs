@@ -153,7 +153,8 @@ instance HasMusicXmlInstrument BasicPart where
 instance HasMusicXmlInstrument Music.Parts.Part where
     getMusicXmlClef = defaultClef
     getMusicXmlNumberOfStaves p
-      | p == harp                = 2
-      | p^._instrument == piano  = 2
-      | otherwise                = 1
+      | p == harp                 = 2
+      | p^._instrument == piano   = 2
+      | p^._instrument == celesta = 2
+      | otherwise                 = 1
 
