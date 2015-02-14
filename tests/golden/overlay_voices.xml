@@ -7,6 +7,9 @@
   <part-list>
     <score-part id="P1">
       <part-name></part-name>
+      <part-name-display>
+        <display-text></display-text>
+      </part-name-display>
     </score-part>
   </part-list>
   <part id="P1">
@@ -28,6 +31,9 @@
           </metronome>
         </direction-type>
       </direction>
+      <attributes>
+        <staves>1</staves>
+      </attributes>
       <attributes>
         <clef>
           <sign>G</sign>
