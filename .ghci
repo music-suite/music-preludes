@@ -1,4 +1,5 @@
 -- :set -XOverloadedStrings
+:set -XTypeFamilies
 -- :set -XNoMonomorphismRestriction
 -- :load src/Music/Prelude/Standard.hs
 
@@ -8,6 +9,7 @@
 :def! display  (\x -> return $ "display $ "++ x)
 :def! audify  (\x -> return $ "audify $ "++ x)
 :def! da  (\x -> return $ "displayAndAudify $ "++ x)
+:def! eval-typefun (\x -> return $ "() :: ("++ x ++ " ~ ()) => ()")
 :set editor mate
 
 -- let play x = do
