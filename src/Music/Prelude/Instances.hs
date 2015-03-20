@@ -32,8 +32,8 @@ import           Music.Parts
 import           Music.Pitch
 import           Music.Score            hiding (Fifths, Interval, Note, Pitch)
 
-import qualified Music.Lilypond         as Lilypond
-import qualified Music.MusicXml.Simple  as Xml
+import qualified Data.Music.Lilypond         as Lilypond
+import qualified Data.Music.MusicXml.Simple  as Xml
 import qualified Music.Score            as Score
 
 deriving instance Typeable Music.Parts.Part
