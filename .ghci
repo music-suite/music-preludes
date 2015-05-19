@@ -18,7 +18,6 @@
 
 :def! play (\x -> return $ "do { writeMidi \"/Users/hans/Desktop/test.mid\" $ asScore $ " ++ x ++ "; System.Process.system \"timidity /Users/hans/Desktop/test.mid 2>/dev/null >/dev/null\" }")
 
-:def! write (\x -> return $ "write $ asScore $ "++ x)
 :def! unload (\_ -> return ":m - Music.Prelude")
 :set -XNoMonomorphismRestriction
 :set -XOverloadedStrings
