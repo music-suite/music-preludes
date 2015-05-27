@@ -1,0 +1,148 @@
+<!doctype html>
+<head>
+  <title></title>
+  <link rel="stylesheet" type="text/css" href="haskell.css"/>
+  <script src="https://rawgit.com/hanshoglund/b353635ca3b59fb11665/raw/b8a8d431e73183ca83054dd3c6748ee3748e537d/paperjs-0.21.js"></script>
+
+
+
+  
+</head>
+<body>
+  <canvas id="myCanvas" width="1400" height="800"></canvas>
+  <noscript>Please enable JavaScript.</noscript>
+
+
+  <script type="text/javascript">
+  	doPaper = function() {
+
+		  var canvas = document.getElementById('myCanvas');
+      paper.setup(canvas);
+      new paper.Tool(); // updates paper.tool and pushes to paper.tools
+      
+      // Used for creatiung var-sized rects
+      window.lastRectPos = new paper.Point([0,0])
+      // Serialized rect obejcts
+      // tlx,tly,brx,bry, i.e. [[10,10,10,10], ...]
+      window.rects = [];
+      // Displayed objects 
+      window.dispRects = [];
+      
+      function shouldCreate() {
+        return paper.Key.isDown('shift')
+      }
+      function shouldCreateDrag() {
+        return paper.Key.isDown('command')
+      }
+      function shouldRemove () {
+        return !shouldCreate() && !shouldCreateDrag()
+      }
+      function assureP2(p,p2) {
+        return p2 || p.add(new paper.Point([20,20]))
+      }
+      function makeRect(p,p2) {
+        p2 = assureP2(p,p2);
+        var path = new paper.Path.Rectangle(p, p2);
+    		path.strokeColor = 'white';
+    		path.fillColor = 'blue';
+        path.onMouseDown = (function(){
+          if (shouldRemove()) {
+            path.remove()
+            // FIXME remove from rects
+          }
+        })
+        // HACK save serializable version as part of shape obj
+        path.hh__serialized = [p.x,p.y,p2.x,p2.y]        
+        window.dispRects.push(path)
+      }
+      // function pushRect(p,p2) {
+        // p2 = assureP2(p,p2);
+        // window.rects.push([p.x,p.y,p2.x,p2.y])
+      // }
+
+      function clearDispRects() {
+        window.dispRects.forEach( function (r) {
+          r && r.remove()
+        })
+        window.dispRects = []
+      }
+
+      // Load all points from window.rects, populate dispRects with rect objs
+      window.load = function () {
+        clearDispRects();
+        window.rects.forEach(function(ps) {
+          // var [a,b,c,d] = ps
+          a = ps[0]
+          b = ps[1]
+          c = ps[2]
+          d = ps[3]
+          makeRect(new paper.Point([a,b]), new paper.Point([c,d]))
+        })
+        paper.view.draw();
+      }
+      window.store = function () {
+        window.rects = []
+        window.dispRects.forEach (function (r) {
+          // console.log(r.hh__serialized)
+          window.rects.push(r.hh__serialized)
+        })
+        paper.view.draw();
+      }
+      paper.tool.onMouseDown = (function(e){
+        if (shouldCreate()) {
+          makeRect(e.point)
+        }
+        if (shouldCreateDrag()) {
+          // function copyPoint(p) {
+            // return new paper.Point(p.x,p.y)
+          // }
+          window.lastRectPos = e.point
+        }
+        // TODO test
+        if (paper.Key.isDown('escape')) {
+          console.log("sending to hs")
+          if (window.retFunc) {
+            window.store();
+            // Send to backend
+            window.retFunc(window.rects);
+          }
+        }
+      })
+      paper.tool.onMouseUp = (function(e){
+        if (shouldCreateDrag()) {
+          // console.log(window.lastRectPos)
+          // console.log(e.point)
+          // console.log(e.point.subtract(window.lastRectPos))
+          makeRect(window.lastRectPos, e.point) // TODO use end point
+        }
+      })
+  	  
+      // makeRect(new paper.Point([75,75]))
+      paper.view.draw();
+  	}
+  	
+  	window.h = {}
+    // window.h.send = function(ret) {
+      // console.log(ret)
+      // ret(window.rects)
+    // }
+  	window.h.dummy = function(ret) {}
+  	window.h.start = function(ret) {
+  	  doPaper();
+  	  window.retFunc = ret;
+  	}
+  	window.h.query = function(ret) {
+      store(); // Get rects from what we see
+      ret(window.rects);
+  	}
+  </script>
+  <script src="haskell.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    Haskell.initFFI();
+  </script>
+  
+</body>
+
+
+
+</html>
