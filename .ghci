@@ -1,5 +1,6 @@
 -- :set -XOverloadedStrings
 :set -XTypeFamilies
+:set -XBangPatterns
 -- :set -XNoMonomorphismRestriction
 -- :load src/Music/Prelude/Standard.hs
 
