@@ -58,7 +58,7 @@ import qualified Music.Prelude.Standard as PreludeStandard
 #ifndef GHCI
 version = Paths.version
 #else
-version = undefined
+version = error "Could not get version"
 #endif
 
 -- | Current Music Suite version as a string.
