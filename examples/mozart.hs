@@ -39,37 +39,37 @@ score' = info $ compress 4 $ tempo (metronome (1/4) 30) $ {-delay (4*2) $ -}
     stanza1_instr </> stanza1_voc
 
 -- Rhythm helper functions
-lss l s1 s2     = l^*2 |> s1 |> s2
-ssl s1 s2 l     = s1 |> s2 |> l^*2
+lss l s1 s2     = l|*2 |> s1 |> s2
+ssl s1 s2 l     = s1 |> s2 |> l|*2
 s3 s1 s2 s3     = s1 |> s2 |> s3
 s4 s1 s2 s3 s4  = s1 |> s2 |> s3 |> s4
-sl s l          = s |> l^*3
-ls l s          = l^*3 |> s
-fit2 x y        = (x |> y)^/2
-l4 l            = l^*4
-ll l1 l2        = (l1 |> l2)^*2
+sl s l          = s |> l|*3
+ls l s          = l|*3 |> s
+fit2 x y        = (x |> y)|/2
+l4 l            = l|*4
+ll l1 l2        = (l1 |> l2)|*2
 
-a2  = a  ^* 2
-as2 = as ^* 2
-ab2 = ab ^* 2
-b2  = b  ^* 2
-bs2 = bs ^* 2
-bb2 = bb ^* 2
-c2  = c  ^* 2
-cs2 = cs ^* 2
-cb2 = cb ^* 2
-d2  = d  ^* 2
-ds2 = ds ^* 2
-db2 = db ^* 2
-e2  = e  ^* 2
-es2 = es ^* 2
-eb2 = eb ^* 2
-f2  = f  ^* 2
-fs2 = fs ^* 2
-fb2 = fb ^* 2
-g2  = g  ^* 2
-gs2 = gs ^* 2
-gb2 = gb ^* 2
+a2  = a  |* 2
+as2 = as |* 2
+ab2 = ab |* 2
+b2  = b  |* 2
+bs2 = bs |* 2
+bb2 = bb |* 2
+c2  = c  |* 2
+cs2 = cs |* 2
+cb2 = cb |* 2
+d2  = d  |* 2
+ds2 = ds |* 2
+db2 = db |* 2
+e2  = e  |* 2
+es2 = es |* 2
+eb2 = eb |* 2
+f2  = f  |* 2
+fs2 = fs |* 2
+fb2 = fb |* 2
+g2  = g  |* 2
+gs2 = gs |* 2
+gb2 = gb |* 2
 (//) = (|>)
 
 {-
