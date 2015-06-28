@@ -5,6 +5,7 @@
 -- :load src/Music/Prelude/Standard.hs
 
 :m + Music.Prelude
+:m + Database.Stash
 :def! open     (\x -> return $ "open  $ asScore $ "++ x)
 :def! play     (\x -> return $ "play  $ asScore $ "++ x)
 :def! display  (\x -> return $ "display $ "++ x)
