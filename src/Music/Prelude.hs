@@ -20,4 +20,5 @@ module Music.Prelude (
   ) where
 
 import Music.Prelude.Standard
+import Music.Prelude.Inspectable
 

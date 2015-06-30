@@ -23,6 +23,7 @@ module Music.Prelude.Standard (
         module Music.Articulation,
         module Music.Parts,
         module Music.Score,
+        Music,
         StandardNote,
         asScore,
         asVoice,
@@ -30,6 +31,7 @@ module Music.Prelude.Standard (
         asNote,
         open,
         play,
+        fromPitch'',
         openAndPlay
   ) where
 
@@ -74,8 +76,13 @@ type StandardNote =
                   [TieT
                     Pitch]))))))))
 
+type Music = Score StandardNote
+-- testRealize = realize (pitchSet [c,e,g,fs,gs]) undefined (Perm4 31)
 
 open          = openLilypond . asScore
 play          = error "Not implemented: play"
 openAndPlay x = open x >> play x
 
+fromPitch'' :: IsPitch a => Pitch -> a
+fromPitch'' x = let i = x .-. c in 
+  fromPitch $ PitchL ((fromIntegral $ i^._steps) `mod` 7, Just (fromIntegral (i^._alteration)), fromIntegral $ octaves i)
