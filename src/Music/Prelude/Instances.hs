@@ -158,3 +158,24 @@ instance HasMusicXmlInstrument Music.Parts.Part where
       | p^._instrument == celesta = 2
       | otherwise                 = 1
 
+
+instance HasDuration Pitch where
+  _duration = const 1
+instance HasDuration a => HasDuration (PartT p a) where
+  _duration = _duration . extract
+instance HasDuration a => HasDuration (ColorT a) where
+  _duration = _duration . extract
+instance HasDuration a => HasDuration (TextT a) where
+  _duration = _duration . extract
+instance HasDuration a => HasDuration (TremoloT a) where
+  _duration = _duration . extract
+instance HasDuration a => HasDuration (HarmonicT a) where
+  _duration = _duration . extract
+instance HasDuration a => HasDuration (SlideT a) where
+  _duration = _duration . extract
+instance HasDuration a => HasDuration (ArticulationT b a) where
+  _duration = _duration . extract
+instance HasDuration a => HasDuration (DynamicT b a) where
+  _duration = _duration . extract
+instance HasDuration a => HasDuration (TieT a) where
+  _duration = _duration . extract
