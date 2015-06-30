@@ -29,6 +29,7 @@ library
                         lens                    >= 4.11     && < 5,
                         split,
                         containers,
+                        comonad                 >= 4.2.2 && < 5,
                         vector-space            >= 0.10.2   && < 1,
                         vector-space-points     >= 0.2      && < 1,
                         process                 >= 1.2      && < 1.3,
