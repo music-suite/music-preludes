@@ -26,6 +26,7 @@ module Music.Prelude.Instances () where
 
 import           Data.AffineSpace.Point
 import           Data.Typeable
+import           Control.Comonad (extract)
 
 import           Music.Dynamics
 import           Music.Parts
