@@ -16,7 +16,8 @@
 -------------------------------------------------------------------------------------
 
 module Music.Prelude (
-        module Music.Prelude.Standard
+        module Music.Prelude.Standard,
+        module Music.Prelude.Inspectable
   ) where
 
 import Music.Prelude.Standard
