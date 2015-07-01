@@ -29,9 +29,24 @@ module Music.Prelude.Inspectable (
 
 import qualified System.Process
 
-import Music.Prelude.Standard
+import Music.Prelude.Standard hiding (open,play)
 import qualified Music.Score
+import qualified System.Process
+import qualified System.Info
+import Data.Ini
 
+data Conf
+  = Conf
+    String --Midi player
+    String --Midi converter
+    String --Audio viwer
+    String --Score viewer (TODO use program vs just write file etc)
+defaultConf = Conf
+  "timidity"
+  "timidity -Ow"
+  "open -a audacity"
+  "lilypond"
+  
 -- Not perfect but works for many cases
 --
 -- >>> ucat [[violins],[violas]]
@@ -54,27 +69,49 @@ ucat xs = if allDistinct ps
 
 class Inspectable a where
   inspectableToMusic :: a -> Music
-  display :: a -> IO ()
-  audify  :: a -> IO ()
-  display = display . inspectableToMusic
-  audify  = audify . inspectableToMusic
 
 displayAndAudify :: Inspectable a => a -> IO ()
 displayAndAudify x = display x >> audify x
 
-instance Inspectable a => Inspectable (Maybe a) where
-  inspectableToMusic = maybe mempty id . fmap inspectableToMusic
-
 instance Inspectable (Score StandardNote) where
   inspectableToMusic = id
-  display = open
-  audify  = play_
-    where
-      play_ x = do
-        writeMidi "test.mid" x
-        System.Process.system "timidity test.mid 2>/dev/null >/dev/null"
-        return ()
+
+
+display :: Inspectable a => a -> IO ()
+audify  :: Inspectable a => a -> IO ()
+display = display' . inspectableToMusic
+audify  = audify' . inspectableToMusic
+
+
+display' = openLilypond
+  where
+    openLilypond' options sc = do
+      writeLilypond' options "test.ly" sc
+      runLilypond >> cleanLilypond >> runOpen
+        where
+          runLilypond = void $ System.Process.runCommand
+            -- "lilypond -f pdf test.ly"  >>= waitForProcess
+            "lilypond -f pdf test.ly 2>/dev/null"  >>= System.Process.waitForProcess
+          cleanLilypond = void $ System.Process.runCommand
+            "rm -f test-*.tex test-*.texi test-*.count test-*.eps test-*.pdf test.eps"
+          runOpen = void $ System.Process.runCommand
+            $ openCommand ++ " test.pdf"
+
+openCommand :: String
+openCommand = case System.Info.os of
+  "darwin" -> "open"
+  "linux"  -> "xdg-open"
+    
+
+audify'  = play_
+  where
+    play_ x = do
+      writeMidi "test.mid" x
+      System.Process.system "timidity test.mid 2>/dev/null >/dev/null"
+      return ()
       
+instance Inspectable a => Inspectable (Maybe a) where
+  inspectableToMusic = maybe mempty id . fmap inspectableToMusic
 instance Inspectable (Score Pitch) where
   inspectableToMusic = inspectableToMusic . asScore . fmap fromPitch''
 instance Inspectable (Voice StandardNote) where
@@ -85,7 +122,6 @@ instance Inspectable (Voice ()) where
   inspectableToMusic = inspectableToMusic . set pitches (c::Pitch)
 instance Inspectable (Ambitus Pitch) where
   inspectableToMusic x = let (m,n) = x^.from ambitus in glissando $ fromPitch'' m |> fromPitch'' n
-  audify x = let (m,n) = x^.from ambitus in audify $ asScore $ fromPitch'' m |> fromPitch'' n
 instance Inspectable [Chord Pitch] where
   inspectableToMusic = scat . fmap inspectableToMusic
 instance Inspectable (Mode Pitch) where
@@ -121,22 +157,4 @@ instance Inspectable [Voice Pitch] where
   inspectableToMusic = asScore . ucat . fmap (fmap fromPitch'') . fmap (renderAlignedVoice . aligned 0 0)
 instance Inspectable [Note Pitch] where
   inspectableToMusic = inspectableToMusic . fmap ((^.voice) . pure)
-
--- instance Inspectable (Floater Pitch) where
-  -- inspectableToMusic = inspectableToMusic . asScore . renderFloater . fmap fromPitch''
-
--- instance Inspectable (Floater StandardNote) where
-  -- inspectableToMusic = inspectableToMusic  . asScore . renderFloater
--- renderFloater' = asScore . renderFloater . fmap fromPitch''
-
--- instance Inspectable Shape where
---   inspectableToMusic shape = scat $ fmap (renderFloater.makeFloater shape) $ fmap dummyPitches [{-3,6,10,-}16{-,40-}]
---   -- It is not specified how many pitches a shape should contain, so we render it with some different
---   -- numbers and draw that in sequence.
---     where
---       dummyPitches x = (^.chord) $ rev (take (x`div`2) dw) <> take (x`div`2) uw
---       uw = enumChromaticFromTo c (octavesUp 100 c)
---       dw = enumDownChromaticFromTo c (octavesDown 100 c)
--- instance Inspectable (Pattern Pitch) where
-  -- inspectableToMusic = fmap fromPitch'' . flip renderPattern (0<->1)
 

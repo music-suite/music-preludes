@@ -29,10 +29,7 @@ module Music.Prelude.Standard (
         asVoice,
         asTrack,
         asNote,
-        open,
-        play,
         fromPitch'',
-        openAndPlay
   ) where
 
 import           Data.Typeable
@@ -78,10 +75,6 @@ type StandardNote =
 
 type Music = Score StandardNote
 -- testRealize = realize (pitchSet [c,e,g,fs,gs]) undefined (Perm4 31)
-
-open          = openLilypond . asScore
-play          = error "Not implemented: play"
-openAndPlay x = open x >> play x
 
 fromPitch'' :: IsPitch a => Pitch -> a
 fromPitch'' x = let i = x .-. c in 
