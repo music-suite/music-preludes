@@ -4,7 +4,7 @@
 import Music.Prelude
 
 -- A simple subject
-subj  = times 20 $ scat [c,d,e,f]^/8 |> scat [g,fs]^/2
+subj  = times 20 $ scat [c,d,e,f]|/8 |> scat [g,fs]|/2
 
 -- The 
 music = id

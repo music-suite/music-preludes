@@ -9,14 +9,14 @@
 import Music.Prelude hiding (open)
 import qualified Music.Score as Score
 
-withTintin :: (HasPitches' a, Score.Pitch a ~ Behavior Pitch) => Pitch -> Score a -> Score a
+withTintin :: (HasPitches' a, Score.Pitch a ~ Pitch) => Pitch -> Score a -> Score a
 withTintin p x = x <> tintin p x
 
 -- | 
 -- Given the a melody voice return the tintinnabuli voice.
 -- 
-tintin :: (HasPitches' a, Score.Pitch a ~ Behavior Pitch) => Pitch -> Score a -> Score a
-tintin tonic = pitches . mapped %~ relative tonic tintin'
+tintin :: (HasPitches' a, Score.Pitch a ~ Pitch) => Pitch -> Score a -> Score a
+tintin tonic = pitches  %~ relative tonic tintin'
 
 -- | 
 -- Given the melody interval (relative tonic), returns the tintinnabular voice interval. 
@@ -44,13 +44,13 @@ mapEvensOdds f g [a] = [f a]
 mapEvensOdds f g (a : b : cs) = f a : g b : mapEvensOdds f g cs
 
 mainSubject :: Score StandardNote
-mainSubject = stretch (1/6) $ asScore $ scat $ mapEvensOdds (accent . (^*2)) id $ concatMap fallingScaleSect [1..30]
+mainSubject = stretch (1/6) $ asScore $ scat $ mapEvensOdds (accent . (|*2)) id $ concatMap fallingScaleSect [1..30]
 
 bell :: Score StandardNote
 bell = let
     cue :: Score (Maybe StandardNote)
     cue = stretchTo 1 (rest |> a) 
-    in parts' .~ solo tubularBells $ text "l.v." $ removeRests $ times 40 $ scat [times 3 $ scat [cue,rest], rest^*2]
+    in parts' .~ solo tubularBells $ text "l.v." $ removeRests $ times 40 $ scat [times 3 $ scat [cue,rest], rest|*2]
 
 strings :: Score StandardNote
 strings = pcat [
@@ -60,7 +60,7 @@ strings = pcat [
     parts' .~ cellos       $ down (_P8^*2) $ stretch 8 stringPart,
     parts' .~ doubleBasses $ down (_P8^*3) $ stretch 16 stringPart]
     where
-        stringPart = delay (1/2) $ withTintin (down (_P8^*4) $ asPitch a) $ mainSubject
+        stringPart = delay (1/2) $ withTintin (down (_P8^*4) $ (a::Pitch)) $ mainSubject
 
 music :: Score StandardNote
 music = meta $ stretch (3/2) $ {-before 60-} (mempty <> bell <> delay 6 strings)

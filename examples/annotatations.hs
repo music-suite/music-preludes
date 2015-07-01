@@ -9,7 +9,7 @@ import Music.Prelude
 main :: IO ()
 main = openLilypond . showAnnotations' ""
      . intervalAnnotations subjectDiff
-     . scat $ map (fromPitch'.pure) subject
+     . scat $ map (fromPitch'') subject
 
 subject :: [Pitch]
 subject = [c, d, f, e, f, g, a, g, e, d, c]

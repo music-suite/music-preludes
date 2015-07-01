@@ -4,12 +4,11 @@
 import Music.Prelude
 import qualified Music.Score as Score
 
-markIf :: (HasColor a, HasPitches' a, Score.Pitch a ~ Behavior Pitch) => (Interval -> Bool) -> Score a -> Score a
-markIf p     = mapIf (\x -> p $ withOrigin c $ unb $ x ^?! pitches) mark
+markIf :: (HasColor a, HasPitches' a, Score.Pitch a ~ Pitch) => (Interval -> Bool) -> Score a -> Score a
+markIf p     = mapIf (\x -> p $ withOrigin c $ x ^?! pitches) mark
   where
     mark         = colorRed
     mapIf p f    = uncurry mplus . over _1 f . mpartition p
-    unb          = (! 0)
     withOrigin x = (.-. x)
 
 markPerfect   = text "Perfect consonances"   . markIf isPerfectConsonance

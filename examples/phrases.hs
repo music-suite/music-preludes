@@ -7,10 +7,10 @@
 import Music.Prelude
 
 -- A simple subject
-subj  = times 2 $ scat [c,c,d,b_,e,e]^/16
+subj  = times 2 $ scat [c,c,d,b_,e,e]|/16
 
 -- Each voice differ slighly in onset etc
-voca v = delay ((4/8)^*v) $ removeRests $ scat $ fmap (\i -> (id $ up (_M2^*i) subj) |> rest^*(15/8)) 
+voca v = delay ((4/8)|*v) $ removeRests $ scat $ fmap (\i -> (id $ up (_M2^*i) subj) |> rest|*(15/8)) 
   $ [0..3]
 
 -- The 
@@ -22,7 +22,7 @@ music = id
   $ over (phrases . valuesV) (rotate 1)
   -- $ over (phrases.middleV) (octavesAbove 1) 
   -- $ over phrases fuse 
-  $ rcat 
+  $ catSep 
   -- $ fadeIn 4
   $ map voca [0..3]
 
@@ -33,3 +33,5 @@ rotate n xs = iterate rotate1 xs !! n
   where
     rotate1 [] = []
     rotate1 xs = last xs : init xs
+
+catSep = pcat . zipWith (set parts') (divide 100 violins)

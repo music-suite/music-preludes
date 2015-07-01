@@ -8,9 +8,9 @@ main   = do
   openLilypond music
   -- openMidi music
 
-guitar = (tutti $ StdInstrument 26)
-alto   = (tutti $ StdInstrument 65)
-rh     = (tutti $ StdInstrument 113)
+guitar = (tutti $ fromMidiProgram 26)
+alto   = (tutti $ fromMidiProgram 65)
+rh     = (tutti $ fromMidiProgram 0)
 
 
 -- Strum a chord
@@ -48,19 +48,21 @@ strum x = strumRhythm Up (map (/8) [2,1,2,1,2])
   where
     dropLast n = reverse . drop n . reverse
 
+counterRh :: Music
+counterRh = set parts' rh $ (removeRests $ times 4 $ octavesUp 1 $ scat [rest|*2,g,g,g|*2,g|*2, rest|*2, scat [g,g,g]|*2])|/8
 
-counterRh = set parts' rh $ (removeRests $ times 4 $ octavesUp 1 $ scat [rest^*2,g,g,g^*2,g^*2, rest^*2, scat [g,g,g]^*2])^/8
+strings :: Music
+strings = set parts' (tutti violin) $ (\x -> x <> octavesUp 1 x) $ 
+     (c_<>e_<>g_)|*4 
+  |> (c_<>fs_<>a_)|*4
+  |> (g__<>c_<>e_)|*4 
+  |> (c_<>f_<>g_)|*4
 
-strings = set parts' (tutti violin) $ octavesAbove 1 $ 
-     (c_<>e_<>g_)^*4 
-  |> (c_<>fs_<>a_)^*4
-  |> (g__<>c_<>e_)^*4 
-  |> (c_<>f_<>g_)^*4
-
+melody :: Music
 melody = octavesDown 1 $ set parts' (tutti horn) $ 
-  (scat [c',g'^*2,e',d',c'^*2,b,c'^*2,d'^*2,e',d',c'^*2]^/4)
+  (scat [c',g'|*2,e',d',c'|*2,b,c'|*2,d'|*2,e',d',c'|*2]|/4)
   |>
-  (scat [c',a'^*2,e',d',c'^*2,b,c'^*2,d'^*2,eb',d',c']^/4)
+  (scat [c',a'|*2,e',d',c'|*2,b,c'|*2,d'|*2,eb',d',c']|/4)
   
 
 music = scat [music1, music2]
@@ -75,6 +77,7 @@ music2 = asScore $ mempty
   <> level _p counterRh
   <> gtr
 
+gtr :: Music
 gtr = set parts' guitar $
   (pcat $ take 4 $ zipWith delay [0,1..10] $ repeat $ strum [c_,e_,g_,c,e,g])
   |>

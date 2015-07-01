@@ -13,9 +13,10 @@ import Data.Default -- debug
 import Math.OEIS
 
 {-    
-    A serial composition using sequences from the OEIS (http://oeis.org/)
+    A composition using sequences from the OEIS (http://oeis.org/)
 
-    TODO optimize extendSequence etc (use local caching, possibly `unamb`)
+    You might need to install OEIS:
+      cabal install oeis
 -}
 
 main :: IO ()
@@ -24,8 +25,8 @@ main = openMusicXml music
 ensemble :: [Part]
 ensemble = (divide 4 (tutti violin)) <> (divide 2 (tutti viola)) <> (divide 2 (tutti cello)) <> [tutti doubleBass]
 
-type Scale = Integer -> Interval
-scale :: Scale
+type Color = Integer -> Interval
+scale :: Color
 scale n = case n `mod` 6 of
   0 -> _P1
   1 -> _M2
@@ -34,7 +35,7 @@ scale n = case n `mod` 6 of
   4 -> _P5
   5 -> _M6
 
-len = 90
+len = 390
 
 seq1 :: Score Integer
 seq1 = scat $ take len $ fmap return $ fmap (`mod` 6) $ Data.Foldable.toList $ extendSequence [2,1,1,2,2]
@@ -49,9 +50,9 @@ music = pcat [(partNs 0 & up (m3^*2) & compress 6),
   & fmap (pitches' %~ normalize) & compress 4 & staccato
 
 partNs n = part1 n <> part2 n <> part3 n
-part1 n = asScore $ (parts' .~ (ensemble !! (0+3*n))) $ fmap (\x -> pitches' %~ (.+^ pure (scale x)) $ (c::Note)) $ seq1
-part2 n = asScore $ (parts' .~ (ensemble !! (1+3*n))) $ fmap (\x -> pitches' %~ (.+^ pure (scale x)) $ (c::Note)) $ seq2
-part3 n = asScore $ (parts' .~ (ensemble !! (2+3*n))) $ fmap (\x -> pitches' %~ (.+^ pure (scale x)) $ (c::Note)) $ seq3
+part1 n = asScore $ (parts' .~ (ensemble !! (0+3*n))) $ fmap (\x -> pitches' %~ (.+^ (scale x)) $ (c::StandardNote)) $ seq1
+part2 n = asScore $ (parts' .~ (ensemble !! (1+3*n))) $ fmap (\x -> pitches' %~ (.+^ (scale x)) $ (c::StandardNote)) $ seq2
+part3 n = asScore $ (parts' .~ (ensemble !! (2+3*n))) $ fmap (\x -> pitches' %~ (.+^ (scale x)) $ (c::StandardNote)) $ seq3
 
 -- instance Monoid Part where
 --   mempty = def
@@ -103,32 +104,4 @@ mapEvensOdds f g xs = let
     in take (length xs) $ map f (evens xs) `merge` map g (odds xs)
 
 
-openAudacity :: Score Note -> IO ()    
-openAudacity x = do
-    void $ writeMidi "test.mid" $ x
-    void $ system "timidity -Ow test.mid"
-    void $ system "open -a Audacity test.wav"
-
-openAudio :: Score Note -> IO ()    
-openAudio x = do
-    void $ writeMidi "test.mid" $ x
-    void $ system "timidity -Ow test.mid"
-    void $ system "open -a Audacity test.wav"
-
-fixClefs :: Score Note -> Score Note
-fixClefs = pcat . fmap (uncurry g) . extractParts'
-    where
-        g p x = clef (case defaultClef p of { 0 -> GClef; 1 -> CClef; 2 -> FClef } ) x
-
-concurrently_ :: IO a -> IO b -> IO ()
-concurrently_ = concurrentlyWith (\x y -> ())
-
-concurrentlyWith :: (a -> b -> c) -> IO a -> IO b -> IO c
-concurrentlyWith f x y = uncurry f <$> x `concurrently` y
-
-play, open, openAndPlay :: Score Note -> IO ()   
-tempo_ = 120
-play x = openAudio $ stretch ((60*4)/tempo_) $ fixClefs $ x
-open x = openLilypond' LyScoreFormat $ fixClefs $ x
-openAndPlay x = play x `concurrently_` openMusicXml x
 
