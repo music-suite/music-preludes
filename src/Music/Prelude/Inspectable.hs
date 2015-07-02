@@ -24,6 +24,8 @@
 
 module Music.Prelude.Inspectable (
   Inspectable(..),
+  display,
+  audify,
   displayAndAudify,
 ) where
 
