@@ -180,3 +180,35 @@ instance HasDuration a => HasDuration (DynamicT b a) where
   _duration = _duration . extract
 instance HasDuration a => HasDuration (TieT a) where
   _duration = _duration . extract
+
+
+instance Splittable Pitch where
+  split _ x = (x,x)
+
+instance Splittable a => Splittable (PartT p a) where
+  split t = unzipR . fmap (split t)
+instance Splittable a => Splittable (ColorT a) where
+  split t = unzipR . fmap (split t)
+instance Splittable a => Splittable (TextT a) where
+  split t = unzipR . fmap (split t)
+instance Splittable a => Splittable (TremoloT a) where
+  split t = unzipR . fmap (split t)
+instance Splittable a => Splittable (HarmonicT a) where
+  split t = unzipR . fmap (split t)
+instance Splittable a => Splittable (SlideT a) where
+  split t = unzipR . fmap (split t)
+instance Splittable a => Splittable (ArticulationT b a) where
+  split t = unzipR . fmap (split t)
+instance Splittable a => Splittable (DynamicT b a) where
+  split t = unzipR . fmap (split t)
+instance Splittable a => Splittable (TieT a) where
+  split t = unzipR . fmap (split t) 
+
+
+instance Reversible Pitch where
+  rev = id
+instance Reversible (Score a ) where
+  rev = revDefault
+
+
+
