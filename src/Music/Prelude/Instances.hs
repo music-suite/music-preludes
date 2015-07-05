@@ -36,6 +36,7 @@ import           Music.Score            hiding (Fifths, Interval, Note, Pitch)
 import qualified Data.Music.Lilypond         as Lilypond
 import qualified Data.Music.MusicXml.Simple  as Xml
 import qualified Music.Score            as Score
+import Data.Functor.Adjunction (unzipR)
 
 deriving instance Typeable Music.Parts.Part
 
