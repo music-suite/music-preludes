@@ -27,7 +27,7 @@ source-repository head
 library
     build-depends:      base                    >= 4        && < 5,
                         lens                    >= 4.11     && < 5,
-                        split,
+                        split                   >= 0.2.2    && < 1,
                         containers,
                         comonad                 >= 4.2.2 && < 5,
                         vector-space            >= 0.10.2   && < 1,

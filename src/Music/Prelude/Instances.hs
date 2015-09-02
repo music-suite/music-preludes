@@ -38,36 +38,8 @@ import qualified Data.Music.MusicXml.Simple  as Xml
 import qualified Music.Score            as Score
 import Data.Functor.Adjunction (unzipR)
 
-deriving instance Typeable Music.Parts.Part
-
-instance Transformable Music.Parts.Part where
-  transform _ = id
-type instance Music.Score.Part Music.Parts.Part = Music.Parts.Part
-type instance SetPart a Music.Parts.Part = a
-
-instance (Transformable a, a ~ Music.Score.Part a) => HasPart Music.Parts.Part a where
-  part = ($)
-instance (Transformable a, a ~ Music.Score.Part a) => HasParts Music.Parts.Part a where
-  parts = ($)
 
 
-
-instance Transformable BasicPart where
-  transform _ = id
-type instance Music.Score.Part BasicPart = BasicPart
-type instance SetPart a BasicPart = a
-
-instance (Transformable a, a ~ Music.Score.Part a) => HasPart BasicPart a where
-  part = ($)
-instance (Transformable a, a ~ Music.Score.Part a) => HasParts BasicPart a where
-  parts = ($)
-
-
-
-
-instance Tiable Pitch where
-    beginTie = id
-    endTie = id
 
 instance HasBackendNote Midi Semitones where
   exportNote b = exportNote b . fmap toInteger
