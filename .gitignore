@@ -26,3 +26,4 @@ te
 *.dyn_o
 sounds*
 sound*
+.ghci
