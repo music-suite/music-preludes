@@ -30,10 +30,10 @@ module Music.Prelude.Basic (
         asScore,
         asVoice,
         asTrack,
-        asBasicNote,
-        open,
-        play,
-        openAndPlay
+        asBasicNote
+        -- open,
+        -- play,
+        -- openAndPlay
   ) where
 
 import           Data.Typeable
@@ -76,8 +76,8 @@ type BasicNote = (PartT BasicPart
 -- type BasicArticulation = Music.Articulation.Articulation
 -- type BasicPitch        = Music.Pitch.Pitch
 
-open          = openLilypond . asScore
-play          = error "Not implemented: play"
-openAndPlay x = open x >> play x
+-- open          = openLilypond . asScore
+-- play          = error "Not implemented: play"
+-- openAndPlay x = open x >> play x
 
 

@@ -1,4 +1,5 @@
 
+{-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE DeriveDataTypeable         #-}
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -32,6 +33,7 @@ module Music.Prelude.Inspectable (
 import qualified System.Process
 
 import Music.Prelude.Standard hiding (open,play)
+import Music.Score ()
 import qualified Music.Score
 import qualified System.Process
 import qualified System.Info
@@ -85,19 +87,20 @@ display = display' . inspectableToMusic
 audify  = audify' . inspectableToMusic
 
 
-display' = openLilypond
-  where
-    openLilypond' options sc = do
-      writeLilypond' options "test.ly" sc
-      runLilypond >> cleanLilypond >> runOpen
-        where
-          runLilypond = void $ System.Process.runCommand
-            -- "lilypond -f pdf test.ly"  >>= waitForProcess
-            "lilypond -f pdf test.ly 2>/dev/null"  >>= System.Process.waitForProcess
-          cleanLilypond = void $ System.Process.runCommand
-            "rm -f test-*.tex test-*.texi test-*.count test-*.eps test-*.pdf test.eps"
-          runOpen = void $ System.Process.runCommand
-            $ openCommand ++ " test.pdf"
+display' = error "Disabled display"
+-- display' = openLilypond
+--   where
+--     openLilypond' options sc = do
+--       writeLilypond' options "test.ly" sc
+--       runLilypond >> cleanLilypond >> runOpen
+--         where
+--           runLilypond = void $ System.Process.runCommand
+--             -- "lilypond -f pdf test.ly"  >>= waitForProcess
+--             "lilypond -f pdf test.ly 2>/dev/null"  >>= System.Process.waitForProcess
+--           cleanLilypond = void $ System.Process.runCommand
+--             "rm -f test-*.tex test-*.texi test-*.count test-*.eps test-*.pdf test.eps"
+--           runOpen = void $ System.Process.runCommand
+--             $ openCommand ++ " test.pdf"
 
 openCommand :: String
 openCommand = case System.Info.os of
@@ -120,8 +123,8 @@ instance Inspectable (Voice StandardNote) where
   inspectableToMusic = inspectableToMusic . renderAlignedVoice . aligned 0 0
 instance Inspectable (Voice Pitch) where
   inspectableToMusic = inspectableToMusic . asScore . renderAlignedVoice . aligned 0 0 . fmap fromPitch''
-instance Inspectable (Voice ()) where
-  inspectableToMusic = inspectableToMusic . set pitches (c::Pitch)
+-- instance Inspectable (Voice ()) where
+  -- inspectableToMusic = inspectableToMusic . set pitches (c::Pitch)
 instance Inspectable (Ambitus Pitch) where
   inspectableToMusic x = let (m,n) = x^.from ambitus in glissando $ fromPitch'' m |> fromPitch'' n
 instance Inspectable [Chord Pitch] where

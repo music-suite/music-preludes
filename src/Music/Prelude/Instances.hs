@@ -33,8 +33,8 @@ import           Music.Parts
 import           Music.Pitch
 import           Music.Score            hiding (Fifths, Interval, Note, Pitch)
 
-import qualified Data.Music.Lilypond         as Lilypond
-import qualified Data.Music.MusicXml.Simple  as Xml
+-- import qualified Data.Music.Lilypond         as Lilypond
+-- import qualified Data.Music.MusicXml.Simple  as Xml
 import qualified Music.Score            as Score
 import Data.Functor.Adjunction (unzipR)
 
@@ -58,23 +58,23 @@ instance HasBackendNote SuperCollider Pitch where
   exportChord b = exportChord b . fmap (fmap (\p -> semitones (p .-. c)))
 
 
-instance HasBackendNote MusicXml Pitch where
-  exportNote  _ (XmlContext d Nothing)    = Xml.rest (realToFrac d)
-  exportNote  _ (XmlContext d (Just x))   = (`Xml.note` realToFrac d) . snd3 Just . spellPitch 4 $ x
-
-  exportChord _ (XmlContext d Nothing)    = Xml.rest (realToFrac d)
-  exportChord _ (XmlContext d (Just xs))  = (`Xml.chord` (realToFrac d)) . fmap (snd3 Just . spellPitch 4) $ xs
-
-instance HasBackendNote Lilypond Pitch where
-  exportNote  _ (LyContext d Nothing)    = (^*realToFrac (4*d)) Lilypond.rest
-  exportNote  _ (LyContext d (Just x))   = (^*realToFrac (d*4)) . Lilypond.note . pitchLilypond . Lilypond.Pitch . spellPitch 5 $ x
-
-  exportChord _ (LyContext d Nothing)    = (^*realToFrac (4*d)) Lilypond.rest
-  exportChord _ (LyContext d (Just xs))  = (^*realToFrac (d*4)) . Lilypond.chord . fmap (pitchLilypond . Lilypond.Pitch . spellPitch 5) $ xs
+-- instance HasBackendNote MusicXml Pitch where
+--   exportNote  _ (XmlContext d Nothing)    = Xml.rest (realToFrac d)
+--   exportNote  _ (XmlContext d (Just x))   = (`Xml.note` realToFrac d) . snd3 Just . spellPitch 4 $ x
+--
+--   exportChord _ (XmlContext d Nothing)    = Xml.rest (realToFrac d)
+--   exportChord _ (XmlContext d (Just xs))  = (`Xml.chord` (realToFrac d)) . fmap (snd3 Just . spellPitch 4) $ xs
+--
+-- instance HasBackendNote Lilypond Pitch where
+--   exportNote  _ (LyContext d Nothing)    = (^*realToFrac (4*d)) Lilypond.rest
+--   exportNote  _ (LyContext d (Just x))   = (^*realToFrac (d*4)) . Lilypond.note . pitchLilypond . Lilypond.Pitch . spellPitch 5 $ x
+--
+--   exportChord _ (LyContext d Nothing)    = (^*realToFrac (4*d)) Lilypond.rest
+--   exportChord _ (LyContext d (Just xs))  = (^*realToFrac (d*4)) . Lilypond.chord . fmap (pitchLilypond . Lilypond.Pitch . spellPitch 5) $ xs
 
 -- TODO move
 snd3 f (a, b, c) = (a, f b, c)
-pitchLilypond a = Lilypond.NotePitch a Nothing
+-- pitchLilypond a = Lilypond.NotePitch a Nothing
 
 spellPitch :: (Enum p, Num a, Num o) => Octaves -> Pitch -> (p, a, o)
 spellPitch referenceOctave p = (pitchName, pitchAccidental, octave)
@@ -97,23 +97,23 @@ instance HasMidiProgram Music.Parts.Part where
                 42 -> 48
                 x  -> x
 
-instance HasLilypondInstrument BasicPart where
-    getLilypondClef = 0
-
-instance HasLilypondInstrument Music.Parts.Part where
-    getLilypondClef = defaultClef
-
-instance HasMusicXmlInstrument BasicPart where
-    getMusicXmlClef = 0
-    getMusicXmlNumberOfStaves = 1
-
-instance HasMusicXmlInstrument Music.Parts.Part where
-    getMusicXmlClef = defaultClef
-    getMusicXmlNumberOfStaves p
-      | p == harp                 = 2
-      | p^._instrument == piano   = 2
-      | p^._instrument == celesta = 2
-      | otherwise                 = 1
+-- instance HasLilypondInstrument BasicPart where
+--     getLilypondClef = 0
+--
+-- instance HasLilypondInstrument Music.Parts.Part where
+--     getLilypondClef = defaultClef
+--
+-- instance HasMusicXmlInstrument BasicPart where
+--     getMusicXmlClef = 0
+--     getMusicXmlNumberOfStaves = 1
+--
+-- instance HasMusicXmlInstrument Music.Parts.Part where
+--     getMusicXmlClef = defaultClef
+--     getMusicXmlNumberOfStaves p
+--       | p == harp                 = 2
+--       | p^._instrument == piano   = 2
+--       | p^._instrument == celesta = 2
+--       | otherwise                 = 1
 
 
 instance HasDuration Pitch where
