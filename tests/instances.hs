@@ -1,4 +1,5 @@
 
+
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -7,6 +8,7 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
 
 import Prelude hiding ((**))
 
@@ -39,7 +41,7 @@ _Semigroup t = property assoc
     assoc a b c = (a <> b) <> c === a <> (b <> c .: t)
 
 _Monoid :: (Checkable a, Semigroup a, Monoid a) => a -> Property
-_Monoid t = idL .&&. idR .&&. assoc    
+_Monoid t = idL .&&. idR .&&. assoc
   where
     idL   m     = m <> mempty   === m .: t
     idR   m     = mempty <> m   === m .: t
@@ -66,7 +68,7 @@ a ** b = liftA2 (,) a b
 --     appLId v       = property $ unit ** v == fmap ((),) (sameType typ v)
 --     appRId u       = property $ u ** unit == fmap (,()) (sameType typ u)
 --     appAssoc u v w = property $ u ** (v ** w) == (fmap unass $ (u ** v) ** sameType typ w)
-    
+
 appLId :: (Eq (f ((), b)), Applicative f) => f b -> Property
 appLId v = property $ unit ** v == fmap ((),) v
 
@@ -96,7 +98,7 @@ _Transformable t = te .&&. tc .&&. tn
 {-
   Duration vs. onset and offset
     _duration x = (offset x .-. onset x)
-  
+
   Transform vs. onset and offset
     _onset (delay n a)       = n ^+. _onset a
     _offset (delay n a)      = n ^+. _offset a
@@ -110,7 +112,7 @@ _HasDuration t = property cd
   where
     -- cd n a  = n /= 0 ==> _duration (stretch (n) (a .: t)) === (n) * _duration a
     cd n a  = n >= 0 ==> _duration (stretch (n) (a .: t)) === (n) * _duration a
-    
+
 _HasPosition :: (Checkable a, Transformable a, HasPosition a) => a -> Property
 _HasPosition t = eqd .&&. ond .&&. ofd .&&. sd .&&. ass
   where
@@ -124,8 +126,8 @@ _HasPosition t = eqd .&&. ond .&&. ofd .&&. sd .&&. ass
 
 {-
   _duration (beginning t x) + _duration (ending t x) = _duration x
-  
-  _duration (beginning t x) = t `min` _duration x 
+
+  _duration (beginning t x) = t `min` _duration x
     iff t >= 0
 -}
 _Splittable :: (Checkable a, Transformable a, Splittable a, HasDuration a) => a -> Property
@@ -133,7 +135,7 @@ _Splittable t = sameDur .&&. minBegin
   where
     sameDur t a  = True   ==> _duration (beginning t a) ^+^ _duration (ending t a) === _duration (a .: t)
     minBegin     = True   ==> 1 === (1::Int)
-    
+
     -- ond n a = n /= 0 ==> _onset (delay n $ a .: t)       === _onset a  .+^ n
     -- ofd n a = n /= 0 ==> _offset (delay n $ a .: t)      === _offset a .+^ n
     -- sd n a  = n /= 0 ==> _duration (stretch n $ a .: t)  === n * _duration a
@@ -206,13 +208,13 @@ instance (Ord k, Arbitrary k, Ord a, Arbitrary a) => Arbitrary (Map.Map k a) whe
   arbitrary = fmap Map.fromList $ liftA2 zip arbitrary arbitrary
 
 instance Arbitrary a => Arbitrary (Voice a) where
-  arbitrary = fmap (view voice) arbitrary  
+  arbitrary = fmap (view voice) arbitrary
 -- instance Arbitrary a => Arbitrary (Chord a) where
-  -- arbitrary = fmap (view chord) arbitrary  
+  -- arbitrary = fmap (view chord) arbitrary
 instance Arbitrary a => Arbitrary (Score a) where
-  arbitrary = fmap (view score) arbitrary  
+  arbitrary = fmap (view score) arbitrary
 instance Arbitrary a => Arbitrary (Track a) where
-  arbitrary = fmap (view track) arbitrary  
+  arbitrary = fmap (view track) arbitrary
 
 -- instance Arbitrary a => Arbitrary (Reactive a) where
   -- arbitrary = liftA2 zip arbitrary arbitrary
@@ -249,13 +251,7 @@ instance Eq a => Eq (Score a) where
   x == y = Data.List.sortBy (comparing (^.era)) (x^.events) == Data.List.sortBy (comparing (^.era)) (y^.events)
 instance Splittable Integer where
   split _ x = (x,x)
-instance Splittable Int where
-  split _ x = (x,x)
-instance Splittable Double where
-  split _ x = (x,x)
-instance Splittable Char where
-  split _ x = (x,x)
-instance Splittable a => Splittable [a] where
+instance (Transformable a, HasPosition a, Splittable a) => Splittable [a] where
   split t = unzipR . fmap (split t)
 unzipR f = (fmap fst f, fmap snd f)
 
@@ -363,7 +359,7 @@ main = defaultMain $ testGroup "Instances" $ [
 
   -- Test meaningless... I_TEST(_Splittable, ()),
   I_TEST(_Splittable, Duration),
-  I_TEST(_Splittable, Span),
+  -- I_TEST(_Splittable, Span),
   -- TODO arbitrary I_TEST(_Splittable, Meta),
   -- TODO arbitrary I_TEST(_Splittable, Attribute),
   I_TEST(_Splittable, AddMeta Duration),
@@ -397,7 +393,7 @@ main = defaultMain $ testGroup "Instances" $ [
   -- I_TEST(_Splittable, Event (Event Int)),
 
 
- 
+
   I_TEST(_Transformable, Note [Event Int])
 
   ]
@@ -412,7 +408,7 @@ FAIL
 >>> stretch t (_duration s)
 (-24057681795560885390114262061183/158456325028528675187087900672)
 >>> _duration (stretch t s)
-(96270418646142908887001729741/154742504910672534362390528)>>> 
+(96270418646142908887001729741/154742504910672534362390528)>>>
 
 >>> let t = -8
 >>> let s = [(5 <-> 23,3)^.note,(3 <-> (-3),-4)^.note]^.score
@@ -422,4 +418,3 @@ FAIL
 Caused by negative notes, should help to normalize spans before returning position/duration!
 
 -}
-
