@@ -1,4 +1,1 @@
-
-# music-preludes
-
-DEPRECATED and merged into music-suite
+This repo has been merged into: https://github.com/music-suite/music-suite
